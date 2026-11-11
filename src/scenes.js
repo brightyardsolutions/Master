@@ -110,67 +110,12 @@ class Stage {
 }
 
 /* ====================================================================== */
-/* HERO: the yard at work. Agents read a brief, write and test the code,  */
-/* an engineer approves it, and the finished product ships. On a loop.    */
+/* HERO: the yard. A field of signals flowing into the BrightYard mark.   */
 /* ====================================================================== */
-const MONO = 'ui-monospace, Menlo, Consolas, monospace';
-const CODE = [
-  [['// build-agent · PR #128', 'c']],
-  [['export async function ', 'k'], ['cartTotal', 'f'], ['(cart) {', 'd']],
-  [['  const ', 'k'], ['key = ', 'd'], ['`total:${cart.id}`', 's'], [';', 'd']],
-  [['  const ', 'k'], ['hit = ', 'd'], ['await ', 'k'], ['cache.', 'd'], ['get', 'f'], ['(key);', 'd']],
-  [['  if ', 'k'], ['(hit) ', 'd'], ['return ', 'k'], ['hit;', 'd']],
-  [['  const ', 'k'], ['total = ', 'd'], ['sum', 'f'], ['(cart.items);', 'd']],
-  [['  await ', 'k'], ['cache.', 'd'], ['set', 'f'], ['(key, total, { ttl: ', 'd'], ['60', 'n'], [' });', 'd']],
-  [['  return ', 'k'], ['total;', 'd']],
-  [['}', 'd']]
-];
-const CC = { c: '#7A77A8', k: '#A39DFF', f: '#C6F432', s: '#8FF2CC', n: '#F6C453', d: '#E6E4FF' };
-const CODE_LEN = CODE.map(l => l.reduce((s, t) => s + t[0].length, 0));
-const CODE_TOTAL = CODE_LEN.reduce((a, b) => a + b, 0);
-const CW = 1024, CH = 704, PW = 4.0, PH = 2.75, LH = 56, LY = 118, GX = 84, FS = 27;
-const CYCLE = 16;
-
-function rrect(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
-
-function productTexture() {
-  const c = document.createElement('canvas'); c.width = CW; c.height = CH; const x = c.getContext('2d');
-  x.fillStyle = '#FBFAFF'; x.fillRect(0, 0, CW, CH);
-  x.fillStyle = '#4F46E5'; rrect(x, 44, 34, 44, 44, 12); x.fill();
-  x.fillStyle = '#C6F432'; [[56, 46], [76, 46], [66, 56], [66, 66]].forEach(p => { x.beginPath(); x.arc(p[0], p[1], 4, 0, 7); x.fill(); });
-  x.fillStyle = '#D9D4FA'; [[610, 70], [700, 70], [790, 60]].forEach(p => { rrect(x, p[0], 48, p[1], 16, 8); x.fill(); });
-  x.fillStyle = '#22C55E'; rrect(x, 884, 38, 96, 36, 18); x.fill();
-  x.fillStyle = '#fff'; x.font = '600 20px Inter, system-ui, sans-serif'; x.textBaseline = 'middle'; x.fillText('● Live', 902, 57);
-  x.fillStyle = '#1E1B4B'; rrect(x, 44, 132, 430, 44, 10); x.fill(); rrect(x, 44, 190, 330, 44, 10); x.fill();
-  x.fillStyle = '#B9B5DE'; rrect(x, 44, 262, 400, 16, 8); x.fill(); rrect(x, 44, 290, 300, 16, 8); x.fill();
-  x.fillStyle = '#C6F432'; rrect(x, 44, 340, 190, 58, 16); x.fill();
-  x.fillStyle = '#1E1B4B'; rrect(x, 78, 362, 122, 14, 7); x.fill();
-  x.fillStyle = '#F1EEFF'; rrect(x, 560, 124, 420, 290, 26); x.fill();
-  [[0.45, '#4F46E5'], [0.7, '#C6F432'], [0.55, '#4F46E5'], [0.85, '#C6F432'], [0.65, '#4F46E5'], [1, '#C6F432']].forEach((b, i) => { x.fillStyle = b[1]; const h = 210 * b[0]; rrect(x, 596 + i * 60, 384 - h, 40, h, 8); x.fill(); });
-  [0, 1, 2].forEach(i => {
-    x.fillStyle = '#fff'; rrect(x, 44 + i * 316, 462, 300, 200, 22); x.fill(); x.strokeStyle = '#E4E0FB'; x.lineWidth = 2; x.stroke();
-    x.fillStyle = i === 1 ? '#C6F432' : '#EEEDFF'; rrect(x, 68 + i * 316, 486, 56, 56, 16); x.fill();
-    x.fillStyle = '#1E1B4B'; rrect(x, 68 + i * 316, 566, 180, 16, 8); x.fill();
-    x.fillStyle = '#C9C5E8'; rrect(x, 68 + i * 316, 598, 230, 12, 6); x.fill(); rrect(x, 68 + i * 316, 622, 160, 12, 6); x.fill();
-  });
-  const t = new CanvasTexture(c); t.colorSpace = SRGBColorSpace; t.anisotropy = 4; return t;
-}
-function briefTexture() {
-  const c = document.createElement('canvas'); c.width = 256; c.height = 328; const x = c.getContext('2d');
-  x.fillStyle = '#FBFAFF'; rrect(x, 0, 0, 256, 328, 22); x.fill();
-  x.fillStyle = '#4F46E5'; x.font = '700 24px Inter, system-ui, sans-serif'; x.fillText('BRIEF', 26, 50);
-  x.fillStyle = '#1E1B4B'; rrect(x, 26, 76, 180, 16, 8); x.fill();
-  x.fillStyle = '#C9C5E8'; [110, 136, 162, 198, 224, 250, 276].forEach((y, i) => { rrect(x, 26, y, [204, 170, 190, 204, 150, 184, 120][i], 11, 5); x.fill(); });
-  const t = new CanvasTexture(c); t.colorSpace = SRGBColorSpace; return t;
-}
-
 export class Hero extends Stage {
   constructor(canvas) {
-    super(canvas, { bg: 0x0B0A24, fog: [16, 52], fov: 38, ambient: 0.9, bloom: 0.3 });
-    this.p = 0; this.ptr = new Vector3(0, 0, 999); this.mouse = new Vector2(); this.tm = new Vector2(); this.ts = 1; this.home = new Vector3(4.4, 3.5, 0);
-    const S = this.scene;
-
-    /* the yard: a field of signals */
+    super(canvas, { bg: 0x0B0A24, fog: [16, 52], fov: 38, ambient: 0.8, bloom: 0.34 });
+    this.p = 0; this.ptr = new Vector3(0, 0, 999); this.mouse = new Vector2(); this.tm = new Vector2();
     const NX = this.low ? 90 : 150, NZ = this.low ? 46 : 70, sp = 0.5, pos = new Float32Array(NX * NZ * 3), rnd = new Float32Array(NX * NZ);
     let k = 0;
     for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) { pos[k * 3] = (i - NX / 2) * sp; pos[k * 3 + 1] = 0; pos[k * 3 + 2] = (j - NZ + 14) * sp; rnd[k] = Math.random(); k++; }
@@ -190,169 +135,54 @@ export class Hero extends Stage {
       fragmentShader: `varying float vG;varying float vF;varying float vR;
         void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float a=smoothstep(.5,.2,d);
         vec3 c=mix(vec3(.42,.38,1.),vec3(.776,.957,.196),clamp(vG*1.3+step(.985,vR),0.,1.));
-        gl_FragColor=vec4(c,a*vF*(.6+vG*.5+step(.985,vR)*.4));}`
+        gl_FragColor=vec4(c,a*vF*(.75+vG*.5+step(.985,vR)*.4));}`
     });
-    S.add(new Points(g, this.fm));
+    this.field = new Points(g, this.fm); this.scene.add(this.field);
 
-    /* the workshop */
-    const W = this.ws = new Group(); S.add(W);
-    this.tile = tile(IND, LIME, [0, 2, 4, 7]); this.tile.scale.setScalar(0.24); this.tile.position.set(0, 2.55, -0.2); W.add(this.tile);
+    this.tile = tile(IND, LIME, [0, 2, 4, 7]); this.scene.add(this.tile);
+    this.glow = new PointLight(LIME, 5, 12); this.scene.add(this.glow);
+    this.home = new Vector3(4.2, 3.5, 0);
 
-    const P = this.panel = new Group(); W.add(P);
-    P.add(new Mesh(new RoundedBoxGeometry(4.24, 2.99, 0.12, 4, 0.06), new MeshPhysicalMaterial({ color: 0x6C63FF, emissive: 0x4F46E5, emissiveIntensity: 0.55, roughness: 0.3, metalness: 0.2, clearcoat: 0.7 })));
-    this.cc = document.createElement('canvas'); this.cc.width = CW; this.cc.height = CH; this.cx = this.cc.getContext('2d');
-    this.ct = new CanvasTexture(this.cc); this.ct.colorSpace = SRGBColorSpace; this.ct.anisotropy = 4;
-    const front = new Mesh(new PlaneGeometry(PW, PH), new MeshBasicMaterial({ map: this.ct })); front.position.z = 0.066; P.add(front);
-    const back = new Mesh(new PlaneGeometry(PW, PH), new MeshBasicMaterial({ map: productTexture(), color: 0xB4B4C2 })); back.position.z = -0.066; back.rotation.y = Math.PI; P.add(back);
-    this.ripples = [0, 1, 2].map(() => { const m = new Mesh(new RingGeometry(1.5, 1.56, 80), new MeshBasicMaterial({ color: LIME, transparent: true, opacity: 0, side: DoubleSide, depthWrite: false })); m.position.z = -0.12; P.add(m); return m; });
-    this.pglow = new PointLight(LIME, 0, 9); W.add(this.pglow);
-
-    const agent = (name, x, y, z) => {
-      const a = new Group(), head = new Group();
-      head.add(new Mesh(new SphereGeometry(0.31, 32, 24), new MeshPhysicalMaterial({ color: 0x5A52F0, emissive: 0x4F46E5, emissiveIntensity: 0.35, roughness: 0.25, metalness: 0.2, clearcoat: 1 })));
-      const eyeM = new MeshStandardMaterial({ color: LIME, emissive: LIME, emissiveIntensity: 0.25 });
-      const eye = new Mesh(new SphereGeometry(0.1, 18, 14), eyeM); eye.position.z = 0.262; head.add(eye);
-      const visM = new MeshStandardMaterial({ color: 0xffffff, emissive: 0xB8B3FF, emissiveIntensity: 0.5 });
-      const vis = new Mesh(new TorusGeometry(0.2, 0.026, 8, 40), visM); vis.position.z = 0.2; head.add(vis);
-      const halo = new Mesh(new TorusGeometry(0.48, 0.014, 6, 64), new MeshBasicMaterial({ color: 0xC6F432, transparent: true, opacity: 0.3 })); halo.rotation.x = Math.PI / 2;
-      const l = label(name, { size: 30, bg: 'rgba(11,10,36,.88)', color: '#C6F432', font: MONO, weight: 500 }); l.position.y = -0.62;
-      a.add(head, halo, l); a.position.set(x, y, z); a.userData = { head, eyeM, visM, halo, l, home: new Vector3(x, y, z), k: 0 }; W.add(a); return a;
-    };
-    this.agents = [agent('plan-agent', -2.7, 1.55, 0.8), agent('build-agent', -2.85, -0.55, 1.0), agent('test-agent', -1.25, -2.2, 1.1), agent('a11y-agent', 1.15, -2.2, 1.1), agent('ship-agent', 2.7, 1.45, 0.8)];
-    const E = this.eng = new Group(), em = new MeshStandardMaterial({ color: 0xE6E4FF, emissive: 0xE6E4FF, emissiveIntensity: 0.1, roughness: 0.5 });
-    const eb = new Mesh(new CapsuleGeometry(0.15, 0.3, 4, 12), em); eb.position.y = -0.12; const eh = new Mesh(new SphereGeometry(0.13, 20, 14), em); eh.position.y = 0.33;
-    const el = label('engineer', { size: 30, bg: '#E6E4FF', color: '#1E1B4B', font: MONO, weight: 500 }); el.position.y = -0.66;
-    E.add(eb, eh, el); E.position.set(2.8, -0.7, 1.0); E.userData = { m: em, home: E.position.clone(), l: el, k: 0 }; W.add(E);
-
-    this.brief = new Mesh(new PlaneGeometry(0.92, 1.18), new MeshBasicMaterial({ map: briefTexture(), transparent: true, color: 0xB8B8C6 })); W.add(this.brief);
-    this.bscan = new Mesh(new PlaneGeometry(0.92, 0.035), new MeshBasicMaterial({ color: LIME, transparent: true })); this.bscan.position.z = 0.01; this.brief.add(this.bscan);
-
-    const pill = (t, bg, color) => { const s = label(t, { size: 34, bg, color }); W.add(s); show(s, 0); return s; };
-    this.caps = [pill('Reading the brief', '#C6F432', '#0B0A24'), pill('Writing code', '#C6F432', '#0B0A24'), pill('448 tests passed', '#3DDC97', '#0B0A24'), pill('0 accessibility issues', '#8FF2CC', '#0B0A24'), pill('Shipped to production', '#C6F432', '#0B0A24'), pill('Approved by an engineer', '#E6E4FF', '#1E1B4B')];
-    this.beam = new Beam(S, LIME, 3); this.ebeam = new Beam(S, 0xffffff, 3); this.link = new Beam(S, 0x8F88FF, 2);
-
-    this.sig = []; const sg = new SphereGeometry(0.06, 10, 8), N = this.low ? 8 : 14;
+    this.sig = []; const sg = new SphereGeometry(0.07, 10, 8);
+    const N = this.low ? 14 : 30;
     for (let i = 0; i < N; i++) {
-      const c = new QuadraticBezierCurve3(new Vector3((Math.random() - 0.5) * 34, 0.2, -18 + Math.random() * 22), new Vector3(), new Vector3());
+      const c = new QuadraticBezierCurve3(new Vector3((Math.random() - 0.5) * 34, 0.2, -18 + Math.random() * 24), new Vector3(), new Vector3());
       const m = new Mesh(sg, new MeshBasicMaterial({ color: LIME, transparent: true }));
       const lg = new BufferGeometry(); lg.setAttribute('position', new Float32BufferAttribute(new Float32Array(31 * 3), 3));
-      const ln = new Line(lg, new LineBasicMaterial({ color: 0x8F88FF, transparent: true, opacity: 0.08 }));
-      S.add(m, ln); this.sig.push({ c, m, ln, o: Math.random(), s: 0.09 + Math.random() * 0.1, d: [0, 2, 4, 7][i % 4] });
+      const ln = new Line(lg, new LineBasicMaterial({ color: 0x8F88FF, transparent: true, opacity: 0.1 }));
+      this.scene.add(m, ln); this.sig.push({ c, m, ln, o: Math.random(), s: 0.1 + Math.random() * 0.12, d: [0, 2, 4, 7][i % 4] });
     }
     this.ray = new Raycaster(); this.plane = new Plane(new Vector3(0, 1, 0), 0); this.hit = new Vector3();
-    this._a = new Vector3(); this._b = new Vector3(); this._t = new Vector3(); this.key = '';
-    this.draw(0, 0, -1, 0, true);
+    this.tmpV = new Vector3(); this.ts = 1;
   }
   layout(w, h) {
-    const wide = w / h > 1.05, a = w / h;
-    this.home.set(wide ? Math.min(3.85, a * 2.2) : 0, wide ? 3.55 : 5.35, wide ? 0 : -1.5);
-    this.ts = wide ? Math.min(0.9, 0.52 + a * 0.22) : 0.45;
-    this.fm.uniforms.uPx.value = this.r.getPixelRatio() * (wide ? 1 : 0.8);
+    const wide = w / h > 1.05;
+    this.home.set(wide ? Math.min(4.6, 1.6 + w / h * 1.3) : 0, wide ? 4.5 : 5.3, wide ? 0 : -3);
+    this.ts = wide ? 0.68 : 0.4; this.fm.uniforms.uPx.value = this.r.getPixelRatio() * (wide ? 1 : 0.8);
   }
   pointer(nx, ny) { this.tm.set(nx, ny); }
   setScroll(p) { this.p = p; }
-
-  /* code panel texture: redrawn only when its state changes */
-  draw(chars, ticks, scan, foot, blink) {
-    const key = chars + '|' + ticks + '|' + Math.round(scan * 40) + '|' + foot + '|' + (blink ? 1 : 0); if (key === this.key) return; this.key = key;
-    const x = this.cx; x.fillStyle = '#15123C'; x.fillRect(0, 0, CW, CH);
-    x.fillStyle = '#221E5E'; x.fillRect(0, 0, CW, 64);
-    ['#F0554E', '#F6C453', '#3DDC97'].forEach((c, i) => { x.fillStyle = c; x.beginPath(); x.arc(38 + i * 30, 32, 8, 0, 7); x.fill(); });
-    x.textBaseline = 'middle'; x.font = '500 22px ' + MONO; x.fillStyle = '#A9A5DC'; x.fillText('checkout/cart-total.ts', 140, 33);
-    x.fillStyle = 'rgba(198,244,50,.16)'; rrect(x, CW - 160, 15, 130, 34, 17); x.fill(); x.fillStyle = '#C6F432'; x.fillText('PR #128', CW - 141, 33);
-    if (scan >= 0) { x.fillStyle = 'rgba(143,242,204,.14)'; x.fillRect(0, LY - LH / 2 + scan * LH * CODE.length - 30, CW, 60); x.fillStyle = '#8FF2CC'; x.fillRect(0, LY - LH / 2 + scan * LH * CODE.length, CW, 3); }
-    x.font = FS + 'px ' + MONO; const cw = x.measureText('M').width; let left = chars; this.cur = null;
-    for (let i = 0; i < CODE.length; i++) {
-      const y = LY + i * LH;
-      if (i < ticks) { x.fillStyle = '#3DDC97'; x.fillText('✓', 34, y); } else if (left > 0 || i === 0) { x.fillStyle = '#4B4880'; x.fillText(String(i + 1), 34, y); }
-      if (left <= 0) continue;
-      let cx = GX;
-      for (const tk of CODE[i]) { if (left <= 0) break; const s = tk[0].slice(0, left); x.fillStyle = CC[tk[1]]; x.fillText(s, cx, y); cx += s.length * cw; left -= s.length; }
-      if (left <= 0 || i === CODE.length - 1) this.cur = [cx, y];
-    }
-    if (this.cur && blink && chars < CODE_TOTAL) { x.fillStyle = '#C6F432'; x.fillRect(this.cur[0] + 3, this.cur[1] - 15, 13, 30); }
-    const F = [['✓ 448 tests passed', '#3DDC97'], ['✓ 0 accessibility issues', '#8FF2CC'], ['✓ Approved by an engineer', '#E6E4FF']];
-    x.font = '500 21px ' + MONO; let fx = 34;
-    for (let i = 0; i < foot; i++) { x.fillStyle = F[i][1]; x.fillText(F[i][0], fx, CH - 38); fx += x.measureText(F[i][0]).width + 34; }
-    this.ct.needsUpdate = true;
-  }
-  /* canvas pixel on the code panel -> world position */
-  at(px, py, out) { out.set((px / CW - 0.5) * PW, (0.5 - py / CH) * PH, 0.1); return this.panel.localToWorld(out); }
-
   update(t) {
-    const p = this.p, intro = ease(seg(t, 0.1, 1.8)), W = this.ws;
+    const p = this.p, intro = ease(seg(t, 0.1, 1.8));
     this.mouse.lerp(this.tm, 0.06);
     this.fm.uniforms.uT.value = t; this.fm.uniforms.uIn.value = intro;
-    this.cam.position.set(this.mouse.x * 0.5, 3.3 - p * 1.5 + this.mouse.y * 0.2, 13.5 - p * 5.5);
+    this.cam.position.set(this.mouse.x * 0.6, 3.3 - p * 1.5 + this.mouse.y * 0.25, 13.5 - p * 5.5);
     this.cam.lookAt(0, 2.3 - p * 0.6, 0);
     this.ray.setFromCamera(this.mouse, this.cam);
     if (this.ray.ray.intersectPlane(this.plane, this.hit)) this.ptr.lerp(this.hit, 0.12);
-
-    const u = t < 1.6 ? 0 : (t - 1.6) % CYCLE, live = t >= 1.6;
-    const end = u > 15.3;
-    const chars = end ? 0 : Math.floor(CODE_TOTAL * seg(u, 2.3, 6.8)), ticks = end ? 0 : Math.floor(CODE.length * seg(u, 7.25, 8.85) + 0.001);
-    const scan = u > 7.1 && u < 8.95 ? seg(u, 7.1, 8.95) : -1, foot = end ? 0 : (u > 8.95 ? 1 : 0) + (u > 9.9 ? 1 : 0) + (u > 11.5 ? 1 : 0);
-    const flip = ease(seg(u, 12.3, 13.3)) - ease(seg(u, 15.3, 15.95)), served = ease(seg(u, 13.3, 13.9)) * (1 - seg(u, 15.1, 15.5));
-    const act = !live ? -1 : u < 2.25 ? 0 : u < 7.0 ? 1 : u < 9.1 ? 2 : u < 10.6 ? 3 : u < 12.25 ? 5 : u < 15.2 ? 4 : -1;
-    if (flip < 0.5) this.draw(chars, ticks, scan, foot, Math.floor(t * 2.5) % 2 === 0);
-
-    W.position.set(this.home.x, this.home.y + Math.sin(t * 0.7) * 0.1 + p * 4.5, this.home.z);
-    W.scale.setScalar(Math.max(0.001, this.ts * (1 - p * 0.3) * ease(seg(t, 0.25, 1.5))));
-    W.rotation.set(-this.mouse.y * 0.1 + p * 0.5, this.mouse.x * 0.18 + p * 1.1, 0);
-    const P = this.panel;
-    P.rotation.set(Math.sin(t * 0.6) * 0.02 - 0.03, -0.3 + flip * Math.PI + Math.sin(t * 0.45) * 0.035, 0);
-    P.position.set(0, served * 0.12, served * 1.0); P.scale.setScalar(1 + served * 0.07);
-    this.pglow.position.set(0, 0, 2.2); this.pglow.intensity = served * 4;
-    this.ripples.forEach((m, i) => { const on = u > 13.5 && u < 15.3, rr = (u * 0.55 + i / 3) % 1; m.material.opacity = on ? (1 - rr) * 0.4 : 0; m.visible = on; m.scale.setScalar(0.6 + rr * 1.1); });
-    this.tile.rotation.set(-0.1, Math.sin(t * 0.5) * 0.4, 0);
-    this.tile.userData.dots.forEach((d, i) => { if (d.userData.on) d.material.emissiveIntensity = 0.7 + Math.sin(t * 3 + i) * 0.25; });
-    W.updateMatrixWorld(true);
-
-    /* the brief arrives and is read */
-    const bin = ease(seg(u, 0.1, 0.9)), mg = ease(seg(u, 1.75, 2.3)), B = this.brief;
-    B.visible = live && u < 2.32;
-    this._a.set(-5.6, 3.6, 1.6).lerp(this._b.set(-1.75, 1.45, 0.95), bin).lerp(this._b.set(-0.7, 0.3, 0.12), mg);
-    B.position.copy(this._a); B.rotation.set(0, -0.3 + (1 - bin) * 0.9, (1 - bin) * 0.5 - 0.06); B.scale.setScalar(Math.max(0.001, (1 - mg * 0.85) * (0.4 + 0.6 * bin)));
-    B.material.opacity = 1 - seg(u, 2.1, 2.3);
-    const bs = seg(u, 0.9, 1.7); this.bscan.visible = bs > 0 && bs < 1; this.bscan.position.y = 0.55 - bs * 1.1;
-
-    /* who is working, and on what */
-    const tg = this._t; let has = act > -1;
-    if (act === 0) B.getWorldPosition(tg);
-    else if (act === 1) this.at(this.cur ? this.cur[0] : GX, this.cur ? this.cur[1] : LY, tg);
-    else if (act === 2) this.at(CW * (0.3 + 0.4 * Math.abs(Math.sin(t * 2))), LY - LH / 2 + Math.max(0, scan) * LH * CODE.length, tg);
-    else if (act === 3) this.at(CW * 0.5 + Math.sin(t * 2.2) * 300, CH * 0.5 + Math.cos(t * 1.7) * 200, tg);
-    else if (act === 5) this.at(CW * 0.72, CH - 38, tg);
-    else if (act === 4) P.getWorldPosition(tg);
-    const actors = this.agents.concat([this.eng]); let who = null;
-    actors.forEach((a, i) => {
-      const d = a.userData, on = i === act; d.k += ((on ? 1 : 0) - d.k) * 0.09;
-      a.position.copy(d.home).lerp(this._a.set(0, 0, 0.9), d.k * 0.16); a.position.y += Math.sin(t * 1.3 + i * 1.7) * 0.07;
-      a.scale.setScalar(1 + d.k * 0.22);
-      if (i < 5) {
-        d.eyeM.emissiveIntensity = 0.45 + d.k * 0.75 + (on ? Math.sin(t * 9) * 0.15 : 0); d.visM.emissiveIntensity = 0.3 + d.k * 0.6;
-        d.halo.rotation.z = t * (0.4 + d.k * 2.2); d.halo.material.opacity = 0.25 + d.k * 0.55; d.halo.rotation.x = Math.PI / 2 + Math.sin(t * 0.8 + i) * 0.35;
-        if (has && on) d.head.lookAt(tg); else { P.getWorldPosition(this._b); d.head.lookAt(this._b); }
-      } else d.m.emissiveIntensity = 0.1 + d.k * 0.25;
-      if (on) who = a;
-    });
-    W.updateMatrixWorld(true);
-    if (who) who.getWorldPosition(this._a);
-    const ag = who && act !== 5 ? 1 : 0, eg = act === 5 ? 1 : 0;
-    if (who && act !== 5) this.beam.set(this._a, tg, 0.25); this.beam.update(t, ag * intro * (1 - p), 1.4);
-    if (act === 5) this.ebeam.set(this._a, tg, 0.25); this.ebeam.update(t, eg * (1 - p), 1.4);
-    if (who) { this.tile.getWorldPosition(this._b); this.link.set(this._b, this._a, 0.5); } this.link.update(t, (who ? 0.9 : 0) * (1 - p), 0.8);
-    const cs = [seg(u, 0.9, 1.2) * (1 - seg(u, 2.0, 2.25)), seg(u, 2.5, 2.8) * (1 - seg(u, 6.8, 7.0)), seg(u, 8.7, 8.95) * (1 - seg(u, 9.0, 9.15)), seg(u, 9.75, 9.95) * (1 - seg(u, 10.4, 10.6)), seg(u, 13.5, 13.9) * (1 - seg(u, 15.0, 15.3)), seg(u, 11.4, 11.6) * (1 - seg(u, 12.1, 12.3))];
-    const owner = [0, 1, 2, 3, 4, 5];
-    this.caps.forEach((c, i) => { const a = actors[owner[i]]; c.position.copy(a.position); c.position.y += 0.74; c.position.z += 0.2; if (a.position.x > 2) c.position.x -= 0.95; show(c, live ? cs[i] : 0); });
-
-    /* signals from the yard feed the orchestrator */
+    const T = this.tile, s = this.ts * (1 - p * 0.35) * (0.001 + ease(seg(t, 0.3, 1.5)));
+    T.position.set(this.home.x, this.home.y + Math.sin(t * 0.8) * 0.16 + p * 4.5, this.home.z);
+    T.scale.setScalar(s);
+    T.rotation.set(-0.08 - this.mouse.y * 0.22 + p * 0.9, -0.38 + Math.sin(t * 0.4) * 0.14 + this.mouse.x * 0.4 + p * 1.6, Math.sin(t * 0.3) * 0.03);
+    T.userData.dots.forEach((d, i) => { const k = ease(seg(t, 1 + i * 0.08, 1.5 + i * 0.08)); d.scale.setScalar(k * (d.userData.on ? 1 + Math.sin(t * 2 + i) * 0.06 : 1)); });
+    this.glow.position.copy(T.position); this.glow.position.z += 2; this.glow.intensity = 5 * intro * (1 - p);
+    T.updateMatrixWorld();
     this.sig.forEach(q => {
-      this.tile.userData.dots[q.d].getWorldPosition(this._b);
-      q.c.v2.copy(this._b); q.c.v1.copy(q.c.v0).lerp(this._b, 0.55); q.c.v1.y += 4.5;
-      const v = (t * q.s + q.o) % 1; q.m.position.copy(q.c.getPoint(v)); q.m.material.opacity = Math.sin(Math.PI * v) * intro * (1 - p);
-      const pos = q.ln.geometry.attributes.position; for (let i = 0; i <= 30; i++) { const w = q.c.getPoint(i / 30); pos.setXYZ(i, w.x, w.y, w.z); } pos.needsUpdate = true;
-      q.ln.material.opacity = 0.07 * intro * (1 - p);
+      const dot = T.userData.dots[q.d]; dot.getWorldPosition(this.tmpV);
+      q.c.v2.copy(this.tmpV); q.c.v1.copy(q.c.v0).lerp(this.tmpV, 0.55); q.c.v1.y += 4.5;
+      const u = (t * q.s + q.o) % 1; q.m.position.copy(q.c.getPoint(u)); q.m.material.opacity = Math.sin(Math.PI * u) * intro * (1 - p);
+      const pos = q.ln.geometry.attributes.position; for (let i = 0; i <= 30; i++) { const v = q.c.getPoint(i / 30); pos.setXYZ(i, v.x, v.y, v.z); } pos.needsUpdate = true;
+      q.ln.material.opacity = 0.09 * intro * (1 - p);
     });
   }
 }
