@@ -570,7 +570,7 @@ function heroInit(pg){
     tl.from('.h3-kick',{y:20,autoAlpha:0,duration:.8,ease:'power3.out'})
       .add(function(){$('.hero3 h1').classList.add('in')},'<')
       .from('.hero3 .lead,.hero3 .acts,.hero3 .micro,.hero3 .segs',{y:28,autoAlpha:0,duration:.9,ease:'power3.out',stagger:.09},'-=.3')
-      .from('.h3-hud .mini',{x:60,autoAlpha:0,duration:1,ease:'power3.out',stagger:.12},'-=.9')
+      .from('.h3-meta',{autoAlpha:0,duration:.8},'-=.5')
       .from('.h3-scroll',{autoAlpha:0,duration:.8},'-=.4');
     G.to('.h3-in',{yPercent:-14,autoAlpha:0,ease:'none',scrollTrigger:{trigger:hero,start:'top top',end:'bottom 35%',scrub:true}});
   }
@@ -578,8 +578,9 @@ function heroInit(pg){
     if(!S){hero.classList.add('no3d');return}
     var sc=makeScene('hero','Hero',$('#hero-c'));
     if(!sc){hero.classList.add('no3d');return}
-    sc.start();hero.classList.add('is-live');
+    sc.start();hero.classList.add('is-live');window.__heroScene=sc;
     if(!hero._b){hero._b=1;
+      var pb=$('#hero-pause');if(pb)pb.addEventListener('click',function(){sc.paused=!sc.paused;pb.setAttribute('aria-pressed',sc.paused);pb.textContent=sc.paused?'Play animation':'Pause animation'});
       hero.addEventListener('pointermove',function(e){var r=hero.getBoundingClientRect();sc.pointer((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height*2-1))});
     }
     if(anim&&ctx)ctx.add(function(){ST.create({trigger:hero,start:'top top',end:'bottom top',scrub:true,onUpdate:function(s){sc.setScroll(s.progress)}})});
@@ -669,9 +670,9 @@ var seg={
 };
 $$('.sg').forEach(function(b){b.setAttribute('aria-pressed',b.classList.contains('on'));b.addEventListener('click',function(){
   $$('.sg').forEach(function(x){x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b)});
-  var p=$('#seg-p'),t=$('#seg-b span');
-  p.classList.add('sw');t.classList.add('sw');
-  setTimeout(function(){p.textContent=seg[b.dataset.s][0];t.textContent=seg[b.dataset.s][1];p.classList.remove('sw');t.classList.remove('sw')},220);
+  var p=$('#seg-p'),t=$('#seg-b span'),c=seg[b.dataset.s];
+  if(anim){G.to(p,{autoAlpha:0,y:8,duration:.2,ease:'power1.in',overwrite:true,onComplete:function(){p.textContent=c[0];G.to(p,{autoAlpha:1,y:0,duration:.45,ease:'power3.out'})}})}else p.textContent=c[0];
+  t.classList.add('sw');setTimeout(function(){t.textContent=c[1];t.classList.remove('sw')},220);
 })});
 
 /* ---------- typing code demo ---------- */
