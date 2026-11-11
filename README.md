@@ -17,7 +17,9 @@ Static site for brightyard.in, served by Cloudflare Pages. There is no build ste
 
 ## Running locally
 
-Open `index.html` in a browser, or serve the folder:
+**Windows:** double-click `start-local.bat`. It opens http://localhost:8080, and whenever you reload the page it pulls the latest changes from GitHub (needs Git installed and this folder cloned with Git). Keep its window open while you browse.
+
+**Mac or Linux:**
 
 ```bash
 python3 -m http.server 8080
