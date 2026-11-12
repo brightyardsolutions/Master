@@ -338,6 +338,7 @@ if(tpl&&home){
     if(!bp){err.textContent='Something went wrong drawing the blueprint. Please try again.';return}
     if(!bp.project.supported){setS('confused');bsay('off');live.textContent=bp.project.message;return}
     setS('work');bsay('work');
+    if(mob.matches){var pr=plan.getBoundingClientRect();if(pr.top<60||pr.bottom>innerHeight)window.scrollTo({top:pr.top+scrollY-(innerHeight-pr.height)/2,behavior:reduced?'auto':'smooth'})}
     setTimeout(function(){reveal(bp,t)},reduced||!bud?0:1450);
   });
 
@@ -425,7 +426,7 @@ if(tpl&&home){
       '<span class="bh-drag">Drag to rotate</span>';
     bres.classList.add('holo');bres.dataset.view='0';bres.hidden=false;budEl.classList.add('is-holo');
     var panel=$('.bh-panel',bres),tabs=$$('.bh-tabs button',bres),labels={};$$('.bh-l',bres).forEach(function(l){labels[l.dataset.k]=l});
-    widen(true);bud.planFrame(mob.matches?{x:0,y:0.2}:{x:0.1,y:0});bud.showPlan(P);bud.setView(0);setS('present');bsay(null,'Here\'s your blueprint!');
+    widen(true);bud.planFrame(null);bud.showPlan(P);bud.setView(0);setS('present');bsay(null,'Here\'s your blueprint!');
     live.textContent='Blueprint ready: '+R.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks. Use the tabs to explore the timeline, team and next step.';
     function bind(){
       var s=$('#bpsend',panel);if(s)s.onclick=function(){var g=$('#goal');if(g)g.value='Challenge: '+t+'\n\nIndicative blueprint: '+R.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks, '+R.complexity.toLowerCase()+' complexity.';nav('contact');setTimeout(function(){var n=$('#name');if(n)n.focus({preventScroll:true})},1400)};
@@ -449,8 +450,13 @@ if(tpl&&home){
       var o={v:0};G2.to(o,{v:D.minimum_weeks,duration:1.1,delay:1,ease:'power2.out',onUpdate:function(){w.textContent=Math.round(o.v)}})}else w.textContent=D.minimum_weeks;
     /* labels follow the 3D model */
     var sc=$('#budCanvas'),cr=null;
+    var sz={};function vis(k){var c=k.charAt(0),l=labels[k];return c==='s'?(view===1||l.classList.contains('hov')):c==='a'?view===2:c==='r'?(view===1||view===3):(view===0||view===3)}
     (function loop(){if(!holo)return;raf=requestAnimationFrame(loop);var a=bud.anchors();if(!a)return;
-      a.forEach(function(p){var l=labels[p.k];if(l)l.style.transform='translate('+p.x.toFixed(1)+'px,'+p.y.toFixed(1)+'px) translate(-50%,-100%)'})})();
+      var placed=[];
+      a.filter(function(p){return labels[p.k]&&p.z<1}).sort(function(p,q){return (vis(q.k)?1:0)-(vis(p.k)?1:0)||p.x-q.x}).forEach(function(p){
+        var l=labels[p.k];if(!sz[p.k]||!sz[p.k].w)sz[p.k]={w:l.offsetWidth,h:l.offsetHeight};var w=sz[p.k].w,h=sz[p.k].h,x=p.x,y=p.y;
+        if(vis(p.k)){for(var n=0;n<8;n++){var hit=false;for(var i=0;i<placed.length;i++){var r=placed[i];if(x-w/2<r[2]+4&&x+w/2>r[0]-4&&y-h<r[3]+3&&y>r[1]-3){hit=true;y=r[1]-3;break}}if(!hit)break}placed.push([x-w/2,y-h,x+w/2,y])}
+        l.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px) translate(-50%,-100%)'})})();
     /* hover and drag */
     var down=null;
     hv=function(e){

@@ -653,7 +653,11 @@ export class Buddy extends Stage {
     this.chest.forEach((d, i) => { d.material.emissiveIntensity = d.userData.on ? 0.5 + (ch ? Math.sin(t * 20 + i) * 0.5 + 0.6 : 0) : 0; });
     this.glow.intensity = (this.board ? 0.6 : 2.5) + f.glow * (this.board ? 1 : 4); this.glow.position.set(bx, 0.25 + by, bz + 0.9 * bs);
     const V = this.board && this.planOut < 0 ? VIEWS[this.view] : null, k = this.vk || 1, ce = 1 - Math.exp(-dt * 2.6);
-    if (V) { this._v.set(V.t[0] + (V.p[0] - V.t[0]) * k, V.t[1] + (V.p[1] - V.t[1]) * k, V.t[2] + (V.p[2] - V.t[2]) * k); this.cpos.lerp(this._v, ce); this.ctgt.lerp(this._v.set(V.t[0], V.t[1], V.t[2]), ce); }
+    if (V) {
+      const dir = this._dir || (this._dir = new Vector3()); dir.set(V.p[0] - V.t[0], V.p[1] - V.t[1], V.p[2] - V.t[2]).normalize();
+      const vf = this.cam.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * (this.W / this.H)), d = FIT_R / Math.sin(Math.min(vf, hf) / 2) * (V.z || 1);
+      this._v.set(V.t[0], V.t[1], V.t[2]).addScaledVector(dir, d); this.cpos.lerp(this._v, ce); this.ctgt.lerp(this._v.set(V.t[0], V.t[1], V.t[2]), ce);
+    }
     else { this.cpos.lerp(this._v.set(0, 1.95, this.far || 7.4), ce); this.ctgt.lerp(this._v.set(0, 1.55, 0), ce); }
     this.cam.position.copy(this.cpos); this.cam.lookAt(this.ctgt);
     this.updatePlan(t, dt);
@@ -675,11 +679,12 @@ function gridTex() {
   for (let j = 0; j <= 22; j++) { x.strokeStyle = j % 5 ? 'rgba(79,70,229,.08)' : 'rgba(79,70,229,.2)'; x.lineWidth = j % 5 ? 1 : 1.6; x.beginPath(); x.moveTo(0, j * 26.2); x.lineTo(1024, j * 26.2); x.stroke(); }
   const t = new CanvasTexture(c); t.colorSpace = SRGBColorSpace; t.anisotropy = 4; return t;
 }
+const FIT_R = 2.9;
 const VIEWS = [
-  { p: [1.9, 4.6, 9.0], t: [0.3, 0.3, 0] },
-  { p: [-1.5, 3.3, 6.9], t: [0.45, 0.3, 0] },
-  { p: [0.9, 3.1, 6.4], t: [0.2, 0.85, 0] },
-  { p: [5.2, 2.5, 4.9], t: [1.2, 0.5, -0.1] }
+  { p: [1.6, 4.0, 8.0], t: [0.2, 0.45, -0.1], z: 1 },
+  { p: [-1.5, 3.2, 6.9], t: [0.2, 0.4, -0.1], z: 0.93 },
+  { p: [0.5, 2.5, 6.6], t: [0.1, 0.95, 0], z: 0.96 },
+  { p: [4.4, 2.6, 5.4], t: [0.6, 0.45, -0.2], z: 0.93 }
 ];
 Object.assign(Buddy.prototype, {
   showPlan(P) {
@@ -711,7 +716,9 @@ Object.assign(Buddy.prototype, {
       const b = this.blocks[Math.min(a.s, this.blocks.length - 1)], c = pal[k % pal.length];
       const m = new Mesh(new SphereGeometry(0.085, 18, 12), new MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.9 }));
       g.add(m); const ring = new Mesh(new RingGeometry(0.11, 0.13, 32), new MeshBasicMaterial({ color: c, transparent: true, opacity: 0, side: DoubleSide })); ring.rotation.x = -Math.PI / 2; g.add(ring);
-      return { m, ring, b, k, off: (k % 3 - 1) * 0.3, lift: (k % 3) * 0.22, ph: Math.random() * 6 };
+      const tg = new BufferGeometry(); tg.setAttribute('position', new Float32BufferAttribute(new Float32Array(6), 3));
+      const tether = new Line(tg, new LineBasicMaterial({ color: IND, transparent: true, opacity: 0 })); g.add(tether);
+      return { m, ring, tether, b, k, off: (k % 3 - 1) * 0.3, ph: Math.random() * 6 };
     });
     this.beacons = P.risks.map((r, k) => {
       const b = this.blocks[Math.min(r.s, this.blocks.length - 1)], bg = new Group();
@@ -779,10 +786,12 @@ Object.assign(Buddy.prototype, {
     const team = this.view === 2 ? 1 : 0; this._tm = lerp(this._tm || 0, team, 1 - Math.exp(-dt * 4));
     this.aorbs.forEach(o => {
       const k = ease(seg(pt, 1.9 + o.k * 0.12, 2.7 + o.k * 0.12)), b = o.b;
-      const hx = b.x + o.off, hy = b.top.y + 0.32 + this._tm * (0.5 + o.lift) + Math.sin(t * 2 + o.ph) * 0.05, hz = b.z + Math.cos(t + o.ph) * 0.08;
+      const n = this.aorbs.length, rx = n > 1 ? -2.0 + o.k * (3.5 / (n - 1)) : 0, tm = this._tm;
+      const hx = lerp(b.x + o.off, rx, tm), hy = lerp(b.top.y + 0.32, 1.85, tm) + Math.sin(t * 2 + o.ph) * 0.05, hz = lerp(b.z + Math.cos(t + o.ph) * 0.08, 0.45, tm);
+      const tp = o.tether.geometry.attributes.position; tp.setXYZ(0, o.m.position.x, o.m.position.y, o.m.position.z); tp.setXYZ(1, b.x + o.off * 0.5, b.top.y, b.z); tp.needsUpdate = true; o.tether.material.opacity = tm * k * 0.45;
       const sx = 2.25, sy = 1.3, sz = -0.6;
       o.m.position.set(lerp(sx, hx, k), lerp(sy, hy, k) + Math.sin(Math.PI * k) * 0.8, lerp(sz, hz, k));
-      o.m.scale.setScalar(Math.max(0.001, seg(pt, 1.85 + o.k * 0.12, 2.0 + o.k * 0.12) * (1 + this._tm * 0.25)));
+      o.m.scale.setScalar(Math.max(0.001, seg(pt, 1.85 + o.k * 0.12, 2.0 + o.k * 0.12) * (1 + this._tm * 0.35)));
       o.ring.position.set(hx, b.top.y + 0.01, b.z); const rr = (t * 0.7 + o.k * 0.3) % 1; o.ring.material.opacity = k >= 1 ? (1 - rr) * 0.6 : 0; o.ring.scale.setScalar(1 + rr * 1.6);
     });
     this.beacons.forEach((b, i) => {
