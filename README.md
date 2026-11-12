@@ -61,22 +61,29 @@ Share links look like `brightyard.in/#/plan/<code>`. The code holds only the bri
 
 Every form endpoint has a hidden honeypot field, rejects posts from other sites, and limits each network per hour (8 packs, 5 reviews, 6 contact messages). The network is stored only as a salted hash that changes every hour.
 
-## Backend setup (Cloudflare, one time)
+## Backend setup (Cloudflare and Zoho ZeptoMail, one time)
 
 The site still works with no backend: the dialog falls back to the share link, print and email.
 
-1. **Email.** Create a [Resend](https://resend.com) account, verify the `brightyard.in` domain (add the DNS records it shows in Cloudflare DNS), and create an API key.
-2. **Database.** Cloudflare dashboard > Storage & Databases > D1 > Create, name it `brightyard`. Open its Console, paste the contents of `schema.sql` and run it.
-3. **Pages project settings.** Workers & Pages > your BrightYard project > Settings:
+1. **Email sender: Zoho ZeptoMail** (Zoho's service for automated email; separate from your Zoho Mail inbox).
+   - Sign in at zeptomail.zoho.in with your Zoho account.
+   - Mail Agents > Add Mail Agent, name it `BrightYard website`.
+   - In the agent: Domains > Add domain `brightyard.in`. ZeptoMail shows a DKIM record (TXT) and a bounce record (CNAME). Add both in Cloudflare > DNS > Records, with the CNAME set to **DNS only** (grey cloud), then click Verify in ZeptoMail. Leave your existing Zoho Mail MX and SPF records as they are.
+   - In the agent: SMTP/API > API > copy the **Send Mail token**.
+2. **Database.** Cloudflare > Storage & Databases > D1 > Create, name it `brightyard`. In its Console, paste the contents of `schema.sql` and Execute. Check with `SELECT name FROM sqlite_master WHERE type='table';` (you should see leads, events and rate).
+3. **Pages project settings.** Workers & Pages > your BrightYard project > Settings. Do this for **Production** and for **Preview**:
    - Bindings > Add > D1 database: variable name `DB`, database `brightyard`.
-   - Variables and secrets, for Production:
-     - `RESEND_API_KEY`: type **Secret**, your Resend key. Never put it in code or in a plain variable.
-     - `MAIL_FROM`: `BrightYard <blueprints@brightyard.in>`
-     - `TEAM_EMAIL`: the inbox that receives leads, for example `hello@brightyard.in`
+   - Variables and secrets:
+     - `ZEPTOMAIL_TOKEN`: type **Secret**, the Send Mail token. Never put it in code or in a plain variable.
+     - `MAIL_FROM`: `BrightYard <blueprints@brightyard.in>` (any address on the verified domain; it does not need its own mailbox)
+     - `TEAM_EMAIL`: the Zoho Mail inbox that receives leads
      - `SITE_URL`: `https://brightyard.in/`
+     - `ZEPTOMAIL_HOST`: only if your Zoho account is not in India: `api.zeptomail.com` (US) or `api.zeptomail.eu` (EU)
      - `RATE_SALT`: type Secret, any long random text (optional, strengthens the rate-limit hash)
 4. Redeploy (Deployments > the latest > Retry deployment) so the settings take effect.
-5. Test: make a blueprint on the live site, click **Send my blueprint**, and check both inboxes.
+5. Test: make a blueprint, click **Send my blueprint**, and check both inboxes, including spam.
+
+Resend also works: set `RESEND_API_KEY` instead of `ZEPTOMAIL_TOKEN`.
 
 To read leads: D1 > `brightyard` > Console, then run `SELECT * FROM leads ORDER BY created_at DESC LIMIT 50;`. For the funnel, run `SELECT * FROM events ORDER BY day DESC, name;`.
 

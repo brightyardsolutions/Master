@@ -1,8 +1,11 @@
 /* Shared helpers for the BrightYard API (Cloudflare Pages Functions).
    Bindings and settings (Cloudflare dashboard > Pages project > Settings):
      DB              D1 database binding (tables in schema.sql). Optional: without it nothing is stored and there is no rate limit.
-     RESEND_API_KEY  secret, for sending email through Resend. Without it the API answers 503 and the site offers link/print/mailto.
-     MAIL_FROM       e.g. "BrightYard <blueprints@brightyard.in>" (the domain must be verified in Resend)
+     ZEPTOMAIL_TOKEN secret, the Zoho ZeptoMail "Send Mail" token. Without it (or RESEND_API_KEY) the API answers 503
+                     and the site offers link/print/mailto instead.
+     ZEPTOMAIL_HOST  api.zeptomail.in for Zoho India accounts (default); api.zeptomail.com for US, api.zeptomail.eu for EU
+     RESEND_API_KEY  secret, alternative sender if ZeptoMail is not used
+     MAIL_FROM       e.g. "BrightYard <blueprints@brightyard.in>" (the domain must be verified in ZeptoMail)
      TEAM_EMAIL      where lead notices go, e.g. hello@brightyard.in
      SITE_URL        e.g. https://brightyard.in/ (used to build the 3D blueprint link)
      MAIL_LOG        "1" only for local development: log emails instead of sending them */
@@ -80,19 +83,43 @@ export async function saveLead(env, lead) {
 
 export class MailError extends Error { constructor(code) { super(code); this.code = code; } }
 
-/* Sends through the Resend HTTP API. */
+/* "BrightYard <blueprints@brightyard.in>" -> { name, address } */
+function parseFrom(v) {
+  const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(v || '');
+  return m ? { name: m[1].replace(/^"|"$/g, ''), address: m[2] } : { name: 'BrightYard', address: (v || '').trim() };
+}
+
+/* Sends through Zoho ZeptoMail (preferred) or Resend, whichever key is set. */
 export async function sendMail(env, { to, subject, html, text, replyTo }) {
-  if (!env.RESEND_API_KEY) {
-    if (env.MAIL_LOG === '1') { console.log('[mail]', JSON.stringify({ to, subject, text: (text || '').slice(0, 400) })); return { id: 'logged' }; }
-    throw new MailError('not_configured');
+  const reply = replyTo || env.TEAM_EMAIL || '';
+  if (env.ZEPTOMAIL_TOKEN) {
+    const from = parseFrom(env.MAIL_FROM);
+    if (!from.address) throw new MailError('not_configured');
+    const host = env.ZEPTOMAIL_HOST || 'api.zeptomail.in';
+    const url = /^https?:\/\//.test(host) ? host : 'https://' + host + '/v1.1/email';
+    const token = env.ZEPTOMAIL_TOKEN.trim();
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: /^Zoho-enczapikey /i.test(token) ? token : 'Zoho-enczapikey ' + token, 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        from, to: [{ email_address: { address: to } }], subject, htmlbody: html, textbody: text,
+        ...(reply ? { reply_to: [{ address: reply }] } : {}), track_clicks: false, track_opens: false
+      })
+    });
+    if (!r.ok) { console.error('zeptomail', r.status, (await r.text()).slice(0, 300)); throw new MailError('send_failed'); }
+    return r.json();
   }
-  const r = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: env.MAIL_FROM || 'BrightYard <onboarding@resend.dev>', to: [to], subject, html, text, reply_to: replyTo || env.TEAM_EMAIL || undefined })
-  });
-  if (!r.ok) { console.error('resend', r.status, (await r.text()).slice(0, 300)); throw new MailError('send_failed'); }
-  return r.json();
+  if (env.RESEND_API_KEY) {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: env.MAIL_FROM, to: [to], subject, html, text, reply_to: reply || undefined })
+    });
+    if (!r.ok) { console.error('resend', r.status, (await r.text()).slice(0, 300)); throw new MailError('send_failed'); }
+    return r.json();
+  }
+  if (env.MAIL_LOG === '1') { console.log('[mail]', JSON.stringify({ to, subject, text: (text || '').slice(0, 400) })); return { id: 'logged' }; }
+  throw new MailError('not_configured');
 }
 
 /* Wraps body content in a simple, email-safe layout. */
