@@ -17,6 +17,7 @@ Static site for brightyard.in, served by Cloudflare Pages. There is no build ste
 | `assets/js/scenes.js` | **Generated.** The three 3D scenes bundled with three.js. Do not edit by hand |
 | `src/scenes.js` | Source for the 3D scenes (home hero, Allocivo hotel, Xessly page) |
 | `vendor/` | GSAP, ScrollTrigger and Lenis, served locally so the site does not depend on a CDN |
+| `assets/fonts/` | Inter and Instrument Serif, served from this site so visitors' browsers never contact Google (SIL Open Font License, licences included) |
 | `logos/`, `favicon.svg` | BrightYard, Allocivo and Xessly marks |
 
 ## Running locally
