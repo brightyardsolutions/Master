@@ -8,6 +8,7 @@
      MAIL_FROM       e.g. "BrightYard <blueprints@brightyard.in>" (the domain must be verified in ZeptoMail)
      TEAM_EMAIL      where lead notices go, e.g. hello@brightyard.in
      SITE_URL        e.g. https://brightyard.in/ (used to build the 3D blueprint link)
+     LEAD_RETENTION_DAYS  optional, default 365: stored requests older than this are deleted
      MAIL_LOG        "1" only for local development: log emails instead of sending them */
 
 export const json = (data, status = 200, headers = {}) =>
@@ -61,11 +62,12 @@ export async function limited(env, request, bucket, max, windowSec = 3600) {
   const win = Math.floor(Date.now() / 1000 / windowSec);
   const key = bucket + ':' + (await sha256(ip + '|' + win + '|' + (env.RATE_SALT || 'by'))).slice(0, 32);
   try {
-    const row = await env.DB.prepare(
-      'INSERT INTO rate (k, win, n) VALUES (?1, ?2, 1) ON CONFLICT(k, win) DO UPDATE SET n = n + 1 RETURNING n'
-    ).bind(key, win).first();
-    if (Math.random() < 0.02) await env.DB.prepare('DELETE FROM rate WHERE win < ?1').bind(win - 24).run();
-    return row && row.n > max;
+    const [, res] = await env.DB.batch([
+      env.DB.prepare('DELETE FROM rate WHERE win < ?1').bind(win - 24),   /* hashes older than a day are deleted */
+      env.DB.prepare('INSERT INTO rate (k, win, n) VALUES (?1, ?2, 1) ON CONFLICT(k, win) DO UPDATE SET n = n + 1 RETURNING n').bind(key, win)
+    ]);
+    const row = res && res.results && res.results[0];
+    return !!row && row.n > max;
   } catch (e) { console.error('rate', e && e.message); return false; }
 }
 
@@ -77,6 +79,9 @@ export async function saveLead(env, lead) {
       'INSERT INTO leads (id, kind, email, name, company, role, timing, message, brief, start_date, plan_title, weeks, page, parent_id, created_at) VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)'
     ).bind(id, lead.kind, lead.email || '', lead.name || '', lead.company || '', lead.role || '', lead.timing || '', lead.message || '',
       lead.brief || '', lead.start || '', lead.title || '', lead.weeks || '', lead.page || '', lead.parent || '', new Date().toISOString()).run();
+    /* retention: requests are deleted after LEAD_RETENTION_DAYS (default 365), as the privacy policy says */
+    const days = Math.max(30, +env.LEAD_RETENTION_DAYS || 365);
+    await env.DB.prepare('DELETE FROM leads WHERE created_at < ?1').bind(new Date(Date.now() - days * 864e5).toISOString()).run();
     return id;
   } catch (e) { console.error('lead', e && e.message); return ''; }
 }

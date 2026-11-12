@@ -1398,3 +1398,18 @@ html.bpd-open{overflow:hidden}
   html.printing-bp #bp-print a{color:#4F46E5}
   @page{margin:14mm}
 }
+
+/* ---------- privacy page ---------- */
+.pv{max-width:760px}
+.pv-upd{color:var(--mute);font-size:14px;margin:0 0 8px}
+.pv h2{font-size:22px;letter-spacing:-.01em;margin:40px 0 12px}
+.pv p,.pv li{color:var(--ink);font-size:16px;line-height:1.65}
+.pv p{margin:0 0 12px}
+.pv-l{margin:0 0 12px;padding-left:20px;display:grid;gap:6px;list-style:disc}
+.pv-l li::marker{color:var(--ind)}
+.pv-s{padding:64px 0 96px}
+.pv-t{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin:0 0 14px}
+.pv-t table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:560px}
+.pv-t th{text-align:left;font-weight:600;background:var(--mist);padding:12px 14px}
+.pv-t td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top;line-height:1.5}
+.pv-t td:first-child{font-weight:600;width:28%}
