@@ -627,7 +627,7 @@ export class Buddy extends Stage {
     this.arms[0].rotation.z = spring(P, 'aL', aL, dt, 120, 12); this.arms[1].rotation.z = spring(P, 'aR', aR, dt, 120, 12);
     this.arms[0].rotation.x = spring(P, 'aLx', aLx, dt, 120, 12); this.arms[1].rotation.x = spring(P, 'aRx', aRx, dt, 120, 12);
     const R = this.rig, ly = spring(P, 'lift', lift, dt, 140, 13), onB = !!this.board && this.planOut < 0 && st === 'present';
-    const bx = spring(P, 'bx', onB ? 2.2 : 0, dt, 40, 11), by = spring(P, 'by', onB ? 0.1 : 0, dt, 40, 11), bz = spring(P, 'bz', onB ? -0.75 : 0, dt, 40, 11), bs = spring(P, 'bs', onB ? 0.44 : 1, dt, 40, 11), br = spring(P, 'br', onB ? -0.85 : 0, dt, 40, 11);
+    const bx = spring(P, 'bx', onB ? 2.3 : 0, dt, 40, 11), by = spring(P, 'by', onB ? 0.1 : 0, dt, 40, 11), bz = spring(P, 'bz', onB ? 0.55 : 0, dt, 40, 11), bs = spring(P, 'bs', onB ? 0.44 : 1, dt, 40, 11), br = spring(P, 'br', onB ? -0.55 : 0, dt, 40, 11);
     R.position.set(bx, by + (ly + Math.sin(t * 2.1) * 0.03) * bs, bz); R.scale.setScalar(bs); R.rotation.y = spin + br;
     this.shadow.position.set(bx, by + 0.005, bz);
     this.feet.forEach((ft, i) => { ft.position.y = 0.2 - Math.min(ly, 0.6) * 0 + (st === 'idle' ? Math.max(0, Math.sin(t * 2.1 + i * Math.PI)) * 0.02 : 0); });
@@ -654,9 +654,7 @@ export class Buddy extends Stage {
     this.glow.intensity = (this.board ? 0.6 : 2.5) + f.glow * (this.board ? 1 : 4); this.glow.position.set(bx, 0.25 + by, bz + 0.9 * bs);
     const V = this.board && this.planOut < 0 ? VIEWS[this.view] : null, k = this.vk || 1, ce = 1 - Math.exp(-dt * 2.6);
     if (V) {
-      const dir = this._dir || (this._dir = new Vector3()); dir.set(V.p[0] - V.t[0], V.p[1] - V.t[1], V.p[2] - V.t[2]).normalize();
-      const vf = this.cam.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * (this.W / this.H)), d = FIT_R / Math.sin(Math.min(vf, hf) / 2) * (V.z || 1);
-      this._v.set(V.t[0], V.t[1], V.t[2]).addScaledVector(dir, d); this.cpos.lerp(this._v, ce); this.ctgt.lerp(this._v.set(V.t[0], V.t[1], V.t[2]), ce);
+      const F = this.fitCam(this.view); this.cpos.lerp(F.p, ce); this.ctgt.lerp(F.t, ce);
     }
     else { this.cpos.lerp(this._v.set(0, 1.95, this.far || 7.4), ce); this.ctgt.lerp(this._v.set(0, 1.55, 0), ce); }
     this.cam.position.copy(this.cpos); this.cam.lookAt(this.ctgt);
@@ -720,6 +718,7 @@ Object.assign(Buddy.prototype, {
       const tether = new Line(tg, new LineBasicMaterial({ color: IND, transparent: true, opacity: 0 })); g.add(tether);
       return { m, ring, tether, b, k, off: (k % 3 - 1) * 0.3, ph: Math.random() * 6 };
     });
+    this.aorbs.slice().sort((p, q) => (p.b.x + p.off) - (q.b.x + q.off)).forEach((o, i) => { o.slot = i; });
     this.beacons = P.risks.map((r, k) => {
       const b = this.blocks[Math.min(r.s, this.blocks.length - 1)], bg = new Group();
       const cone = new Mesh(new OctahedronGeometry(0.1, 0), new MeshStandardMaterial({ color: AMBER, emissive: AMBER, emissiveIntensity: 1 })); bg.add(cone);
@@ -748,6 +747,34 @@ Object.assign(Buddy.prototype, {
     this.board = null; this.proj = null; this.plan = null;
   },
   setView(i) { this.view = i; this.drag = 0; this.lastActive = this.now(); },
+  fitPts(i) {
+    const P = [], V3 = (x, y, z) => P.push(new Vector3(x, y, z));
+    [-2.62, 2.62].forEach(x => [-1.42, 1.42].forEach(z => V3(x, 0.1, z)));
+    (this.blocks || []).forEach(b => { V3(b.x - b.len / 2, b.top.y + 0.42, b.z); V3(b.x + b.len / 2, b.top.y + 0.2, b.z); });
+    for (let y = 0; y <= 1.7; y += 0.425) [-0.45, 0.45].forEach(dx => [-0.4, 0.4].forEach(dz => V3(2.3 + dx, y, 0.55 + dz)));
+    if (this.flag) { V3(this.flag.position.x, 1.85, this.flag.position.z); V3(this.flag.position.x + 0.5, 1.85, this.flag.position.z); }
+    if (i === 2 && this.aorbs) { const n = this.aorbs.length; for (let k = 0; k < n; k++) { const rx = n > 1 ? -2.0 + k * (3.5 / (n - 1)) : 0; V3(rx - 0.3, 2.55, 0.45); V3(rx + 0.3, 2.55, 0.45); } }
+    return P;
+  },
+  fitCam(i) {
+    const V = VIEWS[i], key = i + '|' + this.W + 'x' + this.H + '|' + (this.aorbs ? this.aorbs.length : 0) + (this.blocks ? this.blocks.length : 0);
+    if (this._fk === key) return this._fit;
+    const cam = this.cam, sp = cam.position.clone(), sq = cam.quaternion.clone(), pts = this.fitPts(i), v = new Vector3();
+    const dir = new Vector3(V.p[0] - V.t[0], V.p[1] - V.t[1], V.p[2] - V.t[2]).normalize(), tgt = new Vector3(V.t[0], V.t[1], V.t[2]);
+    const right = new Vector3(), up = new Vector3(), fov = cam.fov * Math.PI / 180, asp = this.W / this.H;
+    let d = 8;
+    for (let it = 0; it < 6; it++) {
+      cam.position.copy(tgt).addScaledVector(dir, d); cam.lookAt(tgt); cam.updateMatrixWorld();
+      let x0 = 9, x1 = -9, y0 = 9, y1 = -9;
+      pts.forEach(p => { v.copy(p).project(cam); x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y); });
+      const hh = d * Math.tan(fov / 2), hw = hh * asp;
+      right.setFromMatrixColumn(cam.matrixWorld, 0); up.setFromMatrixColumn(cam.matrixWorld, 1);
+      tgt.addScaledVector(right, (x0 + x1) / 2 * hw * 0.9).addScaledVector(up, (y0 + y1) / 2 * hh * 0.9);
+      d *= Math.max((x1 - x0) / 2 / 0.88, (y1 - y0) / 2 / 0.84);
+    }
+    cam.position.copy(sp); cam.quaternion.copy(sq); cam.updateMatrixWorld();
+    this._fit = { p: tgt.clone().addScaledVector(dir, d), t: tgt }; this._fk = key; return this._fit;
+  },
   dragBy(dx) { this.drag = clamp(this.drag + dx * 0.006, -0.9, 0.9); },
   hoverAt(nx, ny) {
     if (!this.board) return -1;
@@ -786,10 +813,10 @@ Object.assign(Buddy.prototype, {
     const team = this.view === 2 ? 1 : 0; this._tm = lerp(this._tm || 0, team, 1 - Math.exp(-dt * 4));
     this.aorbs.forEach(o => {
       const k = ease(seg(pt, 1.9 + o.k * 0.12, 2.7 + o.k * 0.12)), b = o.b;
-      const n = this.aorbs.length, rx = n > 1 ? -2.0 + o.k * (3.5 / (n - 1)) : 0, tm = this._tm;
+      const n = this.aorbs.length, rx = n > 1 ? -2.0 + o.slot * (3.5 / (n - 1)) : 0, tm = this._tm;
       const hx = lerp(b.x + o.off, rx, tm), hy = lerp(b.top.y + 0.32, 1.85, tm) + Math.sin(t * 2 + o.ph) * 0.05, hz = lerp(b.z + Math.cos(t + o.ph) * 0.08, 0.45, tm);
       const tp = o.tether.geometry.attributes.position; tp.setXYZ(0, o.m.position.x, o.m.position.y, o.m.position.z); tp.setXYZ(1, b.x + o.off * 0.5, b.top.y, b.z); tp.needsUpdate = true; o.tether.material.opacity = tm * k * 0.45;
-      const sx = 2.25, sy = 1.3, sz = -0.6;
+      const sx = 2.3, sy = 1.3, sz = 0.55;
       o.m.position.set(lerp(sx, hx, k), lerp(sy, hy, k) + Math.sin(Math.PI * k) * 0.8, lerp(sz, hz, k));
       o.m.scale.setScalar(Math.max(0.001, seg(pt, 1.85 + o.k * 0.12, 2.0 + o.k * 0.12) * (1 + this._tm * 0.35)));
       o.ring.position.set(hx, b.top.y + 0.01, b.z); const rr = (t * 0.7 + o.k * 0.3) % 1; o.ring.material.opacity = k >= 1 ? (1 - rr) * 0.6 : 0; o.ring.scale.setScalar(1 + rr * 1.6);

@@ -1296,7 +1296,7 @@ h1[tabindex="-1"]:focus{outline:none}
 .card.bpplan{--hl:clamp(290px,27%,340px)}
 @media(min-width:941px){
   .bud.is-holo .bud-stage,.bres.holo .bh-labels{left:var(--hl);right:0;top:0;bottom:0}
-  .bres.holo .bh-panel{left:16px;top:64px;bottom:16px;width:calc(var(--hl) - 28px);max-height:none;background:rgba(255,255,255,.86);box-shadow:0 18px 40px -28px rgba(30,27,75,.45)}
+  .bres.holo .bh-panel{left:16px;top:64px;bottom:auto;width:calc(var(--hl) - 28px);max-height:calc(100% - 80px);background:rgba(255,255,255,.86);box-shadow:0 18px 40px -28px rgba(30,27,75,.45)}
   .bres.holo .bh-nav{left:var(--hl);right:16px}
   .bud.is-holo .bud-bub{right:18px}
 }
@@ -1304,3 +1304,5 @@ h1[tabindex="-1"]:focus{outline:none}
   .bud.is-holo .bud-stage,.bres.holo .bh-labels{top:54px;bottom:46%;left:0;right:0}
   .bres.holo .bh-panel{top:auto;bottom:12px;max-height:calc(46% - 22px)}
 }
+.bh-sum{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:940px){.bh-sum{-webkit-line-clamp:2}}
