@@ -298,7 +298,7 @@ if(tpl&&home){
   bsay('idle');
 
   /* look at the pointer anywhere in the section */
-  node.addEventListener('pointermove',function(e){if(!bud||state!=='idle')return;var b=stage.getBoundingClientRect();bud.setPointer(Math.max(-1.3,Math.min(1.3,(e.clientX-(b.left+b.width/2))/(b.width/2))),Math.max(-1.2,Math.min(1.2,(e.clientY-(b.top+b.height*0.35))/(b.height/2))),true)});
+  node.addEventListener('pointermove',function(e){if(!bud)return;if((state==='focus'||state==='confused')&&!ta.value.trim()){setS('idle');bsay('idle')}if(state!=='idle')return;var b=stage.getBoundingClientRect();bud.setPointer(Math.max(-1.3,Math.min(1.3,(e.clientX-(b.left+b.width/2))/(b.width/2))),Math.max(-1.2,Math.min(1.2,(e.clientY-(b.top+b.height*0.35))/(b.height/2))),true)});
   node.addEventListener('pointerleave',function(){if(bud)bud.setPointer(0,0,false)});
   stage.addEventListener('click',function(){if(state==='present')return;if(bud)bud.boop();bsay('boop')});
 
