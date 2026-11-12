@@ -521,7 +521,7 @@ export class Buddy extends Stage {
     this.faceKey = ''; this._v = new Vector3(); this.layout(1, 1);
   }
   layout(w, h) {
-    const a = w / h; this.far = a < 0.75 ? 9.6 : a < 1 ? 8.4 : 7.4; this.vk = a < 0.75 ? 1.6 : a < 1 ? 1.3 : 1;
+    const a = w / h; this.far = a < 0.75 ? 9.6 : a < 1 ? 8.4 : 7.4; this.vk = a < 0.75 ? 1.6 : a < 1 ? 1.3 : a > 1.9 ? 0.74 : a > 1.5 ? 0.86 : 1;
     if (!this.cpos) { this.cpos = new Vector3(0, 1.95, this.far); this.ctgt = new Vector3(0, 1.55, 0); }
   }
   resize() {
@@ -651,7 +651,7 @@ export class Buddy extends Stage {
     this.tipM.emissiveIntensity = 0.45 + this.orbs.reduce((m, o) => Math.max(m, o.flash), 0) * 2 + (st === 'ponder' ? (Math.sin(t * 6) * 0.5 + 0.5) : 0) + f.glow;
     const ch = ago('absorb') < 0.9 || st === 'work';
     this.chest.forEach((d, i) => { d.material.emissiveIntensity = d.userData.on ? 0.5 + (ch ? Math.sin(t * 20 + i) * 0.5 + 0.6 : 0) : 0; });
-    this.glow.intensity = 2.5 + f.glow * 4; this.glow.position.set(bx, 0.25 + by, bz + 0.9 * bs);
+    this.glow.intensity = (this.board ? 0.6 : 2.5) + f.glow * (this.board ? 1 : 4); this.glow.position.set(bx, 0.25 + by, bz + 0.9 * bs);
     const V = this.board && this.planOut < 0 ? VIEWS[this.view] : null, k = this.vk || 1, ce = 1 - Math.exp(-dt * 2.6);
     if (V) { this._v.set(V.t[0] + (V.p[0] - V.t[0]) * k, V.t[1] + (V.p[1] - V.t[1]) * k, V.t[2] + (V.p[2] - V.t[2]) * k); this.cpos.lerp(this._v, ce); this.ctgt.lerp(this._v.set(V.t[0], V.t[1], V.t[2]), ce); }
     else { this.cpos.lerp(this._v.set(0, 1.95, this.far || 7.4), ce); this.ctgt.lerp(this._v.set(0, 1.55, 0), ce); }
@@ -669,9 +669,10 @@ export class Buddy extends Stage {
 const AMBER = 0xF5A524, TL = 3.9, TX0 = -2.35;
 function gridTex() {
   const c = document.createElement('canvas'); c.width = 1024; c.height = 576; const x = c.getContext('2d');
-  x.fillStyle = 'rgba(0,0,0,0)'; x.fillRect(0, 0, 1024, 576);
-  for (let i = 0; i <= 40; i++) { x.strokeStyle = i % 5 ? 'rgba(143,136,255,.22)' : 'rgba(198,244,50,.45)'; x.lineWidth = i % 5 ? 1 : 2; x.beginPath(); x.moveTo(i * 25.6, 0); x.lineTo(i * 25.6, 576); x.stroke(); }
-  for (let j = 0; j <= 22; j++) { x.strokeStyle = j % 5 ? 'rgba(143,136,255,.22)' : 'rgba(198,244,50,.45)'; x.lineWidth = j % 5 ? 1 : 2; x.beginPath(); x.moveTo(0, j * 26.2); x.lineTo(1024, j * 26.2); x.stroke(); }
+  const g = x.createRadialGradient(512, 288, 40, 512, 288, 620); g.addColorStop(0, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 1024, 576);
+  for (let i = 0; i <= 40; i++) { x.strokeStyle = i % 5 ? 'rgba(79,70,229,.08)' : 'rgba(79,70,229,.2)'; x.lineWidth = i % 5 ? 1 : 1.6; x.beginPath(); x.moveTo(i * 25.6, 0); x.lineTo(i * 25.6, 576); x.stroke(); }
+  for (let j = 0; j <= 22; j++) { x.strokeStyle = j % 5 ? 'rgba(79,70,229,.08)' : 'rgba(79,70,229,.2)'; x.lineWidth = j % 5 ? 1 : 1.6; x.beginPath(); x.moveTo(0, j * 26.2); x.lineTo(1024, j * 26.2); x.stroke(); }
   const t = new CanvasTexture(c); t.colorSpace = SRGBColorSpace; t.anisotropy = 4; return t;
 }
 const VIEWS = [
@@ -684,16 +685,16 @@ Object.assign(Buddy.prototype, {
   showPlan(P) {
     this.hidePlan(true);
     const g = this.board = new Group(); this.scene.add(g); this.plan = P; this.planT = this.now(); this.view = 0; this.drag = 0; this.planOut = -1; this.hover = -1;
-    const top = new Mesh(new RoundedBoxGeometry(5.2, 0.1, 2.8, 3, 0.05), new MeshPhysicalMaterial({ color: 0x15123F, roughness: 0.22, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.15 }));
+    const top = new Mesh(new RoundedBoxGeometry(5.2, 0.1, 2.8, 3, 0.05), new MeshPhysicalMaterial({ color: 0xF1EFFF, roughness: 0.38, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.3 }));
     top.position.y = 0.05; g.add(top);
-    const rim = new Mesh(new RoundedBoxGeometry(5.34, 0.05, 2.94, 3, 0.025), new MeshBasicMaterial({ color: 0x8F88FF })); rim.position.y = 0.02; g.add(rim);
+    const rim = new Mesh(new RoundedBoxGeometry(5.34, 0.05, 2.94, 3, 0.025), new MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.5 })); rim.position.y = 0.02; g.add(rim);
     const grid = new Mesh(new PlaneGeometry(5.0, 2.6), new MeshBasicMaterial({ map: gridTex(), transparent: true, depthWrite: false }));
     grid.rotation.x = -Math.PI / 2; grid.position.y = 0.102; g.add(grid); this.grid = grid;
     this.blocks = P.stages.map((s, i) => {
       const len = Math.max(0.28, (s.b - s.a) / P.W * TL), x = TX0 + s.a / P.W * TL + len / 2, z = 0.72 - i * 0.29, h = 0.12 + s.e * 0.55;
-      const col = s.kind === 'build' ? LIME : s.kind === 'run' ? MINT : s.kind === 'ship' ? 0xB8B3FF : IND;
+      const col = s.kind === 'build' ? 0xD8F27A : s.kind === 'run' ? 0xBDEFDC : s.kind === 'ship' ? 0xCFCBFF : 0x9C95F7;
       const pv = new Group(); pv.position.set(x, 0.1, z); g.add(pv);
-      const m = new Mesh(new RoundedBoxGeometry(len, 1, 0.42, 2, 0.04), new MeshPhysicalMaterial({ color: col, emissive: col, emissiveIntensity: 0.22, roughness: 0.28, clearcoat: 0.8, transparent: true, opacity: 0.9 }));
+      const m = new Mesh(new RoundedBoxGeometry(len, 1, 0.42, 2, 0.04), new MeshPhysicalMaterial({ color: col, emissive: col, emissiveIntensity: 0.12, roughness: 0.35, clearcoat: 0.7, transparent: true, opacity: 0.94 }));
       m.position.y = 0.5; pv.add(m);
       const ed = new LineSegments(new EdgesGeometry(new BoxGeometry(len, 1, 0.42)), new LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 }));
       ed.position.y = 0.5; pv.add(ed);
@@ -702,7 +703,7 @@ Object.assign(Buddy.prototype, {
     });
     this.path = [];
     for (let i = 0; i < this.blocks.length - 1; i++) {
-      const a = this.blocks[i], b = this.blocks[i + 1], bm = new Beam(g, LIME, 2);
+      const a = this.blocks[i], b = this.blocks[i + 1], bm = new Beam(g, IND, 2);
       bm.set(a.top.clone().setY(a.top.y + 0.04), b.top.clone().setY(b.top.y + 0.04), 0.35); this.path.push(bm);
     }
     const pal = [LIME, 0x8F88FF, MINT, 0xFFFFFF, 0xF6C453, 0xFF8FB1];
@@ -727,8 +728,8 @@ Object.assign(Buddy.prototype, {
     const N = this.low ? 70 : 140, pp = new Float32Array(N * 3), pr = [];
     for (let i = 0; i < N; i++) { pr.push([(Math.random() - 0.5) * 5, Math.random(), (Math.random() - 0.5) * 2.6, 0.2 + Math.random() * 0.5]); }
     const pg = new BufferGeometry(); pg.setAttribute('position', new BufferAttribute(pp, 3));
-    this.parts = new Points(pg, new PointsMaterial({ color: LIME, size: 0.035, transparent: true, opacity: 0.7, depthWrite: false })); this.partsR = pr; g.add(this.parts);
-    const beam = this.proj = new Mesh(new CylinderGeometry(0.02, 1.15, 1, 40, 1, true), new MeshBasicMaterial({ color: LIME, transparent: true, opacity: 0, side: DoubleSide, depthWrite: false, blending: AdditiveBlending }));
+    this.parts = new Points(pg, new PointsMaterial({ color: 0x8F88FF, size: 0.03, transparent: true, opacity: 0.6, depthWrite: false })); this.partsR = pr; g.add(this.parts);
+    const beam = this.proj = new Mesh(new CylinderGeometry(0.02, 1.15, 1, 40, 1, true), new MeshBasicMaterial({ color: 0xB8B3FF, transparent: true, opacity: 0, side: DoubleSide, depthWrite: false }));
     this.scene.add(beam);
     g.scale.setScalar(0.001);
   },
@@ -766,13 +767,13 @@ Object.assign(Buddy.prototype, {
     const sIn = ease(seg(pt, 0.15, 0.95));
     g.scale.setScalar(Math.max(0.001, (sIn + Math.sin(Math.PI * seg(pt, 0.15, 0.95)) * 0.06) * (1 - ease(out))));
     g.rotation.y = lerp(g.rotation.y, this.drag + Math.sin(t * 0.25) * 0.03, 1 - Math.exp(-dt * 5));
-    this.grid.material.opacity = 0.75 + Math.sin(t * 1.4) * 0.2;
+    this.grid.material.opacity = 0.9 + Math.sin(t * 1.2) * 0.1;
     this.blocks.forEach((b, i) => {
       const k = ease(seg(pt, 0.7 + i * 0.16, 1.25 + i * 0.16)), hv = this.hover === i ? 1 : 0;
       b.pv.scale.y = Math.max(0.001, k * b.h * (1 + Math.sin(Math.PI * seg(pt, 0.7 + i * 0.16, 1.25 + i * 0.16)) * 0.15));
       b.pv.position.y = 0.1 + hv * 0.06;
-      b.m.material.emissiveIntensity = 0.2 + hv * 0.45 + (this.view === 1 ? Math.max(0, Math.sin(t * 2 - i * 0.6)) * 0.25 : 0);
-      b.pv.userData.ed.material.opacity = 0.35 + hv * 0.6;
+      b.m.material.emissiveIntensity = 0.1 + hv * 0.3 + (this.view === 1 ? Math.max(0, Math.sin(t * 2 - i * 0.6)) * 0.15 : 0);
+      b.pv.userData.ed.material.opacity = 0.7 + hv * 0.3;
     });
     this.path.forEach((bm, i) => bm.update(t, seg(pt, 1.6 + i * 0.1, 2.0 + i * 0.1) * (1 - out), 0.6));
     const team = this.view === 2 ? 1 : 0; this._tm = lerp(this._tm || 0, team, 1 - Math.exp(-dt * 4));
@@ -795,13 +796,13 @@ Object.assign(Buddy.prototype, {
     const rr = (t * 0.6) % 1; this.pad.material.opacity = (1 - rr) * 0.8; this.pad.scale.setScalar(1 + rr * 2.2);
     const pa = this.parts.geometry.attributes.position;
     this.partsR.forEach((p, i) => { const y = (p[1] + t * p[3] * 0.25) % 1; pa.setXYZ(i, p[0], 0.12 + y * 1.6, p[2]); });
-    pa.needsUpdate = true; this.parts.material.opacity = 0.55 * sIn * (1 - out);
+    pa.needsUpdate = true; this.parts.material.opacity = 0.45 * sIn * (1 - out);
     const pb = Math.sin(Math.PI * seg(pt, 0, 1.6)) * (1 - out);
     if (this.proj) {
       this.head.getWorldPosition(this._v); const hy = this._v.y + 0.5, h = Math.max(0.1, hy - 0.12);
       const hd = this._v.clone(); hd.y += 0.5; const tg = new Vector3(0, 0.12, 0); this.board.localToWorld(tg);
       const dir = hd.clone().sub(tg), len = dir.length(); this.proj.position.copy(tg).addScaledVector(dir, 0.5); this.proj.scale.set(1, len, 1);
-      this.proj.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), dir.normalize()); this.proj.material.opacity = pb * 0.11; this.proj.visible = pb > 0.01;
+      this.proj.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), dir.normalize()); this.proj.material.opacity = pb * 0.16; this.proj.visible = pb > 0.01;
     }
   }
 });

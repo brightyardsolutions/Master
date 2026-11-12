@@ -405,6 +405,13 @@ if(tpl&&home){
       '<span class="bh-k">Next step</span><h3 class="bh-t">Watch-outs</h3><ul class="bh-rk">'+P.risks.map(function(r){return '<li>'+bpesc(r.text)+'</li>'}).join('')+'</ul>'+(R.related_product?'<p class="bh-n">Related: <a class="ul-link" href="#/'+R.related_product.toLowerCase()+'">'+bpesc(R.related_product)+'</a></p>':'')+'<div class="bc-cta"><button class="btn pri" id="bpsend" type="button"><span>Send this plan</span><span class="arrow">&rarr;</span></button><button class="btn out" id="bpreset" type="button">Start over</button></div>'
     ];
   }
+  function widen(on){
+    var grid=plan.parentNode,card=grid.firstElementChild;if(mob.matches||grid.classList.contains('is-wide')===on)return;
+    var r0=plan.getBoundingClientRect();
+    var flip=function(){var r1=plan.getBoundingClientRect();if(G2&&anim)G2.fromTo(plan,{x:r0.left-r1.left,width:r0.width},{x:0,width:r1.width,duration:.8,ease:'power3.inOut',clearProps:'width,transform'})};
+    if(on){if(G2&&anim)G2.to(card,{autoAlpha:0,x:-40,duration:.3,ease:'power2.in',onComplete:function(){grid.classList.add('is-wide');flip()}});else grid.classList.add('is-wide')}
+    else{grid.classList.remove('is-wide');flip();if(G2&&anim)G2.fromTo(card,{autoAlpha:0,x:-40},{autoAlpha:1,x:0,duration:.55,delay:.35,ease:'power3.out',clearProps:'opacity,visibility,transform'});else{card.style.opacity='';card.style.visibility=''}}
+  }
   function revealHolo(bp,t){
     var P=planFromBp(bp),R=bp.project,D=R.estimated_duration,panels=holoPanels(bp,P,t),view=0;
     holo={P:P};
@@ -412,13 +419,13 @@ if(tpl&&home){
     P.agents.forEach(function(a,i){lab+='<span class="bh-l bh-a" data-k="a'+i+'">'+bpesc(a.name)+'</span>'});
     P.risks.forEach(function(r,i){lab+='<span class="bh-l bh-r" data-k="r'+i+'">!</span>'});
     lab+='<span class="bh-l bh-f" data-k="f">Live &middot; week '+D.minimum_weeks+'</span>';
-    bres.innerHTML='<div class="bh-labels" aria-hidden="true">'+lab+'</div><span class="tag bh-tag">Your blueprint</span>'+
+    bres.innerHTML='<div class="bh-labels" aria-hidden="true">'+lab+'</div><div class="bh-top"><span class="tag bh-tag">Your blueprint</span><button type="button" class="bh-edit">&larr; Edit brief</button></div>'+
       '<div class="bh-panel" tabindex="-1">'+panels[0]+'</div>'+
       '<div class="bh-nav"><button type="button" class="bres-a" data-d="-1" aria-label="Previous view">&#8592;</button><div class="bh-tabs" role="tablist">'+CH.map(function(c,i){return '<button type="button" role="tab" aria-selected="'+(i?'false':'true')+'">'+c+'</button>'}).join('')+'</div><button type="button" class="bres-a" data-d="1" aria-label="Next view">&#8594;</button></div>'+
       '<span class="bh-drag">Drag to rotate</span>';
     bres.classList.add('holo');bres.dataset.view='0';bres.hidden=false;budEl.classList.add('is-holo');
     var panel=$('.bh-panel',bres),tabs=$$('.bh-tabs button',bres),labels={};$$('.bh-l',bres).forEach(function(l){labels[l.dataset.k]=l});
-    bud.planFrame(mob.matches?{x:0,y:0.2}:{x:0.17,y:0});bud.showPlan(P);bud.setView(0);setS('present');bsay(null,'Here\'s your blueprint!');
+    widen(true);bud.planFrame(mob.matches?{x:0,y:0.2}:{x:0.1,y:0});bud.showPlan(P);bud.setView(0);setS('present');bsay(null,'Here\'s your blueprint!');
     live.textContent='Blueprint ready: '+R.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks. Use the tabs to explore the timeline, team and next step.';
     function bind(){
       var s=$('#bpsend',panel);if(s)s.onclick=function(){var g=$('#goal');if(g)g.value='Challenge: '+t+'\n\nIndicative blueprint: '+R.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks, '+R.complexity.toLowerCase()+' complexity.';nav('contact');setTimeout(function(){var n=$('#name');if(n)n.focus({preventScroll:true})},1400)};
@@ -432,6 +439,7 @@ if(tpl&&home){
       bsay(null,['Here\'s the big picture.','Follow the path, left to right.','Meet the team!','Ready when you are.'][i]);
     }
     $$('.bres-a',bres).forEach(function(b){b.onclick=function(){go(view+(+b.dataset.d))}});
+    $('.bh-edit',bres).onclick=function(){reset(true);setTimeout(function(){ta.focus()},anim?950:0)};
     tabs.forEach(function(b,i){b.onclick=function(){go(i)}});
     holo.key=function(e){if(!holo||e.target.closest('input,textarea,select'))return;if(e.key==='ArrowRight'){go(view+1);e.preventDefault()}if(e.key==='ArrowLeft'){go(view-1);e.preventDefault()}};
     node.addEventListener('keydown',holo.key);
@@ -457,7 +465,7 @@ if(tpl&&home){
   }
   function hideHolo(){
     if(!holo)return;cancelAnimationFrame(raf);if(holo.key)node.removeEventListener('keydown',holo.key);holo=null;var sc=$('#budCanvas');if(hv)sc.removeEventListener('pointermove',hv);sc.onpointerdown=sc.onpointerup=sc.onpointercancel=null;sc.style.cursor='';
-    if(bud){bud.hidePlan();bud.planFrame(null)}bres.classList.remove('holo');budEl.classList.remove('is-holo');
+    if(bud){bud.hidePlan();bud.planFrame(null)}bres.classList.remove('holo');budEl.classList.remove('is-holo');widen(false);
   }
   function reveal(bp,t){
     if(bud){revealHolo(bp,t);return}
