@@ -4,7 +4,7 @@ import {
   BufferGeometry, BufferAttribute, Float32BufferAttribute, SphereGeometry, BoxGeometry, PlaneGeometry,
   TorusGeometry, RingGeometry, CapsuleGeometry, CylinderGeometry, InstancedMesh, Object3D,
   ShaderMaterial, MeshStandardMaterial, MeshPhysicalMaterial, MeshBasicMaterial, LineBasicMaterial, SpriteMaterial,
-  CanvasTexture, AmbientLight, DirectionalLight, PointLight, Vector2, Vector3, Raycaster, Plane,
+  CanvasTexture, EdgesGeometry, LineSegments, OctahedronGeometry, PointsMaterial, AmbientLight, DirectionalLight, PointLight, Vector2, Vector3, Raycaster, Plane,
   QuadraticBezierCurve3, DoubleSide, AdditiveBlending, SRGBColorSpace, ACESFilmicToneMapping, MathUtils, LinearFilter
 } from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
@@ -521,8 +521,13 @@ export class Buddy extends Stage {
     this.faceKey = ''; this._v = new Vector3(); this.layout(1, 1);
   }
   layout(w, h) {
-    const a = w / h, far = a < 0.75 ? 9.6 : a < 1 ? 8.4 : 7.4;
-    this.cam.position.set(0, 1.95, far); this.cam.lookAt(0, 1.55, 0);
+    const a = w / h; this.far = a < 0.75 ? 9.6 : a < 1 ? 8.4 : 7.4; this.vk = a < 0.75 ? 1.6 : a < 1 ? 1.3 : 1;
+    if (!this.cpos) { this.cpos = new Vector3(0, 1.95, this.far); this.ctgt = new Vector3(0, 1.55, 0); }
+  }
+  resize() {
+    super.resize(); const o = this.frameOff;
+    if (o && (o.x || o.y)) this.cam.setViewOffset(this.W, this.H, -this.W * o.x, this.H * o.y, this.W, this.H); else this.cam.clearViewOffset();
+    this.cam.updateProjectionMatrix();
   }
   now() { return this.time || 0; }
   setState(s) { if (s !== this.state) { this.state = s; this.since = this.now(); } this.lastActive = this.now(); }
@@ -589,7 +594,7 @@ export class Buddy extends Stage {
       spin = ease(seg(el, 0.15, 1.05)) * Math.PI * 2; lift = Math.sin(Math.PI * seg(el, 0.05, 0.75)) * 0.55;
       aL = 1.2; aR = -1.2; f.eye = el < 1.1 ? 'spin' : 'happy'; f.mouth = 'grin'; f.glow = 1;
     } else if (st === 'present') {
-      yaw = -0.5 + Math.sin(t * 0.6) * 0.05; pitch = 0.06; roll = -0.06;
+      yaw = 0.25 + Math.sin(t * 0.6) * 0.08; pitch = 0.12; roll = -0.06;
       aR = -0.35; aL = 1.55 + Math.sin(t * 3) * 0.08; aLx = -0.35; f.eye = 'happy'; f.mouth = 'grin';
     } else if (st === 'confused') {
       roll = Math.sin(el * 3) * 0.16; yaw = Math.sin(el * 1.7) * 0.2;
@@ -621,10 +626,12 @@ export class Buddy extends Stage {
     this.body.scale.set(1 - sq, 1 + sq, 1 - sq);
     this.arms[0].rotation.z = spring(P, 'aL', aL, dt, 120, 12); this.arms[1].rotation.z = spring(P, 'aR', aR, dt, 120, 12);
     this.arms[0].rotation.x = spring(P, 'aLx', aLx, dt, 120, 12); this.arms[1].rotation.x = spring(P, 'aRx', aRx, dt, 120, 12);
-    const R = this.rig, ly = spring(P, 'lift', lift, dt, 140, 13);
-    R.position.y = ly + Math.sin(t * 2.1) * 0.03; R.rotation.y = spin;
+    const R = this.rig, ly = spring(P, 'lift', lift, dt, 140, 13), onB = !!this.board && this.planOut < 0 && st === 'present';
+    const bx = spring(P, 'bx', onB ? 2.2 : 0, dt, 40, 11), by = spring(P, 'by', onB ? 0.1 : 0, dt, 40, 11), bz = spring(P, 'bz', onB ? -0.75 : 0, dt, 40, 11), bs = spring(P, 'bs', onB ? 0.44 : 1, dt, 40, 11), br = spring(P, 'br', onB ? -0.85 : 0, dt, 40, 11);
+    R.position.set(bx, by + (ly + Math.sin(t * 2.1) * 0.03) * bs, bz); R.scale.setScalar(bs); R.rotation.y = spin + br;
+    this.shadow.position.set(bx, by + 0.005, bz);
     this.feet.forEach((ft, i) => { ft.position.y = 0.2 - Math.min(ly, 0.6) * 0 + (st === 'idle' ? Math.max(0, Math.sin(t * 2.1 + i * Math.PI)) * 0.02 : 0); });
-    this.shadow.scale.setScalar(1 - Math.min(0.45, ly * 0.6)); this.shadow.material.opacity = 1 - Math.min(0.6, ly);
+    this.shadow.scale.setScalar((1 - Math.min(0.45, ly * 0.6)) * bs); this.shadow.material.opacity = 1 - Math.min(0.6, ly);
     const av = (P.v.yaw || 0) + (P.v.roll || 0);
     this.ant.rotation.z = spring(P, 'ant', -av * 0.08 - roll * 0.6 + Math.sin(t * 3) * 0.04, dt, 50, 4);
     this.ant.rotation.x = spring(P, 'antx', (P.v.pitch || 0) * 0.05 + nod, dt, 50, 4);
@@ -644,7 +651,157 @@ export class Buddy extends Stage {
     this.tipM.emissiveIntensity = 0.45 + this.orbs.reduce((m, o) => Math.max(m, o.flash), 0) * 2 + (st === 'ponder' ? (Math.sin(t * 6) * 0.5 + 0.5) : 0) + f.glow;
     const ch = ago('absorb') < 0.9 || st === 'work';
     this.chest.forEach((d, i) => { d.material.emissiveIntensity = d.userData.on ? 0.5 + (ch ? Math.sin(t * 20 + i) * 0.5 + 0.6 : 0) : 0; });
-    this.glow.intensity = 2.5 + f.glow * 4;
+    this.glow.intensity = 2.5 + f.glow * 4; this.glow.position.set(bx, 0.25 + by, bz + 0.9 * bs);
+    const V = this.board && this.planOut < 0 ? VIEWS[this.view] : null, k = this.vk || 1, ce = 1 - Math.exp(-dt * 2.6);
+    if (V) { this._v.set(V.t[0] + (V.p[0] - V.t[0]) * k, V.t[1] + (V.p[1] - V.t[1]) * k, V.t[2] + (V.p[2] - V.t[2]) * k); this.cpos.lerp(this._v, ce); this.ctgt.lerp(this._v.set(V.t[0], V.t[1], V.t[2]), ce); }
+    else { this.cpos.lerp(this._v.set(0, 1.95, this.far || 7.4), ce); this.ctgt.lerp(this._v.set(0, 1.55, 0), ce); }
+    this.cam.position.copy(this.cpos); this.cam.lookAt(this.ctgt);
+    this.updatePlan(t, dt);
     this.drawFace(f);
   }
 }
+
+/* ====================================================================== */
+/* HOLOGRAPHIC BLUEPRINT TABLE: Yardie projects the plan as a 3D model.   */
+/* Stages are blocks (length = weeks, height = effort), agents are orbs,  */
+/* risks are beacons, launch is a flag. Four camera views tour the model. */
+/* ====================================================================== */
+const AMBER = 0xF5A524, TL = 3.9, TX0 = -2.35;
+function gridTex() {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 576; const x = c.getContext('2d');
+  x.fillStyle = 'rgba(0,0,0,0)'; x.fillRect(0, 0, 1024, 576);
+  for (let i = 0; i <= 40; i++) { x.strokeStyle = i % 5 ? 'rgba(143,136,255,.22)' : 'rgba(198,244,50,.45)'; x.lineWidth = i % 5 ? 1 : 2; x.beginPath(); x.moveTo(i * 25.6, 0); x.lineTo(i * 25.6, 576); x.stroke(); }
+  for (let j = 0; j <= 22; j++) { x.strokeStyle = j % 5 ? 'rgba(143,136,255,.22)' : 'rgba(198,244,50,.45)'; x.lineWidth = j % 5 ? 1 : 2; x.beginPath(); x.moveTo(0, j * 26.2); x.lineTo(1024, j * 26.2); x.stroke(); }
+  const t = new CanvasTexture(c); t.colorSpace = SRGBColorSpace; t.anisotropy = 4; return t;
+}
+const VIEWS = [
+  { p: [1.9, 4.6, 9.0], t: [0.3, 0.3, 0] },
+  { p: [-1.5, 3.3, 6.9], t: [0.45, 0.3, 0] },
+  { p: [0.9, 3.1, 6.4], t: [0.2, 0.85, 0] },
+  { p: [5.2, 2.5, 4.9], t: [1.2, 0.5, -0.1] }
+];
+Object.assign(Buddy.prototype, {
+  showPlan(P) {
+    this.hidePlan(true);
+    const g = this.board = new Group(); this.scene.add(g); this.plan = P; this.planT = this.now(); this.view = 0; this.drag = 0; this.planOut = -1; this.hover = -1;
+    const top = new Mesh(new RoundedBoxGeometry(5.2, 0.1, 2.8, 3, 0.05), new MeshPhysicalMaterial({ color: 0x15123F, roughness: 0.22, metalness: 0.35, clearcoat: 1, clearcoatRoughness: 0.15 }));
+    top.position.y = 0.05; g.add(top);
+    const rim = new Mesh(new RoundedBoxGeometry(5.34, 0.05, 2.94, 3, 0.025), new MeshBasicMaterial({ color: 0x8F88FF })); rim.position.y = 0.02; g.add(rim);
+    const grid = new Mesh(new PlaneGeometry(5.0, 2.6), new MeshBasicMaterial({ map: gridTex(), transparent: true, depthWrite: false }));
+    grid.rotation.x = -Math.PI / 2; grid.position.y = 0.102; g.add(grid); this.grid = grid;
+    this.blocks = P.stages.map((s, i) => {
+      const len = Math.max(0.28, (s.b - s.a) / P.W * TL), x = TX0 + s.a / P.W * TL + len / 2, z = 0.72 - i * 0.29, h = 0.12 + s.e * 0.55;
+      const col = s.kind === 'build' ? LIME : s.kind === 'run' ? MINT : s.kind === 'ship' ? 0xB8B3FF : IND;
+      const pv = new Group(); pv.position.set(x, 0.1, z); g.add(pv);
+      const m = new Mesh(new RoundedBoxGeometry(len, 1, 0.42, 2, 0.04), new MeshPhysicalMaterial({ color: col, emissive: col, emissiveIntensity: 0.22, roughness: 0.28, clearcoat: 0.8, transparent: true, opacity: 0.9 }));
+      m.position.y = 0.5; pv.add(m);
+      const ed = new LineSegments(new EdgesGeometry(new BoxGeometry(len, 1, 0.42)), new LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 }));
+      ed.position.y = 0.5; pv.add(ed);
+      pv.scale.y = 0.001; pv.userData = { m, ed, h, i };
+      return { pv, m, h, len, x, z, top: new Vector3(x, 0.1 + h, z), col };
+    });
+    this.path = [];
+    for (let i = 0; i < this.blocks.length - 1; i++) {
+      const a = this.blocks[i], b = this.blocks[i + 1], bm = new Beam(g, LIME, 2);
+      bm.set(a.top.clone().setY(a.top.y + 0.04), b.top.clone().setY(b.top.y + 0.04), 0.35); this.path.push(bm);
+    }
+    const pal = [LIME, 0x8F88FF, MINT, 0xFFFFFF, 0xF6C453, 0xFF8FB1];
+    this.aorbs = P.agents.map((a, k) => {
+      const b = this.blocks[Math.min(a.s, this.blocks.length - 1)], c = pal[k % pal.length];
+      const m = new Mesh(new SphereGeometry(0.085, 18, 12), new MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.9 }));
+      g.add(m); const ring = new Mesh(new RingGeometry(0.11, 0.13, 32), new MeshBasicMaterial({ color: c, transparent: true, opacity: 0, side: DoubleSide })); ring.rotation.x = -Math.PI / 2; g.add(ring);
+      return { m, ring, b, k, off: (k % 3 - 1) * 0.3, lift: (k % 3) * 0.22, ph: Math.random() * 6 };
+    });
+    this.beacons = P.risks.map((r, k) => {
+      const b = this.blocks[Math.min(r.s, this.blocks.length - 1)], bg = new Group();
+      const cone = new Mesh(new OctahedronGeometry(0.1, 0), new MeshStandardMaterial({ color: AMBER, emissive: AMBER, emissiveIntensity: 1 })); bg.add(cone);
+      const ring = new Mesh(new RingGeometry(0.14, 0.17, 32), new MeshBasicMaterial({ color: AMBER, transparent: true, side: DoubleSide })); ring.rotation.x = -Math.PI / 2; ring.position.y = -0.12; bg.add(ring);
+      bg.position.copy(b.top); bg.position.x += b.len * 0.3 * (k ? -1 : 1); bg.position.y += 0.3; bg.scale.setScalar(0.001); g.add(bg); return { g: bg, cone, ring, b };
+    });
+    const last = this.blocks[this.blocks.length - 1], fx = TX0 + TL + 0.3, fz = last.z;
+    const flag = this.flag = new Group(); flag.position.set(fx, 0.1, fz); g.add(flag);
+    const pole = new Mesh(new CylinderGeometry(0.018, 0.018, 1.1, 8), new MeshStandardMaterial({ color: 0xF8F7FF })); pole.position.y = 0.55; flag.add(pole);
+    const cloth = new Mesh(new PlaneGeometry(0.46, 0.28, 8, 2), new MeshStandardMaterial({ color: LIME, emissive: LIME, emissiveIntensity: 0.35, side: DoubleSide })); cloth.position.set(0.24, 0.95, 0); flag.add(cloth); this.cloth = cloth;
+    const pad = new Mesh(new RingGeometry(0.14, 0.2, 36), new MeshBasicMaterial({ color: LIME, transparent: true, side: DoubleSide })); pad.rotation.x = -Math.PI / 2; pad.position.y = 0.01; flag.add(pad); this.pad = pad;
+    flag.scale.setScalar(0.001);
+    const N = this.low ? 70 : 140, pp = new Float32Array(N * 3), pr = [];
+    for (let i = 0; i < N; i++) { pr.push([(Math.random() - 0.5) * 5, Math.random(), (Math.random() - 0.5) * 2.6, 0.2 + Math.random() * 0.5]); }
+    const pg = new BufferGeometry(); pg.setAttribute('position', new BufferAttribute(pp, 3));
+    this.parts = new Points(pg, new PointsMaterial({ color: LIME, size: 0.035, transparent: true, opacity: 0.7, depthWrite: false })); this.partsR = pr; g.add(this.parts);
+    const beam = this.proj = new Mesh(new CylinderGeometry(0.02, 1.15, 1, 40, 1, true), new MeshBasicMaterial({ color: LIME, transparent: true, opacity: 0, side: DoubleSide, depthWrite: false, blending: AdditiveBlending }));
+    this.scene.add(beam);
+    g.scale.setScalar(0.001);
+  },
+  hidePlan(now) {
+    if (!this.board) return;
+    if (!now) { this.planOut = this.now(); return; }
+    const g = this.board; this.scene.remove(g); if (this.proj) this.scene.remove(this.proj);
+    [g, this.proj].forEach(o => o && o.traverse(n => { if (n.geometry) n.geometry.dispose(); if (n.material) { if (n.material.map) n.material.map.dispose(); n.material.dispose(); } }));
+    this.board = null; this.proj = null; this.plan = null;
+  },
+  setView(i) { this.view = i; this.drag = 0; this.lastActive = this.now(); },
+  dragBy(dx) { this.drag = clamp(this.drag + dx * 0.006, -0.9, 0.9); },
+  hoverAt(nx, ny) {
+    if (!this.board) return -1;
+    if (!this._ray) this._ray = new Raycaster();
+    this._ray.setFromCamera({ x: nx, y: ny }, this.cam);
+    const hit = this._ray.intersectObjects(this.blocks.map(b => b.m), false)[0];
+    this.hover = hit ? this.blocks.findIndex(b => b.m === hit.object) : -1; return this.hover;
+  },
+  anchors() {
+    if (!this.board || !this.W) return null;
+    const out = [], v = new Vector3(), g = this.board, W = this.W, H = this.H;
+    const put = (k, p, dy) => { v.copy(p); v.y += dy || 0; g.localToWorld(v); v.project(this.cam); out.push({ k, x: (v.x * 0.5 + 0.5) * W, y: (-v.y * 0.5 + 0.5) * H, z: v.z }); };
+    this.blocks.forEach((b, i) => put('s' + i, b.top, 0.12));
+    this.aorbs.forEach(o => { v.copy(o.m.position); g.localToWorld(v); v.project(this.cam); out.push({ k: 'a' + o.k, x: (v.x * 0.5 + 0.5) * W, y: (-v.y * 0.5 + 0.5) * H - 14, z: v.z }); });
+    this.beacons.forEach((b, i) => put('r' + i, b.g.position, 0.2));
+    put('f', this.flag.position, 1.35);
+    return out;
+  },
+  planFrame(o) { this.frameOff = o; this.resize(); },
+  updatePlan(t, dt) {
+    const g = this.board; if (!g) return;
+    const pt = t - this.planT, out = this.planOut > 0 ? seg(t - this.planOut, 0, 0.5) : 0;
+    if (this.planOut > 0 && out >= 1) { this.hidePlan(true); return; }
+    const sIn = ease(seg(pt, 0.15, 0.95));
+    g.scale.setScalar(Math.max(0.001, (sIn + Math.sin(Math.PI * seg(pt, 0.15, 0.95)) * 0.06) * (1 - ease(out))));
+    g.rotation.y = lerp(g.rotation.y, this.drag + Math.sin(t * 0.25) * 0.03, 1 - Math.exp(-dt * 5));
+    this.grid.material.opacity = 0.75 + Math.sin(t * 1.4) * 0.2;
+    this.blocks.forEach((b, i) => {
+      const k = ease(seg(pt, 0.7 + i * 0.16, 1.25 + i * 0.16)), hv = this.hover === i ? 1 : 0;
+      b.pv.scale.y = Math.max(0.001, k * b.h * (1 + Math.sin(Math.PI * seg(pt, 0.7 + i * 0.16, 1.25 + i * 0.16)) * 0.15));
+      b.pv.position.y = 0.1 + hv * 0.06;
+      b.m.material.emissiveIntensity = 0.2 + hv * 0.45 + (this.view === 1 ? Math.max(0, Math.sin(t * 2 - i * 0.6)) * 0.25 : 0);
+      b.pv.userData.ed.material.opacity = 0.35 + hv * 0.6;
+    });
+    this.path.forEach((bm, i) => bm.update(t, seg(pt, 1.6 + i * 0.1, 2.0 + i * 0.1) * (1 - out), 0.6));
+    const team = this.view === 2 ? 1 : 0; this._tm = lerp(this._tm || 0, team, 1 - Math.exp(-dt * 4));
+    this.aorbs.forEach(o => {
+      const k = ease(seg(pt, 1.9 + o.k * 0.12, 2.7 + o.k * 0.12)), b = o.b;
+      const hx = b.x + o.off, hy = b.top.y + 0.32 + this._tm * (0.5 + o.lift) + Math.sin(t * 2 + o.ph) * 0.05, hz = b.z + Math.cos(t + o.ph) * 0.08;
+      const sx = 2.25, sy = 1.3, sz = -0.6;
+      o.m.position.set(lerp(sx, hx, k), lerp(sy, hy, k) + Math.sin(Math.PI * k) * 0.8, lerp(sz, hz, k));
+      o.m.scale.setScalar(Math.max(0.001, seg(pt, 1.85 + o.k * 0.12, 2.0 + o.k * 0.12) * (1 + this._tm * 0.25)));
+      o.ring.position.set(hx, b.top.y + 0.01, b.z); const rr = (t * 0.7 + o.k * 0.3) % 1; o.ring.material.opacity = k >= 1 ? (1 - rr) * 0.6 : 0; o.ring.scale.setScalar(1 + rr * 1.6);
+    });
+    this.beacons.forEach((b, i) => {
+      const k = ease(seg(pt, 2.6 + i * 0.15, 3.0 + i * 0.15)); b.g.scale.setScalar(Math.max(0.001, k * (1 + Math.sin(t * 5) * 0.08)));
+      b.cone.rotation.y = t * 2; const rr = (t * 0.9 + i * 0.5) % 1; b.ring.material.opacity = (1 - rr) * 0.8; b.ring.scale.setScalar(1 + rr * 1.5);
+      b.cone.material.emissiveIntensity = 0.7 + Math.sin(t * 6) * 0.4;
+    });
+    const fk = ease(seg(pt, 2.9, 3.4)); this.flag.scale.setScalar(Math.max(0.001, fk));
+    const cp = this.cloth.geometry.attributes.position; if (!this.cloth.userData.base) this.cloth.userData.base = Float32Array.from(cp.array);
+    const base = this.cloth.userData.base; for (let i = 0; i < cp.count; i++) { const x0 = base[i * 3]; cp.setZ(i, Math.sin(x0 * 9 - t * 6) * 0.04 * (x0 + 0.23)); } cp.needsUpdate = true;
+    const rr = (t * 0.6) % 1; this.pad.material.opacity = (1 - rr) * 0.8; this.pad.scale.setScalar(1 + rr * 2.2);
+    const pa = this.parts.geometry.attributes.position;
+    this.partsR.forEach((p, i) => { const y = (p[1] + t * p[3] * 0.25) % 1; pa.setXYZ(i, p[0], 0.12 + y * 1.6, p[2]); });
+    pa.needsUpdate = true; this.parts.material.opacity = 0.55 * sIn * (1 - out);
+    const pb = Math.sin(Math.PI * seg(pt, 0, 1.6)) * (1 - out);
+    if (this.proj) {
+      this.head.getWorldPosition(this._v); const hy = this._v.y + 0.5, h = Math.max(0.1, hy - 0.12);
+      const hd = this._v.clone(); hd.y += 0.5; const tg = new Vector3(0, 0.12, 0); this.board.localToWorld(tg);
+      const dir = hd.clone().sub(tg), len = dir.length(); this.proj.position.copy(tg).addScaledVector(dir, 0.5); this.proj.scale.set(1, len, 1);
+      this.proj.quaternion.setFromUnitVectors(new Vector3(0, 1, 0), dir.normalize()); this.proj.material.opacity = pb * 0.11; this.proj.visible = pb > 0.01;
+    }
+  }
+});

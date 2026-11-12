@@ -375,7 +375,92 @@ if(tpl&&home){
     $('#bpreset',bres).addEventListener('click',function(){reset(false)});
     return D;
   }
+
+  /* ---------- holographic result: Yardie projects the plan as a 3D table ---------- */
+  var RISK_STAGE={R_REQ:'Understand',R_AMBIG:'Understand',R_DOCS:'Understand',R_INFRA:'Understand',R_ASSUME:'Understand',R_APPROVAL:'Design',R_INTEG:'Build',R_DATA:'Build',R_PROC:'Build',R_CAP:'Build',R_SECAPP:'Prove',R_AI:'Prove',R_SPECIALIST:'Prove',R_DEADLINE:'Launch',R_LONG:'Launch',R_BENCH:'Design'};
+  var CH=['The solution','Timeline','Team','Next step'],hv=null,raf=0,holo=null;
+  function planFromBp(bp){
+    var P=bp.project,W=Math.max(1,Math.ceil(P.estimated_duration.including_hypercare_days/5)),groupOf={},eff={};
+    STAGES.forEach(function(s){s[1].forEach(function(ph){groupOf[ph]=s[0]})});
+    bp.activities.forEach(function(a){var g=groupOf[a.phase_id];eff[g]=(eff[g]||0)+a.effort.traditional_hours});
+    var stages=[];STAGES.forEach(function(s){var ps=bp.phases.filter(function(p){return s[1].indexOf(p.phase_id)>-1});if(!ps.length)return;
+      stages.push({name:s[0],a:Math.min.apply(null,ps.map(function(p){return p.start_day}))/5,b:Math.max.apply(null,ps.map(function(p){return p.end_day}))/5,e:eff[s[0]]||0,kind:s[0]==='Build'?'build':s[0]==='Run'?'run':s[0]==='Launch'?'ship':'plan'})});
+    var mx=Math.max.apply(null,stages.map(function(s){return s.e}))||1;stages.forEach(function(s){s.e=s.e/mx});
+    var idx=function(n){for(var i=0;i<stages.length;i++)if(stages[i].name===n)return i;var b=0;stages.forEach(function(s,i){if(s.kind==='build')b=i});return b};
+    var actPh={};bp.activities.forEach(function(a){actPh[a.activity_id]=groupOf[a.phase_id]});
+    var agents=bp.agents.filter(function(a){return a.agent_id!=='AG_ORCH'}).sort(function(a,b){return b.agent_hours-a.agent_hours}).slice(0,6).map(function(a){
+      var c={};a.activities.forEach(function(id){var g=actPh[id];c[g]=(c[g]||0)+1});var best=Object.keys(c).sort(function(x,y){return c[y]-c[x]})[0];
+      return {name:a.name.replace(' Agent',''),s:idx(best)}});
+    var risks=bp.delivery.risks.slice(0,2).map(function(r){return {s:idx(RISK_STAGE[r.risk_id]||'Build'),text:r.description}});
+    return {W:W,stages:stages,agents:agents,risks:risks};
+  }
+  function wk(a,b){var x=Math.max(1,Math.round(a)+1),y=Math.max(x,Math.round(b));return x===y?'Week '+x:'Weeks '+x+'–'+y}
+  function holoPanels(bp,P,t){
+    var R=bp.project,D=R.estimated_duration,people=bp.resources.human_roles;
+    var longest=P.stages.slice().sort(function(a,b){return (b.b-b.a)-(a.b-a.a)})[0];
+    return [
+      '<span class="bh-k">The solution</span><h3 class="bh-t">'+bpesc(R.proposed_solution)+'</h3><div class="bh-big"><b id="bpwk">0</b><span>to '+D.maximum_weeks+' weeks<br>to first release</span></div><div class="bc-pills"><span>'+bpesc(R.complexity)+' complexity</span><span>'+P.agents.length+' agents</span><span>'+people.length+' people</span></div>'+(R.ambiguous?'<p class="bh-n"><b>Rough guess.</b> Tell us more for a sharper plan.</p>':''),
+      '<span class="bh-k">Timeline</span><h3 class="bh-t">'+P.stages.length+' stages, one path</h3><p class="bh-n">'+bpesc(longest.name)+' is the longest stretch. Block length is time, height is effort.</p><ul class="vh">'+P.stages.map(function(s){return '<li>'+s.name+': '+wk(s.a,s.b)+'</li>'}).join('')+'</ul><p class="bh-hint">Hover a block for details</p>',
+      '<span class="bh-k">Team</span><h3 class="bh-t">'+P.agents.length+' agents build it</h3><p class="bh-n">Each orb is an agent, floating over the stage it works on. <b>Every change is reviewed by</b> '+bpesc(people.slice(0,3).join(', ').toLowerCase())+'.</p>',
+      '<span class="bh-k">Next step</span><h3 class="bh-t">Watch-outs</h3><ul class="bh-rk">'+P.risks.map(function(r){return '<li>'+bpesc(r.text)+'</li>'}).join('')+'</ul>'+(R.related_product?'<p class="bh-n">Related: <a class="ul-link" href="#/'+R.related_product.toLowerCase()+'">'+bpesc(R.related_product)+'</a></p>':'')+'<div class="bc-cta"><button class="btn pri" id="bpsend" type="button"><span>Send this plan</span><span class="arrow">&rarr;</span></button><button class="btn out" id="bpreset" type="button">Start over</button></div>'
+    ];
+  }
+  function revealHolo(bp,t){
+    var P=planFromBp(bp),R=bp.project,D=R.estimated_duration,panels=holoPanels(bp,P,t),view=0;
+    holo={P:P};
+    var lab='';P.stages.forEach(function(s,i){lab+='<span class="bh-l bh-s" data-k="s'+i+'"><b>'+s.name+'</b><em>'+wk(s.a,s.b)+'</em></span>'});
+    P.agents.forEach(function(a,i){lab+='<span class="bh-l bh-a" data-k="a'+i+'">'+bpesc(a.name)+'</span>'});
+    P.risks.forEach(function(r,i){lab+='<span class="bh-l bh-r" data-k="r'+i+'">!</span>'});
+    lab+='<span class="bh-l bh-f" data-k="f">Live &middot; week '+D.minimum_weeks+'</span>';
+    bres.innerHTML='<div class="bh-labels" aria-hidden="true">'+lab+'</div><span class="tag bh-tag">Your blueprint</span>'+
+      '<div class="bh-panel" tabindex="-1">'+panels[0]+'</div>'+
+      '<div class="bh-nav"><button type="button" class="bres-a" data-d="-1" aria-label="Previous view">&#8592;</button><div class="bh-tabs" role="tablist">'+CH.map(function(c,i){return '<button type="button" role="tab" aria-selected="'+(i?'false':'true')+'">'+c+'</button>'}).join('')+'</div><button type="button" class="bres-a" data-d="1" aria-label="Next view">&#8594;</button></div>'+
+      '<span class="bh-drag">Drag to rotate</span>';
+    bres.classList.add('holo');bres.dataset.view='0';bres.hidden=false;budEl.classList.add('is-holo');
+    var panel=$('.bh-panel',bres),tabs=$$('.bh-tabs button',bres),labels={};$$('.bh-l',bres).forEach(function(l){labels[l.dataset.k]=l});
+    bud.planFrame(mob.matches?{x:0,y:0.2}:{x:0.17,y:0});bud.showPlan(P);bud.setView(0);setS('present');bsay(null,'Here\'s your blueprint!');
+    live.textContent='Blueprint ready: '+R.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks. Use the tabs to explore the timeline, team and next step.';
+    function bind(){
+      var s=$('#bpsend',panel);if(s)s.onclick=function(){var g=$('#goal');if(g)g.value='Challenge: '+t+'\n\nIndicative blueprint: '+R.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks, '+R.complexity.toLowerCase()+' complexity.';nav('contact');setTimeout(function(){var n=$('#name');if(n)n.focus({preventScroll:true})},1400)};
+      var r=$('#bpreset',panel);if(r)r.onclick=function(){reset(false)};
+    }
+    function go(i){
+      i=Math.max(0,Math.min(3,i));if(i===view)return;view=i;bud.setView(i);bres.dataset.view=String(i);
+      tabs.forEach(function(b,j){b.setAttribute('aria-selected',j===i?'true':'false')});
+      var swap=function(){panel.innerHTML=panels[i];bind();if(i===0){var w=$('#bpwk',panel);if(w)w.textContent=D.minimum_weeks}};
+      if(G2&&anim){G2.to(panel,{autoAlpha:0,y:10,duration:.18,overwrite:true,onComplete:function(){swap();G2.fromTo(panel,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.45,ease:'power3.out'})}})}else swap();
+      bsay(null,['Here\'s the big picture.','Follow the path, left to right.','Meet the team!','Ready when you are.'][i]);
+    }
+    $$('.bres-a',bres).forEach(function(b){b.onclick=function(){go(view+(+b.dataset.d))}});
+    tabs.forEach(function(b,i){b.onclick=function(){go(i)}});
+    holo.key=function(e){if(!holo||e.target.closest('input,textarea,select'))return;if(e.key==='ArrowRight'){go(view+1);e.preventDefault()}if(e.key==='ArrowLeft'){go(view-1);e.preventDefault()}};
+    node.addEventListener('keydown',holo.key);
+    bind();
+    var w=$('#bpwk',panel);
+    if(G2&&anim){G2.fromTo(panel,{autoAlpha:0,x:-20},{autoAlpha:1,x:0,duration:.7,delay:.9,ease:'power3.out'});G2.from($('.bh-nav',bres),{autoAlpha:0,y:12,duration:.6,delay:1.2});
+      var o={v:0};G2.to(o,{v:D.minimum_weeks,duration:1.1,delay:1,ease:'power2.out',onUpdate:function(){w.textContent=Math.round(o.v)}})}else w.textContent=D.minimum_weeks;
+    /* labels follow the 3D model */
+    var sc=$('#budCanvas'),cr=null;
+    (function loop(){if(!holo)return;raf=requestAnimationFrame(loop);var a=bud.anchors();if(!a)return;
+      a.forEach(function(p){var l=labels[p.k];if(l)l.style.transform='translate('+p.x.toFixed(1)+'px,'+p.y.toFixed(1)+'px) translate(-50%,-100%)'})})();
+    /* hover and drag */
+    var down=null;
+    hv=function(e){
+      var r=sc.getBoundingClientRect(),nx=(e.clientX-r.left)/r.width*2-1,ny=-((e.clientY-r.top)/r.height*2-1);
+      if(down!==null&&e.pointerType!=='touch'){bud.dragBy(e.clientX-down);down=e.clientX;sc.style.cursor='grabbing';return}
+      var h=bud.hoverAt(nx,ny);$$('.bh-s',bres).forEach(function(l,i){l.classList.toggle('hov',i===h)});sc.style.cursor=h>-1?'pointer':'grab';
+    };
+    sc.addEventListener('pointermove',hv);
+    sc.onpointerdown=function(e){if(e.pointerType==='touch')return;down=e.clientX;try{sc.setPointerCapture(e.pointerId)}catch(x){}};
+    sc.onpointerup=sc.onpointercancel=function(){down=null;sc.style.cursor='grab'};
+    setTimeout(function(){panel.focus({preventScroll:true})},anim?1000:0);
+  }
+  function hideHolo(){
+    if(!holo)return;cancelAnimationFrame(raf);if(holo.key)node.removeEventListener('keydown',holo.key);holo=null;var sc=$('#budCanvas');if(hv)sc.removeEventListener('pointermove',hv);sc.onpointerdown=sc.onpointerup=sc.onpointercancel=null;sc.style.cursor='';
+    if(bud){bud.hidePlan();bud.planFrame(null)}bres.classList.remove('holo');budEl.classList.remove('is-holo');
+  }
   function reveal(bp,t){
+    if(bud){revealHolo(bp,t);return}
     var D=build(bp,t);bres.hidden=false;setS('present');bsay('done');budEl.classList.add('is-mini');
     live.textContent='Blueprint ready: '+bp.project.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks. Four cards, scroll sideways.';
     var wk=$('#bpwk',bres),launch=D.minimum_weeks;
@@ -389,9 +474,10 @@ if(tpl&&home){
     setTimeout(function(){var h=$('.bres-track',bres);if(h)h.focus({preventScroll:true})},anim?950:0);
   }
   function reset(quiet){
-    var done=function(){bres.hidden=true;bres.innerHTML='';budEl.classList.remove('is-mini');setS('idle');if(bud)bud.wave();bsay('idle')};
+    var wasHolo=!!holo;
+    var done=function(){hideHolo();bres.hidden=true;bres.innerHTML='';bres.style.opacity='';bres.style.visibility='';bres.style.clipPath='';budEl.classList.remove('is-mini');setS('idle');if(bud)bud.wave();bsay('idle')};
     if(!quiet){ta.value='';known={};showSig()}
-    if(G2&&anim&&!quiet){G2.to(bres,{clipPath:'circle(0% at 86% 18%)',duration:.6,ease:'power3.in',onComplete:function(){done();ta.focus()}})}else{done();if(!quiet)ta.focus()}
+    if(G2&&anim&&!quiet){G2.to(bres,wasHolo?{autoAlpha:0,duration:.35,onComplete:function(){done();ta.focus()}}:{clipPath:'circle(0% at 86% 18%)',duration:.6,ease:'power3.in',onComplete:function(){done();ta.focus()}})}else{done();if(!quiet)ta.focus()}
   }
 }
 
