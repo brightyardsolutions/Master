@@ -78,7 +78,8 @@ function classify(pre,M,C){
     });
   });
   pre.selected.forEach(function(id){if(res[id])res[id].score+=S.selectedBonus});
-  var ranked=Object.keys(res).map(function(k){return res[k]}).sort(function(a,b){return b.score-a.score||b.terms.length-a.terms.length});
+  /* on a tie, a specific service beats software engineering, which nouns like "app" and "website" reach incidentally */
+  var ranked=Object.keys(res).map(function(k){return res[k]}).sort(function(a,b){return b.score-a.score||(a.id==='sw'?1:0)-(b.id==='sw'?1:0)||b.terms.length-a.terms.length});
   var top=ranked[0],second=ranked[1];
   var supported=top.score>=S.supportedMin;
   var secondary=ranked.slice(1).filter(function(r){return r.score>=S.secondaryMin});
@@ -520,7 +521,7 @@ function run(text,opts,M){
       measurable_metrics:metrics.map(function(m){return {metric:m,baseline:pre.numbers.length?'Mentioned in your brief: '+pre.numbers.join(', '):'Not provided; measure during discovery',target:'Agreed in discovery'}}),
       automation_opportunities:acts.filter(function(a){return a.mode==='autonomous'||a.mode==='supervised'}).sort(function(a,b){return b.tradH-a.tradH}).slice(0,3).map(function(a){return a.src.name}),
       note:'No savings or ROI figures are shown without your baseline data.'},
-    meta:{engine:'brightyard-blueprint',version:M.version,generated_ms:0,classification:cls.ranked.filter(function(r){return r.score>0}).map(function(r){return {category:r.name,score:r.score,terms:r.terms}})}
+    meta:{engine:'brightyard-blueprint',version:M.version,generated_ms:0,template:sol.template.id,classification:cls.ranked.filter(function(r){return r.score>0}).map(function(r){return {category:r.name,score:r.score,terms:r.terms}})}
   };
   /* solution graph for the 3D model: today systems, components, flows, fixes, build timing */
   out.visual=(function(){
