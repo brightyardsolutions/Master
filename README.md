@@ -79,7 +79,7 @@ The site still works with no backend: the dialog falls back to the share link, p
      - `MAIL_FROM`: `BrightYard <blueprints@brightyard.in>` (any address on the verified domain; it does not need its own mailbox)
      - `TEAM_EMAIL`: the Zoho Mail inbox that receives leads
      - `SITE_URL`: `https://brightyard.in/`
-     - `ZEPTOMAIL_HOST`: only if your Zoho account is not in India: `api.zeptomail.com` (US) or `api.zeptomail.eu` (EU)
+     - `ZEPTOMAIL_HOST`: only if the API sample code in your Zoho account (agent > SMTP/API > API) shows a host other than `cpaas.zoho.in`; set it to that host
      - `RATE_SALT`: type Secret, any long random text (optional, strengthens the rate-limit hash)
 4. Redeploy (Deployments > the latest > Retry deployment) so the settings take effect.
 5. Test: make a blueprint, click **Send my blueprint**, and check both inboxes, including spam.

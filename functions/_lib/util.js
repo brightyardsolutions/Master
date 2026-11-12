@@ -3,7 +3,8 @@
      DB              D1 database binding (tables in schema.sql). Optional: without it nothing is stored and there is no rate limit.
      ZEPTOMAIL_TOKEN secret, the Zoho ZeptoMail "Send Mail" token. Without it (or RESEND_API_KEY) the API answers 503
                      and the site offers link/print/mailto instead.
-     ZEPTOMAIL_HOST  api.zeptomail.in for Zoho India accounts (default); api.zeptomail.com for US, api.zeptomail.eu for EU
+     ZEPTOMAIL_HOST  optional: cpaas.zoho.in (default, Zoho CPaaS India). Use the host from the API sample code in your
+                     Zoho account if it differs, e.g. api.zeptomail.in for older ZeptoMail accounts
      RESEND_API_KEY  secret, alternative sender if ZeptoMail is not used
      MAIL_FROM       e.g. "BrightYard <blueprints@brightyard.in>" (the domain must be verified in ZeptoMail)
      TEAM_EMAIL      where lead notices go, e.g. hello@brightyard.in
@@ -100,7 +101,8 @@ export async function sendMail(env, { to, subject, html, text, replyTo }) {
   if (env.ZEPTOMAIL_TOKEN) {
     const from = parseFrom(env.MAIL_FROM);
     if (!from.address) throw new MailError('not_configured');
-    const host = env.ZEPTOMAIL_HOST || 'api.zeptomail.in';
+    /* Zoho CPaaS (which now includes ZeptoMail) for India accounts; override with ZEPTOMAIL_HOST for other regions or older accounts */
+    const host = env.ZEPTOMAIL_HOST || 'cpaas.zoho.in';
     const url = /^https?:\/\//.test(host) ? host : 'https://' + host + '/v1.1/email';
     const token = env.ZEPTOMAIL_TOKEN.trim();
     const r = await fetch(url, {
