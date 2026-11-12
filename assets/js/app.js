@@ -421,11 +421,16 @@ if(tpl&&home){
     var met=bp.business_impact.measurable_metrics.slice(0,2).map(function(m){return '<li>'+bpesc(m.metric)+'</li>'}).join('');
     return [
       '<span class="bh-k">What we heard</span><h3 class="bh-t">'+bp.problems.length+' problem'+(bp.problems.length===1?'':'s')+' to solve</h3>'+list(probs,3)+'<p class="bh-hint">Amber markers are problems. Dashed ones are our assumptions, to confirm.</p>',
-      '<span class="bh-k">The solution</span><h3 class="bh-t">'+bpesc(R.proposed_solution)+'</h3><p class="bh-n bh-sum">'+bpesc(bp.solution.summary.split('. ')[0].replace(/\.$/,''))+'.</p>'+list(comps,4),
+      '<span class="bh-k">The solution</span><h3 class="bh-t">'+bpesc(R.proposed_solution)+'</h3><p class="bh-n bh-sum">'+bpesc(bp.solution.summary.split('. ')[0].replace(/\.$/,''))+'.</p>'+prod(R.related_product)+list(comps,4),
       '<span class="bh-k">How we build it</span><h3 class="bh-t">Agents build, engineers review</h3><ul class="bh-ls bh-rows">'+rows+'</ul><p class="bh-n">Agents carry out '+bp.automation.coverage_percentage+'% of the work. An engineer reviews every change'+(gl.length?' and signs off at '+bpesc(gl.join(', ')):'')+'.</p>',
       '<span class="bh-k">By when</span><h3 class="bh-t">Live in about <b id="bpwk">'+D.minimum_weeks+'</b>–'+D.maximum_weeks+' weeks</h3><label class="bh-start">If we start on <select id="bpStart">'+opts+'</select></label><ul class="bh-ls bh-rows">'+ms+'</ul><p class="bh-n"><b>Measure:</b></p><ul class="bh-ls">'+met+'</ul>'+
-        '<div class="bh-cta"><b>Take it to your team</b><span>Your 3D blueprint link, a one-page brief and the full plan, in your inbox.</span><button type="button" class="btn pri" data-take="1"><span>Send my blueprint</span><span class="arrow">&rarr;</span></button></div>'
+        '<div class="bh-cta"><b>Share it with your team</b><span>We email you the 3D blueprint link, a one-page brief and the full plan, ready to forward.</span><button type="button" class="btn pri" data-take="1"><span>Email me this blueprint</span><span class="arrow">&rarr;</span></button></div>'
     ];
+  }
+  /* when the problem is one our own products solve, say so */
+  function prod(name){
+    var P={Allocivo:['allocivo','Allocivo already does this for hotels: live room turns, staff assignment and supervisor approvals.'],Xessly:['xessly','Xessly already does this: AI agents find, fix and verify accessibility issues.']}[name];
+    return P?'<a class="bh-prod" href="#/'+P[0]+'"><b>We already built this</b><span>'+bpesc(P[1])+'</span><em>See '+bpesc(name)+' &rarr;</em></a>':'';
   }
   function widen(on){
     var grid=plan.parentNode,card=grid.firstElementChild;if(mob.matches||grid.classList.contains('is-wide')===on)return;
@@ -445,9 +450,9 @@ if(tpl&&home){
     S.milestones.forEach(function(m,i){lab+='<span class="bh-l bh-m'+(m.live?' bh-live':'')+'" data-k="m'+i+'"><b>'+bpesc(m.label)+'</b><em data-msd="'+m.day+'"></em></span>'});
     if(S.zone)lab+='<span class="bh-l bh-z" data-k="z">Checks on every change</span>';
     lab+='<span class="bh-l bh-w" data-k="w">Week 1</span>';
-    bres.innerHTML='<div class="bh-labels" aria-hidden="true">'+lab+'</div><div class="bh-top"><span class="tag bh-tag">Your blueprint</span><button type="button" class="bh-edit">&larr; Edit brief</button><button type="button" class="bh-send" data-take="1">Send to my team</button></div>'+
+    bres.innerHTML='<div class="bh-labels" aria-hidden="true">'+lab+'</div><div class="bh-top"><span class="tag bh-tag">Your blueprint</span><button type="button" class="bh-edit">&larr; Edit brief</button><button type="button" class="bh-send" data-take="1">Email me this blueprint</button></div>'+
       '<div class="bh-panel" tabindex="-1"><button type="button" class="bh-replay" aria-label="Replay this chapter">&#8635; Replay</button><div class="bh-body">'+panels[0]+'</div></div>'+
-      '<div class="bh-nav"><button type="button" class="bres-a" data-d="-1" aria-label="Previous chapter">&#8592;</button><div class="bh-tabs" role="tablist">'+CH.map(function(c,i){return '<button type="button" role="tab" aria-selected="'+(i?'false':'true')+'"><i>'+(i+1)+'</i>'+c+'</button>'}).join('')+'</div><button type="button" class="bres-a" data-d="1" aria-label="Next chapter">&#8594;</button></div>'+
+      '<div class="bh-nav"><button type="button" class="bres-a" data-d="-1" aria-label="Previous chapter">&#8592;</button><div class="bh-tabs" role="tablist">'+CH.map(function(c,i){return '<button type="button" role="tab" aria-selected="'+(i?'false':'true')+'"><i>'+(i+1)+'</i><span class="tl">'+c+'</span><span class="ts" aria-hidden="true">'+['Heard','Solution','Build','When'][i]+'</span></button>'}).join('')+'</div><button type="button" class="bres-a" data-d="1" aria-label="Next chapter">&#8594;</button></div>'+
       '<span class="bh-drag">Drag to rotate</span>';
     bres.classList.add('holo');bres.dataset.view='0';bres.hidden=false;budEl.classList.add('is-holo');
     var panel=$('.bh-panel',bres),body=$('.bh-body',panel),tabs=$$('.bh-tabs button',bres),labels={};$$('.bh-l',bres).forEach(function(l){labels[l.dataset.k]=l});
@@ -620,6 +625,7 @@ document.addEventListener('keydown',function(e){
   if(e.metaKey||e.ctrlKey||e.altKey)return;
   if(e.key==='Escape'){if(glOpen)setGL(false);else if(on)setBP(false);return}
   if(typing(e.target))return;
+  try{if(localStorage.getItem('by-keys')==='off')return}catch(x){}
   var k=e.key.toLowerCase();
   if(k==='g'){setGL(!glOpen);return}
   if(glOpen){if(/^[1-9]$/.test(e.key))choose(PAGES[+e.key-1][0]);return}
@@ -634,6 +640,7 @@ if(fine&&!wasSeen()){setTimeout(function(){if(!wasSeen()&&!glOpen&&!on)say('New:
 var B=window.BYBrief;if(!B)return;
 var $=function(s,r){return (r||document).querySelector(s)};
 var esc=B.esc,API=SITE.api!==false;
+function coarse(){return matchMedia('(pointer:coarse)').matches}
 
 /* a shared plan link opens straight into the generator and runs the brief */
 var pend=B.readLink(location.hash);
@@ -690,7 +697,7 @@ function field(id,label,type,extra){return '<label class="bpd-f" for="'+id+'"><s
 function hp(){return '<label class="bpd-hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>'}
 function step1(){
   var h=cur.h,M=B.model(h.bp,startISO(h));
-  $('.bpd-b',dlg).innerHTML='<span class="bpd-k">Take it to your team</span><h3 id="bpdT">Send me the blueprint</h3>'+
+  $('.bpd-b',dlg).innerHTML='<span class="bpd-k">Share it with your team</span><h3 id="bpdT" tabindex="-1">Email me this blueprint</h3>'+
     '<p class="bpd-n">For <b>'+esc(M.title)+'</b>, live in about '+M.minW+'–'+M.maxW+' weeks.</p>'+
     '<ul class="bpd-what"><li><b>3D blueprint link</b><span>Opens this model for anyone you share it with</span></li><li><b>One-page brief</b><span>Problem, solution, how and by when, ready to forward</span></li><li><b>Full plan</b><span>Outcomes, measures, team, assumptions and watch-outs</span></li></ul>'+
     '<form class="bpd-form" novalidate>'+field('bpd-email','Work email','email','autocomplete="email" required inputmode="email" placeholder="you@company.com"')+hp()+
@@ -706,7 +713,7 @@ function step1(){
       lastEmail=v;leadId=j.id||'';BYTrack('bp_pack');step2(v);
     }).catch(function(err){btn.disabled=false;btn.firstChild.textContent='Email it to me';fallback(f,err)});
   };
-  setTimeout(function(){em.focus()},60);
+  setTimeout(function(){(coarse()?$('#bpdT',dlg):em).focus()},60);
 }
 function fallback(f,err){
   var h=cur.h,M=B.model(h.bp,startISO(h)),m=$('.bpd-msg',f),c=SITE.contactEmail;
@@ -720,7 +727,7 @@ var ROLES=['Founder or CEO','CTO or engineering lead','Product or operations lea
 function sel(id,label,opts){return '<label class="bpd-f" for="'+id+'"><span>'+label+'</span><select id="'+id+'" name="'+id.replace('bpd-','')+'"><option value="">Choose…</option>'+opts.map(function(o){return '<option>'+esc(o)+'</option>'}).join('')+'</select><em class="bpd-e" id="'+id+'-e"></em></label>'}
 function step2(email){
   $('.bpd-b',dlg).innerHTML='<div class="bpd-ok"><span class="bpd-tick">&#10003;</span><div><b>On its way to '+esc(email)+'</b><span>Check your inbox in a minute. Forward it to anyone on your team.</span></div></div>'+
-    '<span class="bpd-k">Optional</span><h3 id="bpdT">Have an engineer check it</h3><p class="bpd-n">A senior engineer reviews your blueprint against your systems and replies within one business day. No sales call unless you ask.</p>'+
+    '<span class="bpd-k">Optional</span><h3 id="bpdT" tabindex="-1">Have an engineer check it</h3><p class="bpd-n">A senior engineer reviews your blueprint against your systems and replies within one business day. No sales call unless you ask.</p>'+
     '<form class="bpd-form" novalidate><div class="bpd-2">'+field('bpd-name','Your name','text','autocomplete="name" required')+field('bpd-company','Company','text','autocomplete="organization" required')+'</div>'+
     '<div class="bpd-2">'+sel('bpd-role','Your role',ROLES)+sel('bpd-timing','When would you start?',WHEN)+'</div>'+hp()+
     '<button class="btn pri bpd-go" type="submit"><span>Ask for a review</span><span class="arrow">&rarr;</span></button><button type="button" class="bpd-skip">No thanks, I\'m done</button><p class="bpd-msg" role="status"></p></form>'+tools();
@@ -739,7 +746,7 @@ function step2(email){
     }).catch(function(){btn.disabled=false;btn.firstChild.textContent='Ask for a review';var m=$('.bpd-msg',f);m.className='bpd-msg bad';
       m.innerHTML='We couldn\'t send that. Please try again, or email <a class="ul-link" href="mailto:'+esc(SITE.contactEmail)+'">'+esc(SITE.contactEmail)+'</a>.'});
   };
-  setTimeout(function(){$('#bpd-name',dlg).focus()},60);
+  setTimeout(function(){(coarse()?$('#bpdT',dlg):$('#bpd-name',dlg)).focus()},60);
 }
 window.BYTake=function(h){
   if(!h||!h.bp)return;if(!dlg)build();
@@ -797,7 +804,7 @@ function split(el){
         c.textContent.split(/(\s+)/).forEach(function(p){
           if(!p)return;
           if(/^\s+$/.test(p)){f.appendChild(document.createTextNode(' '));return}
-          var w=document.createElement('span');w.className='w';
+          var w=document.createElement('span');w.className='w'+(/^[.,;:!?)]/.test(p)&&c.previousSibling&&c.previousSibling.nodeType===1&&!/^\s/.test(c.textContent)?' wp':'');
           var i=document.createElement('span');i.textContent=p;i.style.transitionDelay=(n++*60)+'ms';
           w.appendChild(i);f.appendChild(w);
         });
@@ -854,16 +861,25 @@ function reveal(pg){
   if(!anim){rv.concat(sp).forEach(function(e){e.classList.add('in')});return}
   sp.forEach(function(el){ST.create({trigger:el,start:'top 90%',once:true,onEnter:function(){el.classList.add('in')}})});
   G.set(rv,{autoAlpha:0,y:44});
-  ST.batch(rv,{start:'top 92%',once:true,onEnter:function(b){G.to(b,{autoAlpha:1,y:0,duration:1,ease:'power3.out',stagger:.09,overwrite:true})}});
+  ST.batch(rv,{start:'top 92%',once:true,onEnter:function(b){G.to(b,{autoAlpha:1,y:0,duration:1,ease:'power3.out',stagger:.09,overwrite:'auto'})}});
+}
+/* child staggers: CSS transitions started by an IntersectionObserver. Content is visible unless .stg-wait is set,
+   and the observer cannot miss: it also fires for anything already on screen. */
+var stio=null;
+function stagger(pg){
+  if(stio)stio.disconnect();
+  var groups=$$('.chips,.wont,.levers,.arch,.auto,.tracks,.cover,.otiles',pg);
+  if(!anim||!('IntersectionObserver' in window)){groups.forEach(function(g){g.classList.remove('stg-wait')});return}
+  stio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('stg-wait');stio.unobserve(e.target)}})},{rootMargin:'0px 0px -12% 0px'});
+  groups.forEach(function(g){[].forEach.call(g.children,function(c,i){c.style.setProperty('--si',i)});g.classList.add('stg','stg-wait');stio.observe(g)});
+  /* bands grow to full size once, whenever they come into view, even at the very end of a page */
+  $$('.band',pg).forEach(function(b){G.set(b,{scale:.94,borderRadius:60});var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();G.to(b,{scale:1,borderRadius:36,duration:.9,ease:'power3.out'})}});io.observe(b)});
 }
 function parallax(pg){
   if(!anim)return;
-  $$('.band',pg).forEach(function(b){G.fromTo(b,{scale:.94,borderRadius:60},{scale:1,borderRadius:36,ease:'none',scrollTrigger:{trigger:b,start:'top 95%',end:'top 45%',scrub:.6}})});
   $$('.prods .pp',pg).forEach(function(p,i){G.fromTo(p,{y:i%2?90:40},{y:0,ease:'none',scrollTrigger:{trigger:p.parentNode,start:'top 95%',end:'top 35%',scrub:.8}})});
   $$('.pp [data-ui],.pvis [data-ui]',pg).forEach(function(u){G.fromTo(u,{y:26,rotateX:8,transformPerspective:900},{y:0,rotateX:0,ease:'none',scrollTrigger:{trigger:u,start:'top 95%',end:'top 50%',scrub:.6}})});
-  $$('.chips',pg).forEach(function(c){G.from($$('.ch',c),{y:40,autoAlpha:0,rotate:-4,stagger:.06,duration:.8,ease:'back.out(1.6)',scrollTrigger:{trigger:c,start:'top 88%',once:true}})});
-  $$('.wont',pg).forEach(function(w){G.from($$('li',w),{x:-40,autoAlpha:0,stagger:.08,duration:.8,ease:'power3.out',scrollTrigger:{trigger:w,start:'top 82%',once:true}})});
-  $$('.levers,.arch,.auto,.tracks,.cover,.otiles',pg).forEach(function(w){G.from(w.children,{y:30,autoAlpha:0,stagger:.07,duration:.8,ease:'power3.out',scrollTrigger:{trigger:w,start:'top 85%',once:true}})});
+  stagger(pg);
   $$('.ph',pg).forEach(function(p){G.to($('.wrap',p),{yPercent:18,autoAlpha:.2,ease:'none',scrollTrigger:{trigger:p,start:'top top',end:'bottom top',scrub:true}})});
 }
 function gallery(pg){
@@ -984,7 +1000,9 @@ var rsz;window.addEventListener('resize',function(){clearTimeout(rsz);rsz=setTim
 /* ---------- preloader then first render ---------- */
 var pre=$('#pre');
 function boot(){render(true)}
-if(anim&&pre){
+var preSeen=(function(){try{var v=sessionStorage.getItem('by-pre');sessionStorage.setItem('by-pre','1');return !!v}catch(e){return false}})();
+var deep=/^#\/(plan|home\/)|^#\/(?!home)[a-z]/.test(location.hash);
+if(anim&&pre&&!preSeen&&!deep){
   var dots=$$('.pre-g i',pre),num=$('#pre-n'),o={v:0};
   G.timeline()
     .to(dots,{scale:1,duration:.45,ease:'back.out(2.4)',stagger:{each:.05,from:'random'}})
@@ -1091,5 +1109,39 @@ if(menu&&burger){
   burger.addEventListener('click',function(){if(phone.matches&&menu.classList.contains('open'))setTimeout(function(){var f=[].filter.call(menu.querySelectorAll(FOC),visible)[0];if(f)f.focus()},60)});
   function close(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false');burger.focus()}
   document.addEventListener('keydown',function(e){if(!phone.matches||!menu.classList.contains('open'))return;if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='Tab')trap(menu.parentNode.contains(burger)?menu.parentNode:menu,e)});
+}
+
+/* required fields: marked visibly and for screen readers */
+[].forEach.call(document.querySelectorAll('form'),function(f){
+  var req=[].slice.call(f.querySelectorAll('[data-req]'));
+  if(f.id==='cf')['goal','name','email'].forEach(function(id){var e=document.getElementById(id);if(e)req.push(e)});
+  req=req.filter(function(e){return e.type!=='checkbox'});
+  if(!req.length)return;
+  req.forEach(function(e){e.setAttribute('aria-required','true');var l=e.closest('label');if(l&&!l.querySelector('.req')){var t=l.firstChild;if(t&&t.nodeType===3&&t.textContent.trim()){var w=document.createElement('span');w.className='lt';l.insertBefore(w,t);w.appendChild(t);var r=document.createElement('span');r.className='req';r.setAttribute('aria-hidden','true');r.textContent=' *';w.appendChild(r)}}});
+  var n=document.createElement('p');n.className='reqn';n.innerHTML='Fields marked <span aria-hidden="true">*</span><span class="sr">with a star</span> are required.';
+  var first=f.querySelector('label:not(.hp),.row2');if(first)f.insertBefore(n,first);
+});
+/* phone menu button says what it will do */
+if(menu&&burger){
+  var sync=function(){var o=menu.classList.contains('open');burger.textContent=o?'✕':'☰';burger.setAttribute('aria-label',o?'Close menu':'Open menu')};
+  new MutationObserver(sync).observe(menu,{attributes:true,attributeFilter:['class']});sync();
+}
+/* single-key shortcuts (G, B and 1-9) can be switched off */
+var glk=document.getElementById('glk');
+if(glk){
+  var keysOn=function(){try{return localStorage.getItem('by-keys')!=='off'}catch(e){return true}};
+  var show=function(){var on=keysOn();glk.setAttribute('aria-pressed',on);glk.textContent='Single-key shortcuts: '+(on?'on':'off')};
+  glk.addEventListener('click',function(){try{localStorage.setItem('by-keys',keysOn()?'off':'on')}catch(e){}show()});show();
+}
+
+/* the assistant button steps aside while the blueprint result or the footer is on screen */
+var astb=document.getElementById('astb');
+if(astb&&'IntersectionObserver' in window){
+  astb.setAttribute('aria-label','Ask BrightYard');
+  var seen=new Set();
+  var small=matchMedia('(max-width:767px)');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)seen.add(e.target);else seen.delete(e.target)});var away=false;seen.forEach(function(t){if(t.tagName==='FOOTER'||small.matches)away=true});document.body.classList.toggle('ast-away',away)},{threshold:.25});
+  var watch=function(){var b=document.getElementById('bpplan');if(b)io.observe(b);var f=document.querySelector('footer');if(f)io.observe(f)};
+  watch();setTimeout(watch,3000);
 }
 })();
