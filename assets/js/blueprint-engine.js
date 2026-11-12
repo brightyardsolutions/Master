@@ -521,6 +521,28 @@ function run(text,opts,M){
       note:'No savings or ROI figures are shown without your baseline data.'},
     meta:{engine:'brightyard-blueprint',version:M.version,generated_ms:0,classification:cls.ranked.filter(function(r){return r.score>0}).map(function(r){return {category:r.name,score:r.score,terms:r.terms}})}
   };
+  /* solution graph for the 3D model: today systems, components, flows, fixes, build timing */
+  out.visual=(function(){
+    var today=[],tkey={},addT=function(label,shape,pid,src){var k=label.toLowerCase();if(!tkey[k]){tkey[k]={id:'T'+today.length,label:label,shape:shape,problems:[],source:src};today.push(tkey[k])}var n=tkey[k];if(pid&&n.problems.indexOf(pid)<0)n.problems.push(pid);if(src==='stated')n.source='stated';return n};
+    pre.integrations.forEach(function(name){var it=M.integrationTerms.filter(function(x){return x.name===name})[0];if(/AWS|Azure|Google Cloud|Mainframe|WhatsApp/.test(name))return;addT(name.replace(/ \(.*\)$/,''),it?it.shape:'server',null,'stated')});
+    (sol.template.integrations||[]).forEach(function(n){addT(n.replace(/ \(to confirm\)/,''),'server',null,'confirm')});
+    problems.forEach(function(p){var pm=C.prob[p.problem_id];if(p.problem_id==='P_IT_SILO'&&today.some(function(n){return n.shape==='server'})){today.forEach(function(n){if(n.shape==='server')n.problems.push(p.problem_id)});return}
+      var lab=pm.today;if(lab==='Legacy system'&&pre.integrations.indexOf('Mainframe')>-1)lab='Mainframe';
+      addT(lab,pm.todayShape,p.problem_id,p.source==='stated'?'stated':'assumed')});
+    today=today.slice(0,5);
+    var comps=compOut.map(function(c){var cm=C.comp[c.component_id],acts=c.activities.map(function(id){return actAgent[id]}).filter(Boolean);
+      return {id:c.component_id,name:c.name,viz:cm.viz,lane:cm.lane,problems:c.problems,agents:c.assigned_agents.filter(function(a){return !/human/.test(a)}),
+        start:acts.length?Math.min.apply(null,acts.map(function(a){return a.start})):0,end:acts.length?Math.max.apply(null,acts.map(function(a){return a.finish})):1,
+        humanGate:acts.some(function(a){return a.mode==='human-led'})}});
+    var nameToId={};compOut.forEach(function(c){nameToId[c.name]=c.component_id});
+    var laneOf={};comps.forEach(function(c){laneOf[c.id]=c.lane});
+    var edges=[];compOut.forEach(function(c){c.dependencies.forEach(function(d){var f=nameToId[d];if(f&&laneOf[f]==='core'&&(laneOf[c.component_id]==='core'||laneOf[c.component_id]==='assure'))edges.push([f,c.component_id])})});
+    today.forEach(function(n){comps.forEach(function(c){if(c.lane==='core'&&c.problems.some(function(p){return n.problems.indexOf(p)>-1}))edges.push([n.id,c.id])})});
+    var seen={};edges=edges.filter(function(e){var k=e.join('>');if(seen[k]||e[0]===e[1])return false;seen[k]=1;return true});
+    var fixes={};problems.forEach(function(p){var best=null;comps.forEach(function(c){if(c.problems.indexOf(p.problem_id)>-1&&(!best||(c.lane==='core'&&best.lane!=='core')))best=c});if(best)fixes[p.problem_id]=best.id});
+    var gates=[];['A_ARCH_OK','A_SC_SIGNOFF','A_TEST_UAT','A_RELEASE_OK'].forEach(function(id){if(actAgent[id])gates.push({id:id,label:M.milestoneLabels[id],day:actAgent[id].finish})});
+    return {today:today,components:comps,edges:edges,fixes:fixes,gates:gates,totalDays:allEnd};
+  })();
   var errs=validate(out);
   if(errs.length){var v=emptyOut(pre,'The blueprint failed validation: '+errs[0],'INVALID_OUTPUT');v.errors=errs;return v}
   out.meta.generated_ms=Date.now()-t0;
