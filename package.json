@@ -1,9 +1,10 @@
 {
   "name": "brightyard-website",
   "private": true,
-  "description": "BrightYard static site. Only needed to rebuild the 3D scene bundle.",
+  "description": "BrightYard static site. Only needed for the build scripts (3D scene bundle, API helper modules).",
   "scripts": {
-    "build:scenes": "esbuild src/scenes.js --bundle --minify --format=iife --global-name=BYScenes --target=es2019 --outfile=assets/js/scenes.js"
+    "build:scenes": "esbuild src/scenes.js --bundle --minify --format=iife --global-name=BYScenes --target=es2019 --outfile=assets/js/scenes.js",
+    "build:functions": "node tools/build-functions.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",

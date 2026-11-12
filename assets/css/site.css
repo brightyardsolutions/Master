@@ -1340,9 +1340,61 @@ h1[tabindex="-1"]:focus{outline:none}
 .bh-start select{width:auto;padding:5px 8px;font-size:13px;border-radius:9px}
 .bh-cta{margin-top:4px;padding:12px;border-radius:14px;background:linear-gradient(135deg,#F4FBE3,#EEEBFF);border:1px solid #DCEFA6;display:grid;gap:6px}
 .bh-cta b{font-size:14.5px;color:var(--ink)}
-.bh-cta span{font-size:12.5px;color:var(--mute);line-height:1.4}
+.bh-cta>span{font-size:12.5px;color:var(--mute);line-height:1.4}
 .bh-cta .btn{justify-self:start;padding:9px 14px;font-size:13.5px}
 .bh-tabs button i{font-style:normal;font-size:10.5px;font-weight:700;margin-right:5px;opacity:.6}
-@media(max-width:940px){.bh-tabs button{padding:6px 8px;font-size:11.5px}.bh-tabs button i{display:none}.bh-cta span{display:none}}
+@media(max-width:940px){.bh-tabs button{padding:6px 8px;font-size:11.5px}.bh-tabs button i{display:none}.bh-cta>span{display:none}}
 .bh-z{background:#E7F8F0;border-color:#9FE3C4;color:#176B4D;font-weight:600}
 .bh-c{font-weight:600;color:var(--ink);font-size:12px}
+
+/* ---------- blueprint lead dialog ---------- */
+.bpd{position:fixed;inset:0;margin:auto;height:fit-content;width:min(520px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto;border:0;border-radius:22px;padding:0;background:#fff;color:var(--ink);box-shadow:0 40px 90px -30px rgba(30,27,75,.55)}
+.bpd::backdrop{background:rgba(30,27,75,.38);backdrop-filter:blur(4px)}
+.bpd[open]{animation:bpdIn .35s var(--ease)}
+@keyframes bpdIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.bpd-b{padding:26px 26px 22px}
+.bpd-x{position:absolute;right:12px;top:10px;width:36px;height:36px;border-radius:50%;border:0;background:transparent;font-size:24px;line-height:1;color:var(--mute);cursor:pointer}
+.bpd-x:hover{background:var(--mist);color:var(--ink)}
+.bpd-k{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ind);margin-bottom:6px}
+.bpd h3{font-size:22px;line-height:1.2;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+.bpd-n{color:var(--mute);font-size:14.5px;line-height:1.5;margin:0 0 14px}
+.bpd-n b{color:var(--ink);font-weight:600}
+.bpd-what{list-style:none;margin:0 0 16px;padding:0;display:grid;gap:8px}
+.bpd-what li{display:grid;gap:1px;padding:10px 12px 10px 36px;border-radius:12px;background:var(--mist);position:relative;font-size:14px}
+.bpd-what li:before{content:"";position:absolute;left:13px;top:15px;width:12px;height:12px;border-radius:4px;background:var(--lime);box-shadow:inset 0 0 0 2px #fff}
+.bpd-what span{color:var(--mute);font-size:12.5px}
+.bpd-form{display:grid;gap:10px}
+.bpd-f{display:grid;gap:5px;font-size:13px;font-weight:500;min-width:0}
+.bpd-f input,.bpd-f select{font:inherit;font-size:15px;font-weight:400;padding:11px 12px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--ink);width:100%;min-width:0}
+.bpd-f input:focus,.bpd-f select:focus{outline:2px solid var(--ind);outline-offset:1px;border-color:var(--ind)}
+.bpd-e{font-style:normal;font-size:12px;color:#B42318;min-height:0}
+.bpd-e:empty{display:none}
+.bpd-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.bpd-2{grid-template-columns:1fr}.bpd-b{padding:22px 18px 18px}}
+.bpd-hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+.bpd-go{justify-self:stretch;justify-content:center}
+.bpd-fine{font-size:12px;color:var(--mute);margin:0;line-height:1.45}
+.bpd-msg{font-size:13px;margin:0;line-height:1.45}
+.bpd-msg:empty{display:none}
+.bpd-msg.bad{color:#7A2E0E;background:#FFF4ED;border:1px solid #F9DBC9;padding:10px 12px;border-radius:11px}
+.bpd-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.bpd-t{font:inherit;font-size:13px;font-weight:500;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.bpd-t:hover{border-color:var(--ind)}
+.bpd-t.ok{background:#E7F8F0;border-color:#9FE3C4;color:#176B4D}
+.bpd-skip{font:inherit;font-size:13px;border:0;background:none;color:var(--mute);cursor:pointer;text-decoration:underline;justify-self:center;padding:4px}
+.bpd-ok{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:#E7F8F0;margin:0 0 18px}
+.bpd-ok div{display:grid;gap:2px;font-size:14px}
+.bpd-ok span:not(.bpd-tick){color:#2D5F4B;font-size:13px}
+.bpd-tick{flex:none;width:26px;height:26px;border-radius:50%;background:#2FBF8F;color:#fff;display:grid;place-items:center;font-size:14px}
+.bpd-tick.big{width:52px;height:52px;font-size:26px;margin:4px auto 14px}
+.bpd-done{text-align:center;padding:8px 0}
+.bpd-done .btn{margin-top:4px}
+html.bpd-open{overflow:hidden}
+/* printable brief: only the brief prints */
+#bp-print{display:none}
+@media print{
+  html.printing-bp body>*:not(#bp-print){display:none!important}
+  html.printing-bp #bp-print{display:block;padding:0 4mm}
+  html.printing-bp #bp-print a{color:#4F46E5}
+  @page{margin:14mm}
+}
