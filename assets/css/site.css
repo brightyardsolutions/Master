@@ -1418,3 +1418,21 @@ html.bpd-open{overflow:hidden}
 .pv-t th{text-align:left;font-weight:600;background:var(--mist);padding:12px 14px}
 .pv-t td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top;line-height:1.5}
 .pv-t td:first-child{font-weight:600;width:28%}
+
+/* ---------- contrast (WCAG 2.2 AA) ---------- */
+/* story steps: dim the inactive ones with a readable grey instead of transparency */
+@media(min-width:941px){
+  .sstep{opacity:1}
+  .sstep h3,.sstep p,.sstep .n{transition:color .5s}
+  .sstep:not(.on) h3,.sstep:not(.on) p,.sstep:not(.on) .n{color:#6E6B8F}
+}
+/* placeholder text in the Xessly demo: still reads as a placeholder, now 4.7:1 */
+.fld .inp{color:#6B7480}
+/* Xessly demo, scanning stage: say "Scanning…" instead of showing the finding faded */
+.xui-f{opacity:1}
+.xui[data-state="0"] .xui-f>*{visibility:hidden}
+.xui[data-state="0"] .xui-f{position:relative}
+.xui[data-state="0"] .xui-f::before{content:"Scanning\2026";position:absolute;left:12px;top:12px;font-size:12px;font-weight:600;color:#5B6773}
+
+/* spam trap fields: off-screen, skipped by keyboard and screen readers */
+.hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}

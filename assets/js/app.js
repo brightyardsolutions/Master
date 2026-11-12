@@ -69,7 +69,7 @@ $('#cf').addEventListener('submit',function(e){
   if(!SITE.formEndpoint){say('This form isn\'t connected yet, so nothing was sent. Please email us at <b>'+esc(SITE.contactEmail)+'</b> instead.');return}
   send.disabled=true;send.firstChild.textContent='Sending…';
   fetch(SITE.formEndpoint,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-    body:JSON.stringify({goal:g,name:n,email:m,company:$('#co').value.trim(),interest:$('#int').value,industry:$('#ind').value,page:location.href})})
+    body:JSON.stringify({goal:g,name:n,email:m,company:$('#co').value.trim(),interest:$('#int').value,industry:$('#ind').value,page:location.href,website:$('#cf [name=website]').value})})
   .then(function(r){if(!r.ok)throw new Error(r.status);
     $('#formcard').innerHTML='<div class="okm" role="status"><div class="tick">&#10003;</div><h3>Message sent</h3><p style="margin-top:10px;color:var(--mute)">Thanks, '+esc(n)+'. A senior engineer will reply within one business day.</p></div>'})
   .catch(function(){send.disabled=false;send.firstChild.textContent='Send message';say('We couldn\'t send that. Please try again, or email us at <b>'+esc(SITE.contactEmail)+'</b>.',true)});
@@ -1070,4 +1070,26 @@ $('#qr').addEventListener('click',function(e){
   setTimeout(function(){var a=document.createElement('div');a.className='m b';a.innerHTML=ans[b.dataset.q];ms.appendChild(a);ms.scrollTop=ms.scrollHeight},550);
   ms.scrollTop=ms.scrollHeight;
 });
+})();
+
+/* ---------- keyboard: keep focus inside the yard menu; phone menu opens into its links and closes with Escape ---------- */
+(function(){
+var FOC='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+function visible(e){return !!(e.offsetWidth||e.offsetHeight||e.getClientRects().length)&&getComputedStyle(e).visibility!=='hidden'}
+function trap(box,e){
+  var f=[].filter.call(box.querySelectorAll(FOC),visible);if(!f.length)return;
+  var first=f[0],last=f[f.length-1],a=document.activeElement;
+  if(!box.contains(a)){e.preventDefault();first.focus();return}
+  if(e.shiftKey&&a===first){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&a===last){e.preventDefault();first.focus()}
+}
+var gl=document.getElementById('gl');
+document.addEventListener('keydown',function(e){if(e.key==='Tab'&&gl&&gl.classList.contains('open'))trap(gl,e)});
+var menu=document.getElementById('menu'),burger=document.getElementById('burger');
+if(menu&&burger){
+  var phone=matchMedia('(max-width:940px)');
+  burger.addEventListener('click',function(){if(phone.matches&&menu.classList.contains('open'))setTimeout(function(){var f=[].filter.call(menu.querySelectorAll(FOC),visible)[0];if(f)f.focus()},60)});
+  function close(){menu.classList.remove('open');burger.setAttribute('aria-expanded','false');burger.focus()}
+  document.addEventListener('keydown',function(e){if(!phone.matches||!menu.classList.contains('open'))return;if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='Tab')trap(menu.parentNode.contains(burger)?menu.parentNode:menu,e)});
+}
 })();
