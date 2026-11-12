@@ -785,12 +785,12 @@
 
 <template id="bp-tpl">
 <section class="sec alt bpgen" id="bpgen"><div class="wrap">
-  <div class="head bpu"><span class="eyebrow">Brief to blueprint</span><h2>Describe the problem. Get a first-draft plan in ten seconds.</h2><p class="lead">Type a sentence or two about what isn't working. We'll sketch an indicative plan and timeline right here in your browser. Nothing is sent unless you choose to send it.</p></div>
+  <div class="head bpu"><span class="eyebrow">Brief to blueprint</span><h2>Describe the problem. Get a first-draft plan in ten seconds.</h2><p class="lead">Tell Yardie what isn't working. It briefs its agents and sketches an indicative plan right here in your browser. Nothing is sent unless you choose to send it.</p></div>
   <div class="bpg bpu">
     <div class="card">
       <label for="bpt">What's not working?</label>
       <textarea id="bpt" rows="5" placeholder="For example: our checkout slows down on sale days and support is drowning in tickets."></textarea>
-      <div class="bpsig" id="bpsig" aria-live="polite"><span class="bps0">Signals we pick up will appear here</span></div>
+      <div class="bpsig" id="bpsig" aria-live="polite"><span class="bps0">Topics Yardie spots will appear here</span></div>
       <div class="bpex"><span>Try:</span>
         <button type="button" data-ex="Our checkout slows down and our servers go down on sale days.">Slow on sale days</button>
         <button type="button" data-ex="We need an AI assistant to answer customer support questions.">AI for support</button>
@@ -802,7 +802,7 @@
       <span class="err" id="bperr"></span>
       <button class="btn pri" id="bpgo" type="button"><span>Draw my blueprint</span><span class="arrow">&rarr;</span></button>
     </div>
-    <div class="card bpplan" id="bpplan" aria-live="polite"></div>
+    <div class="card bpplan" id="bpplan"></div>
   </div>
 </div></section>
 </template>

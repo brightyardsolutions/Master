@@ -20,6 +20,7 @@ function prepare(M){
     d.phrases.forEach(function(p){C.phrases.push({domain:d.id,text:p,toks:p.split(' ')})});
   });
   C.phrases.sort(function(a,b){return b.toks.length-a.toks.length});
+  C.cache=[];
   M.problems.forEach(function(p){C.prob[p.id]=p});
   M.components.forEach(function(c){C.comp[c.id]=c});
   M.templates.forEach(function(t){C.tpl[t.id]=t});
@@ -51,9 +52,10 @@ function preprocess(text,M,C,opts){
     }
   });
   var tokSet={};tokens.forEach(function(t){variants(t).forEach(function(v){tokSet[v]=1})});
+  var padded=' '+norm+' ';
   function has(term){
     if(term.indexOf(' ')<0)return !!tokSet[term];
-    return (' '+norm+' ').indexOf(' '+term+' ')>-1;
+    return padded.indexOf(' '+term+' ')>-1;
   }
   var integrations=[];
   M.integrationTerms.forEach(function(it){if(it.terms.some(has))integrations.push(it.name)});
@@ -322,6 +324,11 @@ function emptyOut(pre,reason,code){
 
 /* ---------- main pipeline ---------- */
 function generate(text,opts,M){
+  var C0=prepare(M),key=normalize(text)+'|'+JSON.stringify(opts||{});if(!C0.cache)C0.cache=[];
+  for(var ci=0;ci<C0.cache.length;ci++)if(C0.cache[ci].k===key)return C0.cache[ci].v;
+  var v=run(text,opts,M);C0.cache.unshift({k:key,v:v});if(C0.cache.length>24)C0.cache.pop();return v;
+}
+function run(text,opts,M){
   var t0=Date.now(),C=prepare(M);
   if(C.configErrors.length){var o=emptyOut(null,'Blueprint configuration error: '+C.configErrors[0],'CONFIG_ERROR');o.errors=C.configErrors;return o}
   if(!String(text||'').trim())return emptyOut(null,'Describe the problem first. A sentence is enough.','EMPTY_INPUT');
@@ -519,6 +526,7 @@ function generate(text,opts,M){
   out.meta.generated_ms=Date.now()-t0;
   return out;
 }
-function quickClassify(text,M){var C=prepare(M);var pre=preprocess(text,M,C,{});var c=classify(pre,M,C);return c.ranked.filter(function(r){return r.score>=M.scoring.supportedMin})}
+var qc={k:null,v:null};
+function quickClassify(text,M){var k=normalize(text);if(k===qc.k)return qc.v;var C=prepare(M);var pre=preprocess(text,M,C,{});var c=classify(pre,M,C);qc.k=k;qc.v=c.ranked.filter(function(r){return r.score>=M.scoring.supportedMin});return qc.v}
 return {generate:generate,classify:quickClassify,validate:validate,normalize:normalize};
 })();

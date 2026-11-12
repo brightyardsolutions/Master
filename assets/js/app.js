@@ -247,82 +247,151 @@ function say(html,ms){hint.innerHTML=html;hint.classList.add('show');clearTimeou
 function seen(){try{sessionStorage.setItem('bys','1')}catch(e){}}
 function wasSeen(){try{return !!sessionStorage.getItem('bys')}catch(e){return false}}
 
-/* ---------- 1. Brief to blueprint (rules engine: BYEngine + #bp-master) ---------- */
-var BPM=null;
+/* ---------- 1. Brief to blueprint: Yardie + rules engine (BYEngine + #bp-master) ---------- */
+var BPM=null,anim=!reduced&&!!window.gsap;
 try{BPM=JSON.parse($('#bp-master').textContent)}catch(e){BPM=null}
 function bpesc(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]})}
 function detect(t){return BPM&&window.BYEngine?BYEngine.classify(t,BPM):[]}
 window.BrightYardBlueprint={generate:function(t,o){return BYEngine.generate(t,o||{},BPM)},master:BPM,last:null};
-var DOTS='<div class="bpe-d" aria-hidden="true"><i class="y"></i><i></i><i class="y"></i><i></i><i class="y"></i><i></i><i></i><i class="y"></i><i></i></div>';
-var EMPTY='<div class="bpe">'+DOTS+'<p>Your blueprint will be drawn here.</p></div>';
-var SCAN='<div class="bpe"><div class="bpscan" aria-hidden="true"><i></i></div><p>Reading your brief&hellip;</p></div>';
-var STAGES=[['Understand','Discovery and assessment',['DISC','ASSESS']],['Design','Architecture and plan',['ARCH','PLAN']],['Build','Agents build, engineers review',['DEV','CONF','INTEG','MIGR']],['Prove','Testing and security',['SEC','TEST']],['Launch','Release and handover',['DEPLOY','HAND']],['Run','Monitoring after go-live',['MON']]];
+var STAGES=[['Understand',['DISC','ASSESS']],['Design',['ARCH','PLAN']],['Build',['DEV','CONF','INTEG','MIGR']],['Prove',['SEC','TEST']],['Launch',['DEPLOY','HAND']],['Run',['MON']]];
+var LINES={
+  idle:['Checking in with my agents…','All agents online.','Ready when you are!'],
+  focus:['Ooh, tell me what\'s stuck!','I\'m all ears. Well, all antenna.'],
+  ponder:['Hmm, thinking…','Let me think about that…'],
+  work:['On it! Briefing my agents…'],
+  vague:['Tell me a bit more?','Which system, and what\'s happening?'],
+  off:['That\'s outside what we build. Got a software problem?'],
+  short:['A sentence is enough!'],
+  done:['Here\'s your blueprint!','Ta-da! Swipe through it.'],
+  boop:['Hi there!','Beep boop!','Need a plan?','Hehe, that tickles.']
+};
+function pick(k){var a=LINES[k];return a[Math.floor(Math.random()*a.length)]}
 
 var tpl=$('#bp-tpl'),home=$('#p-home');
 if(tpl&&home){
   var node=tpl.content.firstElementChild.cloneNode(true),anchor=$('.logos',home);
   if(anchor)anchor.parentNode.insertBefore(node,anchor.nextSibling);else home.insertBefore(node,home.firstChild);
   $$('.bpu',node).forEach(function(el){el.classList.add('rv')});
-  var ta=$('#bpt'),sig=$('#bpsig'),plan=$('#bpplan'),err=$('#bperr'),dt;
-  plan.innerHTML=EMPTY;
-  function showSig(){
-    var d=detect(ta.value);
-    sig.innerHTML=d.length?d.slice(0,4).map(function(c,i){return '<span class="bps" style="--i:'+i+'">'+bpesc(c.short)+'</span>'}).join(''):'<span class="bps0">Signals we pick up will appear here</span>';
+  var ta=$('#bpt'),sig=$('#bpsig'),plan=$('#bpplan'),err=$('#bperr'),dt,pt,bt,known={},bud=null,G2=window.gsap;
+  var mob=matchMedia('(max-width:940px)');
+  plan.innerHTML='<div class="bud" id="bud"><div class="bud-stage" id="budStage" aria-hidden="true"><canvas id="budCanvas"></canvas>'+
+    '<svg class="bud-still" viewBox="0 0 200 220" aria-hidden="true"><ellipse cx="100" cy="208" rx="54" ry="8" fill="#1E1B4B" opacity=".12"/><rect x="58" y="176" width="34" height="26" rx="10" fill="#C6F432"/><rect x="108" y="176" width="34" height="26" rx="10" fill="#C6F432"/><rect x="64" y="118" width="72" height="56" rx="18" fill="#F8F7FF" stroke="#E4E0FB" stroke-width="2"/><rect x="86" y="132" width="28" height="28" rx="7" fill="#4F46E5"/><rect x="95" y="96" width="10" height="24" fill="#24205C"/><rect x="36" y="34" width="128" height="68" rx="24" fill="#F8F7FF" stroke="#E4E0FB" stroke-width="2"/><rect x="34" y="94" width="132" height="10" rx="5" fill="#4F46E5"/><rect x="50" y="44" width="100" height="48" rx="16" fill="#0B0A24"/><rect x="70" y="56" width="16" height="20" rx="7" fill="#C6F432"/><rect x="114" y="56" width="16" height="20" rx="7" fill="#C6F432"/><path d="M90 82q10 7 20 0" stroke="#C6F432" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="118" y="14" width="3" height="20" fill="#24205C"/><circle cx="119.5" cy="13" r="6" fill="#C6F432"/></svg></div>'+
+    '<div class="bud-bub" id="budBub" aria-hidden="true"><span></span><i class="bud-dots"><b></b><b></b><b></b></i></div>'+
+    '<span class="bud-name" aria-hidden="true">Yardie &middot; your blueprint buddy</span></div>'+
+    '<div class="bres" id="bres" role="region" aria-label="Your blueprint" hidden></div><p class="vh" id="bpLive" role="status" aria-live="polite"></p>';
+  var stage=$('#budStage'),bub=$('#budBub'),bres=$('#bres'),live=$('#bpLive'),budEl=$('#bud'),state='idle',lastBub='';
+
+  function bsay(k,txt){var t=txt||pick(k);if(t===lastBub&&k!=='boop')return;lastBub=t;bub.classList.toggle('think',k==='ponder'||k==='work');
+    if(G2&&anim){G2.to(bub,{autoAlpha:0,y:6,scale:.96,duration:.14,overwrite:true,onComplete:function(){$('span',bub).textContent=t;G2.to(bub,{autoAlpha:1,y:0,scale:1,duration:.4,ease:'back.out(2)'})}})}
+    else{$('span',bub).textContent=t;bub.style.opacity=1}}
+  function setS(s){state=s;if(bud)bud.setState(s);budEl.setAttribute('data-state',s)}
+  function inDir(){var a=ta.getBoundingClientRect(),b=stage.getBoundingClientRect();if(!b.width)return;var x=((a.left+a.width/2)-(b.left+b.width/2))/(b.width/2),y=((a.top+a.height/2)-(b.top+b.height*0.35))/(b.height/2);if(bud)bud.setInputDir(Math.max(-1.4,Math.min(1.4,x)),Math.max(-1.4,Math.min(1.4,y)))}
+
+  /* load the 3D buddy only when the section is near */
+  var still=function(){budEl.classList.add('is-still')};
+  if(!('IntersectionObserver' in window)||reduced)still();
+  else{var lio=new IntersectionObserver(function(es){if(!es[0].isIntersecting)return;lio.disconnect();
+    (window.BYLoadScenes?window.BYLoadScenes():Promise.resolve(null)).then(function(S){
+      if(!S){still();return}
+      try{bud=new S.Buddy($('#budCanvas'));bud.start();budEl.classList.add('is-live');bud.setState(state);bsay('idle')}catch(e){still()}
+    })},{rootMargin:'400px 0px'});lio.observe(node)}
+  bsay('idle');
+
+  /* look at the pointer anywhere in the section */
+  node.addEventListener('pointermove',function(e){if(!bud||state!=='idle')return;var b=stage.getBoundingClientRect();bud.setPointer(Math.max(-1.3,Math.min(1.3,(e.clientX-(b.left+b.width/2))/(b.width/2))),Math.max(-1.2,Math.min(1.2,(e.clientY-(b.top+b.height*0.35))/(b.height/2))),true)});
+  node.addEventListener('pointerleave',function(){if(bud)bud.setPointer(0,0,false)});
+  stage.addEventListener('click',function(){if(state==='present')return;if(bud)bud.boop();bsay('boop')});
+
+  /* chips: detected topics fly into Yardie */
+  function fly(chip){
+    if(!G2||!anim||!bud)return;
+    var a=chip.getBoundingClientRect(),b=stage.getBoundingClientRect(),c=chip.cloneNode(true);
+    c.classList.add('bps-fly');c.style.left=a.left+'px';c.style.top=a.top+'px';document.body.appendChild(c);
+    G2.to(c,{x:b.left+b.width/2-a.left-a.width/2,y:b.top+b.height*0.38-a.top,scale:.2,autoAlpha:0,duration:.75,ease:'power2.in',onComplete:function(){c.remove();bud.absorb()}});
   }
-  ta.addEventListener('input',function(){err.textContent='';clearTimeout(dt);dt=setTimeout(showSig,140)});
-  $$('.bpex button',node).forEach(function(b){b.addEventListener('click',function(){ta.value=b.dataset.ex;err.textContent='';showSig();ta.focus()})});
-  $('#bpgo').addEventListener('click',function(){
-    var t=ta.value.trim();
-    if(t.length<8){err.textContent='Describe your challenge first. A sentence is enough.';ta.focus();return}
-    if(!BPM||!window.BYEngine){err.textContent='The blueprint engine failed to load. Please refresh the page.';return}
-    plan.innerHTML=SCAN;
-    setTimeout(function(){build(t)},reduced?0:800);
+  function showSig(){
+    var d=detect(ta.value),fresh=[];
+    sig.innerHTML=d.length?d.slice(0,4).map(function(c,i){if(!known[c.id])fresh.push(i);return '<span class="bps" style="--i:'+i+'">'+bpesc(c.short)+'</span>'}).join(''):'<span class="bps0">Topics Yardie spots will appear here</span>';
+    var nk={};d.forEach(function(c){nk[c.id]=1});known=nk;
+    fresh.forEach(function(i,k){var ch=$$('.bps',sig)[i];if(ch)setTimeout(function(){fly(ch)},120+k*160)});
+    if(fresh.length&&state!=='present')bsay(null,'Ooh, '+(/^[A-Z]{2}/.test(d[fresh[0]].short)?d[fresh[0]].short:d[fresh[0]].short.toLowerCase())+'!');
+  }
+  ta.addEventListener('focus',function(){if(state==='present')return;inDir();setS('focus');bsay('focus')});
+  ta.addEventListener('blur',function(){if(state==='present'||state==='work')return;clearTimeout(pt);setS('idle');bsay('idle')});
+  ta.addEventListener('input',function(){
+    err.textContent='';if(state==='present')return;
+    inDir();setS('typing');if(bud)bud.keystroke();
+    clearTimeout(dt);dt=setTimeout(showSig,220);
+    clearTimeout(pt);pt=setTimeout(function(){if(state==='typing'&&ta.value.trim()){setS('ponder');bsay('ponder')}},1300);
   });
-  function li(h){return '<li>'+h+'</li>'}
-  function grp(title,items){return items.length?'<h4>'+title+'</h4><ul class="ul">'+items.join('')+'</ul>':''}
-  function bindReset(){$('#bpreset').addEventListener('click',function(){plan.innerHTML=EMPTY;ta.value='';showSig();ta.focus()})}
-  function build(t){
+  $$('.bpex button',node).forEach(function(b){b.addEventListener('click',function(){
+    if(state==='present')reset(true);ta.value=b.dataset.ex;err.textContent='';inDir();setS('typing');if(bud)bud.keystroke();showSig();ta.focus();
+    clearTimeout(pt);pt=setTimeout(function(){if(state==='typing'){setS('ponder');bsay('ponder')}},1300)})});
+  window.addEventListener('resize',function(){if(state==='focus'||state==='typing')inDir()});
+
+  $('#bpgo').addEventListener('click',function(){
+    var t=ta.value.trim();clearTimeout(pt);
+    if(t.length<8){err.textContent='Describe your challenge first. A sentence is enough.';setS('confused');bsay('short');ta.focus();return}
+    if(!BPM||!window.BYEngine){err.textContent='The blueprint engine failed to load. Please refresh the page.';return}
     var bp;try{bp=BYEngine.generate(t,{},BPM)}catch(e){bp=null}
     window.BrightYardBlueprint.last=bp;
-    if(!bp){plan.innerHTML=EMPTY;err.textContent='Something went wrong drawing the blueprint. Please try again.';return}
-    var P=bp.project;
-    if(!P.supported){plan.innerHTML='<div class="bpe">'+DOTS+'<p>'+bpesc(P.message)+'</p></div><div class="bpa"><button class="btn out" id="bpreset" type="button">Start over</button></div>';bindReset();return}
-    var D=P.estimated_duration,W=Math.max(1,Math.ceil(D.including_hypercare_days/5)),agents=bp.resources.agent_roles.length,people=bp.resources.human_roles.length;
-    var h='<div class="bpph"><div><span class="tag">Indicative blueprint</span><h3>'+bpesc(P.proposed_solution)+'</h3></div></div>';
-    h+='<div class="bpstats"><div><b><span id="bpwk">0</span> to '+D.maximum_weeks+'</b><span>weeks to first release</span></div><div><b>'+agents+' + '+people+'</b><span>agent roles + people</span></div><div><b>'+bpesc(P.complexity)+'</b><span>complexity</span></div></div>';
-    h+='<p class="bpnote">'+bpesc(bp.solution.summary)+'</p>';
-    if(P.ambiguous)h+='<p class="bpnote"><b>We need a little more.</b> This plan starts with a health check. Tell us which system, what happens and since when for a sharper plan.</p>';
-    h+='<div class="bpax" aria-hidden="true"><span>Week 0</span><span>'+Math.round(W/2)+'</span><span>'+W+'</span></div><div class="bplist">';
-    var k=0;
-    STAGES.forEach(function(s){
-      var ps=bp.phases.filter(function(p){return s[2].indexOf(p.phase_id)>-1});if(!ps.length)return;
+    if(!bp){err.textContent='Something went wrong drawing the blueprint. Please try again.';return}
+    if(!bp.project.supported){setS('confused');bsay('off');live.textContent=bp.project.message;return}
+    setS('work');bsay('work');
+    setTimeout(function(){reveal(bp,t)},reduced||!bud?0:1450);
+  });
+
+  /* ---------- result: four swipeable cards in the same box ---------- */
+  function card(i,label,body){return '<article class="bc" data-i="'+i+'" aria-label="'+label+'"><span class="bc-k">'+label+'</span>'+body+'</article>'}
+  function build(bp,t){
+    var P=bp.project,D=P.estimated_duration,W=Math.max(1,Math.ceil(D.including_hypercare_days/5));
+    var short=bpesc(bp.solution.summary.split('. ')[0].replace(/\.$/,''))+'.';
+    var c1='<h3 class="bc-t">'+bpesc(P.proposed_solution)+'</h3><div class="bc-big"><b id="bpwk">0</b><span>to '+D.maximum_weeks+' weeks<br>to first release</span></div>'+
+      '<div class="bc-pills"><span>'+bpesc(P.complexity)+' complexity</span><span>'+bp.resources.agent_roles.length+' agents</span><span>'+bp.resources.human_roles.length+' people</span></div>'+
+      (P.ambiguous?'<p class="bc-n"><b>Rough guess.</b> Tell us which system and what happens for a sharper plan.</p>':'<p class="bc-n">'+short+'</p>');
+    var bars='';STAGES.forEach(function(s,k){var ps=bp.phases.filter(function(p){return s[1].indexOf(p.phase_id)>-1});if(!ps.length)return;
       var a=Math.min.apply(null,ps.map(function(p){return p.start_day})),b=Math.max.apply(null,ps.map(function(p){return p.end_day}));
-      var c=s[0]==='Run'?'ongoing':s[0]==='Launch'?'ms':'';
-      h+='<div class="bpr" style="--i:'+(k++)+'"><div class="bpn"><b>'+s[0]+'</b><small>'+s[1]+'</small></div><div class="bpt"><span class="bpbar '+c+'" style="left:'+(a/5/W*100).toFixed(2)+'%;width:'+Math.max(2,(b-a)/5/W*100).toFixed(2)+'%"></span></div></div>';
-    });
-    h+='</div>';
-    var probs=bp.problems.map(function(p){return li('<b>'+bpesc(p.description)+'</b>'+(p.source==='stated'?'':' (our assumption, to confirm)'))});
-    var comps=bp.solution.components.map(function(c){return li(bpesc(c.name))});
-    var ags=bp.agents.slice(1).map(function(a){return li('<b>'+bpesc(a.name)+':</b> '+bpesc(a.responsibilities.slice(0,3).join(', ').toLowerCase())+(a.responsibilities.length>3?' and more':'')+'.')});
-    var ppl=bp.resources.human_roles.map(function(r){return li(bpesc(r))});
-    var rk=bp.delivery.risks.slice(0,4).map(function(r){return li(bpesc(r.description)+'. <b>How we handle it:</b> '+bpesc(r.mitigation.charAt(0).toLowerCase()+r.mitigation.slice(1))+'.')});
-    var out=bp.business_impact.expected_outcomes.slice(0,4).map(function(o){return li(bpesc(o.outcome))});
-    h+='<details><summary>See the full plan</summary>'+grp('What we understood',probs)+grp('What we would build',comps)+grp('Agents on the work',ags)+grp('People who review and approve',ppl)+grp('Risks we would manage',rk)+grp('What should improve',out)+
-      '<p class="bpnote">Delivered the traditional way, the same scope would take about '+bp.comparison.traditional.duration_weeks+' weeks. Every agent-written change is reviewed by an engineer.</p></details>';
+      bars+='<li style="--i:'+k+'"><b>'+s[0]+'</b><span class="bc-tr"><i class="'+(s[0]==='Run'?'on':'')+'" style="left:'+(a/5/W*100).toFixed(1)+'%;width:'+Math.max(3,(b-a)/5/W*100).toFixed(1)+'%"></i></span></li>'});
+    var c2='<h3 class="bc-t">How it would run</h3><ul class="bc-bars">'+bars+'</ul><div class="bc-ax"><span>Week 0</span><span>'+W+'</span></div>';
+    var ag=bp.agents.map(function(a){var n=a.name.replace(' Agent','');return '<li><i>'+bpesc(n.charAt(0))+'</i>'+bpesc(n)+'</li>'}).join('');
+    var c3='<h3 class="bc-t">Who does the work</h3><ul class="bc-ag">'+ag+'</ul><p class="bc-n"><b>Reviewed by</b> '+bpesc(bp.resources.human_roles.slice(0,4).join(', ').toLowerCase())+'.</p>';
+    var rk=bp.delivery.risks.slice(0,2).map(function(r){return '<li>'+bpesc(r.description)+'</li>'}).join('');
     var prod=P.related_product;
-    h+=(prod?'<p class="bpnote"><b>Related BrightYard product:</b> '+bpesc(prod)+'. <a class="ul-link" href="#/'+prod.toLowerCase()+'">See how it works</a></p>':'')+'<p class="bpnote">Indicative only. A discovery workshop confirms scope and timing.</p>';
-    h+='<div class="bpa"><button class="btn pri" id="bpsend" type="button"><span>Send this plan to our team</span><span class="arrow">&rarr;</span></button><button class="btn out" id="bpreset" type="button">Start over</button></div>';
-    plan.innerHTML=h;
-    var wkEl=$('#bpwk'),launch=D.minimum_weeks;
-    if(reduced){wkEl.textContent=launch}else{var st=null;(function f(ts){if(!st)st=ts;var p=Math.min((ts-st)/900,1);wkEl.textContent=Math.round(launch*p);if(p<1)requestAnimationFrame(f)})(performance.now())}
-    if(window.ScrollTrigger)ScrollTrigger.refresh();
-    $('#bpsend').addEventListener('click',function(){
-      var g=$('#goal');
+    var c4='<h3 class="bc-t">Watch-outs and next step</h3><ul class="bc-rk">'+rk+'</ul>'+(prod?'<p class="bc-n">Related: <a class="ul-link" href="#/'+prod.toLowerCase()+'">'+bpesc(prod)+'</a></p>':'')+
+      '<div class="bc-cta"><button class="btn pri" id="bpsend" type="button"><span>Send this plan to our team</span><span class="arrow">&rarr;</span></button><button class="btn out" id="bpreset" type="button">Start over</button></div><p class="bc-f">Indicative only. A discovery workshop confirms scope and timing.</p>';
+    var navH='<div class="bres-nav"><button type="button" class="bres-a" data-d="-1" aria-label="Previous card">&#8592;</button><span class="bres-dots">'+[0,1,2,3].map(function(i){return '<button type="button" aria-label="Card '+(i+1)+' of 4"'+(i?'':' aria-current="true"')+'></button>'}).join('')+'</span><button type="button" class="bres-a" data-d="1" aria-label="Next card">&#8594;</button></div>';
+    bres.innerHTML='<div class="bres-h"><span class="tag">Your blueprint</span></div>'+
+      '<div class="bres-track" tabindex="0" aria-label="Blueprint cards, scroll sideways">'+card(0,'The solution',c1)+card(1,'Timeline',c2)+card(2,'Team',c3)+card(3,'Next step',c4)+'</div>'+navH;
+    var tr=$('.bres-track',bres),dots=$$('.bres-dots button',bres),cards=$$('.bc',bres),cur=0;
+    function goC(i){i=Math.max(0,Math.min(3,i));tr.scrollTo({left:cards[i].offsetLeft-tr.offsetLeft,behavior:reduced?'auto':'smooth'})}
+    $$('.bres-a',bres).forEach(function(b){b.onclick=function(){goC(cur+(+b.dataset.d))}});
+    dots.forEach(function(b,i){b.onclick=function(){goC(i)}});
+    tr.addEventListener('scroll',function(){var i=Math.round(tr.scrollLeft/(cards[1].offsetLeft-cards[0].offsetLeft));if(i!==cur){cur=i;dots.forEach(function(d,j){d.toggleAttribute('aria-current',j===i)});
+      var c=cards[i];if(G2&&anim&&!c._a){c._a=1;G2.from($$('.bc-bars i,.bc-ag li,.bc-rk li',c),{scaleX:0,autoAlpha:0,transformOrigin:'left',stagger:.06,duration:.6,ease:'power3.out'})}}},{passive:true});
+    tr.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){goC(cur+1);e.preventDefault()}if(e.key==='ArrowLeft'){goC(cur-1);e.preventDefault()}});
+    $('#bpsend',bres).addEventListener('click',function(){var g=$('#goal');
       if(g)g.value='Challenge: '+t+'\n\nIndicative blueprint: '+P.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks, '+P.complexity.toLowerCase()+' complexity.';
-      nav('contact');
-      setTimeout(function(){var n=$('#name');if(n)n.focus({preventScroll:true})},1400);
-    });
-    bindReset();
+      nav('contact');setTimeout(function(){var n=$('#name');if(n)n.focus({preventScroll:true})},1400)});
+    $('#bpreset',bres).addEventListener('click',function(){reset(false)});
+    return D;
+  }
+  function reveal(bp,t){
+    var D=build(bp,t);bres.hidden=false;setS('present');bsay('done');budEl.classList.add('is-mini');
+    live.textContent='Blueprint ready: '+bp.project.proposed_solution+', about '+D.minimum_weeks+' to '+D.maximum_weeks+' weeks. Four cards, scroll sideways.';
+    var wk=$('#bpwk',bres),launch=D.minimum_weeks;
+    if(G2&&anim){
+      var b=stage.getBoundingClientRect(),p=plan.getBoundingClientRect(),cx=((b.left+b.width/2-p.left)/p.width*100).toFixed(1),cy=((b.top+b.height*0.4-p.top)/p.height*100).toFixed(1);
+      G2.timeline()
+        .fromTo(bres,{clipPath:'circle(0% at '+cx+'% '+cy+'%)'},{clipPath:'circle(150% at '+cx+'% '+cy+'%)',duration:.9,ease:'power3.inOut'})
+        .from($$('.bc[data-i="0"] > *',bres),{y:18,autoAlpha:0,stagger:.06,duration:.6,ease:'power3.out'},'-=.35')
+        .add(function(){var o={v:0};G2.to(o,{v:launch,duration:.9,ease:'power2.out',onUpdate:function(){wk.textContent=Math.round(o.v)}})},'-=.4');
+    }else wk.textContent=launch;
+    setTimeout(function(){var h=$('.bres-track',bres);if(h)h.focus({preventScroll:true})},anim?950:0);
+  }
+  function reset(quiet){
+    var done=function(){bres.hidden=true;bres.innerHTML='';budEl.classList.remove('is-mini');setS('idle');if(bud)bud.wave();bsay('idle')};
+    if(!quiet){ta.value='';known={};showSig()}
+    if(G2&&anim&&!quiet){G2.to(bres,{clipPath:'circle(0% at 86% 18%)',duration:.6,ease:'power3.in',onComplete:function(){done();ta.focus()}})}else{done();if(!quiet)ta.focus()}
   }
 }
 
@@ -487,6 +556,7 @@ function loadScenes(){
   });
   return scenesP;
 }
+window.BYLoadScenes=loadScenes;
 function makeScene(key,cls,canvas){
   if(scenes[key])return scenes[key];
   try{scenes[key]=new BYScenes[cls](canvas)}catch(e){scenes[key]=null}
