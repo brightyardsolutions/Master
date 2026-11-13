@@ -126,10 +126,10 @@ Commit the regenerated `functions/_lib/` files with your change.
 ### Setting up a product site (once per product)
 
 1. Cloudflare > Workers & Pages > Create > Pages > Connect to Git, and choose this repository.
-2. Name the project after the product, for example `allocivo`. Build command: none. **Build output directory:** `sites/allocivo` (or `sites/xessly`). Under **Root directory (advanced)**, also set `sites/allocivo`, so Cloudflare finds that site's `functions/` folder.
+2. Name the project after the product, for example `allocivo`. Build command: none. **Root directory (advanced):** `sites/allocivo` (or `sites/xessly`), so Cloudflare finds that site's `functions/` folder. **Build output directory:** `/`, because it is read relative to the root directory. Branch control: production branch `main`; preview deployments for all other branches.
 3. Settings > Bindings: add the D1 database `DB` = `brightyard` (the same database, so all leads land in one place).
 4. Settings > Variables and secrets, for Production and Preview: `ZEPTOMAIL_TOKEN` (Secret), `MAIL_FROM`, `TEAM_EMAIL`, and `SITE_URL` = `https://allocivo.brightyard.in/`.
-5. Custom domains > Set up a custom domain: `allocivo.brightyard.in`. Cloudflare adds the DNS record.
+5. Custom domains > Set up a custom domain: `allocivo.brightyard.in`. Cloudflare adds the DNS record. The domain serves the production branch, so it shows the product site once this work is merged to `main`; until then, test on the preview link.
 6. Repeat for Xessly with `sites/xessly` and `xessly.brightyard.in`.
 
 ### Pointing the main site at the product sites
