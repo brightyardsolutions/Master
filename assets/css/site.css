@@ -1528,6 +1528,52 @@ body.ast-away .astb:not([aria-expanded="true"]){opacity:0;pointer-events:none;tr
 .hero3 .micro{color:#C9C6F2}
 .hero3 .lead,.hero3 .micro,.hero3 h1{text-shadow:0 1px 2px rgba(11,10,36,.9),0 0 18px rgba(11,10,36,.95)}
 
+/* ---------- home 'Our products': matched twin cards ---------- */
+.prods{align-items:stretch}
+.pp{gap:12px}
+.pp.xs{background:radial-gradient(600px 300px at 100% 0%,#2C2678,transparent 70%),#10161D;border-color:#10161D;color:#fff}
+.pp.xs .tag{background:rgba(255,255,255,.12);color:#fff}
+.pp.xs h3,.pp.al h3{color:#fff}
+.pp .pp-what{margin:0;font-size:16px;line-height:1.55;max-width:46ch}
+.pp.al .pp-what{color:#CFE3E1}
+.pp.xs .pp-what{color:#C9D2DC}
+.pp [data-ui]{min-height:318px;margin:4px 0 2px}
+.pp-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
+.pp-steps li{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.72);transition:background .35s,color .35s,box-shadow .35s}
+.pp-steps b{flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:12px;background:rgba(255,255,255,.12);color:#fff;transition:background .35s,color .35s}
+.pp-steps li.on{background:rgba(255,255,255,.12);color:#fff}
+.pp.al .pp-steps li.on{box-shadow:inset 0 0 0 1.5px var(--lime)}
+.pp.xs .pp-steps li.on{box-shadow:inset 0 0 0 1.5px #8FF2CC}
+.pp.al .pp-steps li.on b,.pp.al .pp-steps li.done b{background:var(--lime);color:#06262A}
+.pp.xs .pp-steps li.on b,.pp.xs .pp-steps li.done b{background:#8FF2CC;color:#10161D}
+.pp-steps li.done{color:#fff}
+.pp-out{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.pp-out li{font-size:12.5px;padding:4px 10px;border-radius:99px}
+.pp.al .pp-out li{background:rgba(198,244,50,.14);color:#E8FBB0}
+.pp.xs .pp-out li{background:rgba(143,242,204,.14);color:#C9FBE8}
+.pp-act{margin-top:auto;padding-top:10px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn.mint{background:#8FF2CC;color:#10161D}
+.btn.mint:hover{box-shadow:0 12px 30px -8px rgba(143,242,204,.55)}
+.pp-lnk{font-weight:500;font-size:15px;color:#fff;text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.35)}
+.pp-lnk:hover{text-decoration-color:currentColor}
+@media(max-width:560px){.pp-steps{grid-template-columns:1fr}.pp [data-ui]{min-height:0}}
+/* both demos take the same height, so the steps, outcomes and buttons line up across the two cards */
+@media(min-width:561px){
+  .pp [data-ui]{height:356px;min-height:0}
+  .pp [data-ui]>.aui,.pp [data-ui]>.xui{height:100%;box-sizing:border-box}
+  .pp [data-ui]>.xui{display:flex;flex-direction:column}
+  .pp [data-ui]>.xui .xui-b{flex:1}
+}
+/* the two cards share rows, so each part sits at the same height in both, whatever wraps */
+@media(min-width:941px){
+  @supports (grid-template-rows:subgrid){
+    .prods{grid-template-rows:repeat(8,auto);row-gap:0}
+    .prods>.pp{display:grid;grid-row:span 8;grid-template-rows:subgrid;row-gap:12px;justify-items:start;align-content:start}
+    .prods>.pp>[data-ui],.prods>.pp>.pp-steps{justify-self:stretch}
+    .prods>.pp>.pp-act{align-self:end}
+  }
+}
+
 /* ===================================================================== */
 /* Glass header: frosted surfaces with a thin neon edge (lime, indigo, mint). */
 /* Light glass over light sections, dark glass over dark ones.             */

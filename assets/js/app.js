@@ -906,7 +906,7 @@ function stagger(pg){
 }
 function parallax(pg){
   if(!anim)return;
-  $$('.prods .pp',pg).forEach(function(p,i){G.fromTo(p,{y:i%2?90:40},{y:0,ease:'none',scrollTrigger:{trigger:p.parentNode,start:'top 95%',end:'top 35%',scrub:.8}})});
+  $$('.prods .pp',pg).forEach(function(p,i){G.fromTo(p,{y:50},{y:0,ease:'none',scrollTrigger:{trigger:p.parentNode,start:'top 95%',end:'top 35%',scrub:.8}})});
   $$('.pp [data-ui],.pvis [data-ui]',pg).forEach(function(u){G.fromTo(u,{y:26,rotateX:8,transformPerspective:900},{y:0,rotateX:0,ease:'none',scrollTrigger:{trigger:u,start:'top 95%',end:'top 50%',scrub:.6}})});
   stagger(pg);
   $$('.ph',pg).forEach(function(p){G.to($('.wrap',p),{yPercent:18,autoAlpha:.2,ease:'none',scrollTrigger:{trigger:p,start:'top top',end:'bottom top',scrub:true}})});
@@ -1241,5 +1241,12 @@ form.addEventListener('submit',function(e){
   if(v.length<6){bub.innerHTML='A sentence is enough: what isn\'t working?';inp.focus();return}
   var m=panel.closest('.mm');if(m){m.classList.remove('open');var b=$('.mmb',m);if(b)b.setAttribute('aria-expanded','false');var h=$('#hdr');if(h)h.classList.remove('mm-on')}
   inp.blur();if(window.BYRunBrief)window.BYRunBrief(v);
+});
+
+/* product cards: the numbered steps light up with the demo they describe */
+$$('.pp').forEach(function(card){
+  var ui=card.querySelector('.aui,.xui'),steps=$$('.pp-steps li',card);if(!ui||!steps.length)return;
+  var sync=function(){var st=+ui.dataset.state||0;steps.forEach(function(li){var k=+li.dataset.s;li.classList.toggle('on',k===st);li.classList.toggle('done',k<st)})};
+  new MutationObserver(sync).observe(ui,{attributes:true,attributeFilter:['data-state']});sync();
 });
 })();
