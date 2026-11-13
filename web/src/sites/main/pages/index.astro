@@ -1,7 +1,29 @@
 ---
 // https://brightyard.in/
-// Step 2 of the migration moves the home page content from today’s index.html (#p-home) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+import MainLayout from '../../../layouts/MainLayout.astro';
+import Hero from '../../../components/main/home/Hero.astro';
+import ClientLogos from '../../../components/main/home/ClientLogos.astro';
+import ServicesGallery from '../../../components/main/home/ServicesGallery.astro';
+import OurProducts from '../../../components/main/home/OurProducts.astro';
+import HowWeWork from '../../../components/main/home/HowWeWork.astro';
+import Numbers from '../../../components/main/home/Numbers.astro';
+import Industries from '../../../components/main/home/Industries.astro';
+import CaseStudies from '../../../components/main/home/CaseStudies.astro';
+import Testimonial from '../../../components/main/home/Testimonial.astro';
+import StartYourWay from '../../../components/main/home/StartYourWay.astro';
+import ClosingBand from '../../../components/main/home/ClosingBand.astro';
 ---
 <MainLayout id="home">
+<Hero />
+<ClientLogos />
+<!-- Brief to blueprint is injected here by the signature layer -->
+<ServicesGallery />
+<OurProducts />
+<HowWeWork />
+<Numbers />
+<Industries />
+<CaseStudies />
+<Testimonial />
+<StartYourWay />
+<ClosingBand />
 </MainLayout>

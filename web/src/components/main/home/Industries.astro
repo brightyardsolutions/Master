@@ -1,0 +1,12 @@
+---
+// brightyard.in home page: Industries Where we've done the work. Hospitality and travel Retail and e-commer
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Industries</span><h2 class="split">Where we've done the work.</h2></div>
+<div class="chips rv">
+<a class="ch" href={link('work', site)}><i></i>Hospitality and travel</a><a class="ch" href={link('work', site)}><i></i>Retail and e-commerce</a><a class="ch" href={link('work', site)}><i></i>Financial services</a><a class="ch" href={link('work', site)}><i></i>Healthcare</a><a class="ch" href={link('work', site)}><i></i>Logistics</a><a class="ch" href={link('work', site)}><i></i>SaaS and technology</a><a class="ch" href={link('work', site)}><i></i>Public sector and education</a>
+</div>
+<p class="fine rv opt" style="margin-top:20px"><span class="tbd">[Keep only industries with at least one completed project you can describe]</span></p>
+</div></div>

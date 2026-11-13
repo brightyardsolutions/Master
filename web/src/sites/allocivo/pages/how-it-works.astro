@@ -1,7 +1,12 @@
 ---
 // https://allocivo.brightyard.in/how-it-works/
-// Step 2 of the migration moves these sections here, as components: al-problem, al-how, al-uses.
 import ProductLayout from "../../../layouts/ProductLayout.astro";
+import Problem from "../../../components/products/allocivo/Problem.astro";
+import How from "../../../components/products/allocivo/How.astro";
+import Uses from "../../../components/products/allocivo/Uses.astro";
 ---
 <ProductLayout path="/how-it-works/">
+<Problem />
+<How />
+<Uses />
 </ProductLayout>

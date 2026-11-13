@@ -1,0 +1,89 @@
+---
+// Xessly: the ten-step story (3D stage added by the script).
+import ProductStory from '../../shared/ProductStory.astro';
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<ProductStory product="xs" label="Xessly story: the problem and the agent-run solution, in ten steps" skip="xessly/xs-problem">
+<li class="s3-step" data-i="0">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-xs"/></svg>
+<span class="k a" style="--i:1">Xessly &middot; by Brightyard</span>
+<h2 class="a" style="--i:2">Find it. Fix it. Prove it.<br>Automatically.</h2>
+<p class="s a" style="--i:3">AI agents that work on every WCAG issue they find, ship the fix and verify it. People step in only when an agent asks.</p></div>
+</li>
+<li class="s3-step" data-i="1">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Every scanner hands you a list. Nobody hands you the fix.</h2><p class="s a" style="--i:2">Reports say something may be wrong. Then the real work starts: understanding it, fixing it in the right place, and checking it worked.</p></div>
+<div class="vcard rep a" style="--i:2"><small>Typical scan report (illustrative)</small>
+<div><b>Contrast (minimum)</b><span>37 instances</span></div>
+<div><b>Name, role, value</b><span>12 instances</span></div>
+<div><b>Info and relationships</b><span>58 instances</span></div>
+<div><b>Keyboard</b><span>9 instances</span></div>
+<div style="border:none"><b style="color:var(--ac)">Who fixes all of this, and when?</b><span></span></div>
+</div>
+</li>
+<li class="s3-step" data-i="2">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Fixing is the slow part.</h2></div>
+<div class="vstack">
+<div class="vcard a" style="--i:1"><small>Reports pile up</small><b>Findings without action</b><span>Hundreds of rule violations, little sense of what to change first.</span></div>
+<div class="vcard a" style="--i:2"><small>Fixes wait</small><b>Accessibility sits in the backlog</b><span>Every fix competes with feature work for the same developers.</span></div>
+<div class="vcard vbad a" style="--i:3"><small>Nobody re-checks</small><b>"Done" is rarely verified</b><span>Changes ship without anyone confirming they worked, or broke something else.</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="3">
+<div><span class="k a">The cost</span><h2 class="a" style="--i:1">One finding, passed between four people.</h2><p class="s a" style="--i:2">Each handoff loses time. The person using a screen reader or a keyboard waits for all of it.</p></div>
+<div class="chain">
+<div class="a" style="--i:2"><b>Product lead</b><span class="bub">Is this urgent, or can it wait?</span></div>
+<div class="a" style="--i:3"><b>Designer</b><span class="bub">What should it look like instead?</span></div>
+<div class="a" style="--i:4"><b>Developer</b><span class="bub">Which element? When do I fit it in?</span></div>
+<div class="a" style="--i:5"><b>Everyone</b><span class="bub r">Did the fix actually work?</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="4">
+<div><span class="k a">The solution</span><h2 class="a" style="--i:1">Five agents. One continuous flow.</h2><p class="s a" style="--i:2">Xessly runs the whole job, from first scan to verified fix, without waiting on a meeting.</p></div>
+<div class="agents a" style="--i:2">
+<div><i>1</i><b>Scan agent</b><span>Crawls pages and journeys on desktop and mobile</span></div>
+<div><i>2</i><b>Triage agent</b><span>Groups duplicates and maps each issue to WCAG 2.2</span></div>
+<div><i>3</i><b>Fix agent</b><span>Writes the fix in your code or your CMS</span></div>
+<div><i>4</i><b>Test agent</b><span>Re-runs checks and catches regressions</span></div>
+<div><i>5</i><b>Verify agent</b><span>Closes what's proven, flags what isn't</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="5">
+<div><span class="k a">In action</span><h2 class="a" style="--i:1">A full run, start to finish, no clicks.</h2><p class="s a" style="--i:2">This is what one run looks like on a fictional store.</p></div>
+<div class="vcard term a" style="--i:2"><small>Agent run &middot; Northstar Store &middot; illustrative</small>
+<div class="tl1"><em>scan</em>Crawled 48 pages, desktop and mobile</div>
+<div class="tl1"><em>triage</em>126 findings &rarr; 31 unique issues (WCAG 2.2 A and AA)</div>
+<div class="tl1"><em>fix</em>PR #42: labels for 6 form fields (1.3.1, 4.1.2)</div>
+<div class="tl1"><em>fix</em>CMS: alt text for 18 product images (1.1.1)</div>
+<div class="tl1"><em>test</em>Automated, keyboard and contrast checks: 0 regressions</div>
+<div class="tl1 ok"><em>verify</em>29 verified &middot; 2 flagged with drafts</div>
+</div>
+</li>
+<li class="s3-step" data-i="6">
+<div><span class="k a">Where fixes land</span><h2 class="a" style="--i:1">It fixes the problem where it lives.</h2><p class="s a" style="--i:2">Code issues become pull requests in your repository. Content issues are fixed in your CMS. No overlay painted on top.</p></div>
+<div class="vgrid2">
+<div class="vcard a" style="--i:2"><small>Your repository</small><b>Pull request</b><pre class="diff"><span class="m">- &lt;input placeholder="Email"&gt;</span>
+<span class="p">+ &lt;label for="email"&gt;Email&lt;/label&gt;</span>
+<span class="p">+ &lt;input id="email" type="email"&gt;</span></pre></div>
+<div class="vcard a" style="--i:3"><small>Your CMS</small><b>Content update</b><span>Alt text added to 18 product images, link text clarified on 4 pages, with a change log you can roll back.</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="7">
+<div><span class="k a">Proof</span><h2 class="a" style="--i:1">Every fix is tested before it counts.</h2><p class="s a" style="--i:2">The test agent re-checks each change and looks for anything it might have broken. One click rolls a change back.</p></div>
+<div class="vcard a" style="--i:2"><small>Verification &middot; PR #42</small><b>Sign-in form labels</b>
+<div class="why"><div><i>&#10003;</i>Each field has an accessible name</div><div><i>&#10003;</i>Labels stay visible while typing</div><div><i>&#10003;</i>Keyboard order unchanged</div><div><i>&#10003;</i>Contrast still passes</div><div><i>&#10003;</i>No new violations introduced</div></div></div>
+</li>
+<li class="s3-step" data-i="8">
+<div><span class="k a">Honest by design</span><h2 class="a" style="--i:1">When an agent isn't sure, it says so.</h2><p class="s a" style="--i:2">Nothing is marked fixed until it's verified. If an agent can't prove a fix, it flags the issue with its best draft instead of guessing.</p></div>
+<div class="vstack">
+<div class="vcard a" style="--i:2"><small>Flagged &middot; draft ready</small><b>Hero image: meaning unclear</b><span>Decorative or informative? Draft alt text attached for a quick yes or no.</span></div>
+<div class="vcard a" style="--i:3"><small>Flagged &middot; draft ready</small><b>Custom date picker</b><span>Two keyboard patterns are possible. Both drafted, waiting for a choice.</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="9">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-xs"/></svg>
+<h2 class="a" style="--i:1">Let the agents take the backlog.</h2>
+<p class="s a" style="--i:2">Point Xessly at your site. Get fixes, not reports.</p>
+<div class="dkcta a" style="--i:3"><a class="btn lime" href={link('xessly/xs-access', site)}>Request early access</a><a class="btn out" href={link('xessly/xs-how', site)}>See the agent flow</a></div></div>
+</li>
+</ProductStory>

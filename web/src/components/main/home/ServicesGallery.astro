@@ -1,0 +1,17 @@
+---
+// brightyard.in home page: What we do Five things we do. One team that does all of them. Every service runs
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec hsec" id="svc-gallery">
+<div class="wrap"><div class="head"><span class="eyebrow rv">What we do</span><h2 class="split">Five things we do. One team that does all of them.</h2><p class="lead rv">Every service runs the same way: AI agents do the building, and engineers who understand your business make it better.</p></div></div>
+<div class="hs" data-hscroll><div class="hs-track">
+<a class="card hs-card" href={link('services', site)}><span class="hs-n" aria-hidden="true">01</span><span class="tag">Product engineering</span><h3>Software people actually use</h3><p>Web and mobile products, APIs and integrations, designed with the people who will use them every day.</p><div class="demo"><pre id="code"></pre></div></a>
+<a class="card hs-card" href={link('services', site)}><span class="hs-n" aria-hidden="true">02</span><span class="tag">Cloud and DevOps</span><h3>Releases that don't need a war room</h3><p>Migrations, infrastructure as code and pipelines that keep shipping boring.</p><div class="demo"><div class="pipe" style="margin:0"><span>Build</span><span>Test</span><span>A11y</span><span>Ship</span></div><div class="dots8"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></a>
+<a class="card hs-card" href={link('services', site)}><span class="hs-n" aria-hidden="true">03</span><span class="tag">Data and AI</span><h3>AI that reaches production</h3><p>Clean data first, then AI features with evaluation and guardrails built in.</p><div class="demo"><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></a>
+<a class="card hs-card" href={link('services', site)}><span class="hs-n" aria-hidden="true">04</span><span class="tag">Accessibility and quality</span><h3>Software that works for everyone</h3><p>Reviews, fixes and testing from the team that builds Xessly.</p><div class="demo"><div class="radar"><i></i><i></i><i></i><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><path d="M5 9h14M12 9v6m0 0l-3.5 6M12 15l3.5 6" fill="none"/></svg></div></div></a>
+<a class="card hs-card lm" href={link('services', site)}><span class="hs-n" aria-hidden="true">05</span><span class="tag" style="background:rgba(255,255,255,.6)">Security and support</span><h3>Secure, watched, on call</h3><p>Hardening, incident readiness and a support desk that knows your system.</p><div class="big" style="margin-top:22px">24/7</div></a>
+<a class="card hs-card wide ind" href={link('products', site)} style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap"><div><span class="tag">Our products</span><h3 style="font-size:26px">We build our own, too.</h3><p>Allocivo and Xessly are Brightyard products. They keep our engineers close to the same problems our clients face.</p></div><span class="btn lime">Meet our products <span class="arrow">&rarr;</span></span></a>
+</div></div>
+<div class="hs-prog" aria-hidden="true"><i></i></div>
+</div>

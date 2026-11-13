@@ -1,0 +1,7 @@
+---
+// Allocivo: opening banner.
+import ProductHero from '../../product/ProductHero.astro';
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<ProductHero product="allocivo"><b>Allocivo</b> is a team of AI agents for hotel operations. It turns workforce availability into action, in real time.<Fragment slot="actions"><div class="acts"><a class="btn pri" href={link('allocivo/al-demo', site)}>Book a demo</a><a class="btn out" href={link('allocivo/al-how', site)}>See how it works</a></div></Fragment></ProductHero>

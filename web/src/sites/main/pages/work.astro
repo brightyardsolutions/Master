@@ -1,7 +1,13 @@
 ---
 // https://brightyard.in/work
-// Step 2 of the migration moves the work page content from today’s index.html (#p-work) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PageHero from '../../../components/shared/PageHero.astro';
+import CaseStudyList from '../../../components/main/work/CaseStudyList.astro';
 ---
 <MainLayout id="work">
+<PageHero eyebrow="Case studies">
+<Fragment slot="title">Results our clients can <mark>point to</mark>.</Fragment>
+<Fragment slot="lead">Each story shows the problem, what we changed and one number that moved, with the timeframe. Client names appear only with permission.</Fragment>
+</PageHero>
+<CaseStudyList />
 </MainLayout>

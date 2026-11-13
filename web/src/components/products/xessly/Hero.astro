@@ -1,0 +1,7 @@
+---
+// Xessly: opening banner.
+import ProductHero from '../../product/ProductHero.astro';
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<ProductHero product="xessly"><b>Xessly</b> is a team of AI agents that finds website accessibility issues, fixes them in your code or CMS, and verifies every change.<Fragment slot="actions"><div class="acts"><a class="btn pri" href={link('xessly/xs-access', site)}>Request early access</a><a class="btn out" href={link('xessly/xs-how', site)}>See the agent flow</a></div></Fragment></ProductHero>

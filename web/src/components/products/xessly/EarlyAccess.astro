@@ -1,0 +1,18 @@
+---
+// Xessly (#xs-access): Early access Let the agents take your accessibility backlog. Tell us about your 
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec alt" id="xs-access"><div class="wrap story" style="align-items:start">
+<div><span class="eyebrow rv">Early access</span><h2 class="split">Let the agents take your accessibility backlog.</h2><p class="lead rv">Tell us about your site and how you ship changes, and we'll be in touch about early access.</p></div>
+<div class="card rv"><form class="lf" data-kind="Xessly early access" novalidate><label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<div class="row2"><label>Name<input name="name" data-req="Enter your name." autocomplete="name"><span class="err"></span></label><label>Work email<input name="email" type="email" data-req="Enter a valid work email." autocomplete="email"><span class="err"></span></label></div>
+<div class="row2"><label>Role<input name="role" data-req="Enter your role." placeholder="e.g. Frontend engineer"><span class="err"></span></label><label>Organisation<input name="company" data-req="Enter your organisation." autocomplete="organization"><span class="err"></span></label></div>
+<div class="row2"><label>Where should fixes go?<select name="where"><option>Code repository (pull requests)</option><option>CMS</option><option>Both</option><option>Not sure yet</option></select></label><label>Repository or CMS <span class="help">(optional)</span><input name="platform" placeholder="e.g. GitHub, WordPress"></label></div>
+<label>Website URL <span class="help">(optional, for context only. This form does not scan your website.)</span><input name="url" type="url" inputmode="url"></label>
+<label>Anything else? <span class="help">(optional)</span><textarea name="message" rows="3"></textarea></label>
+<p class="fnote" role="status" aria-live="polite"></p>
+<button class="btn pri" type="submit"><span>Request early access</span><span class="arrow">&rarr;</span></button>
+<p class="fine" style="margin:0">We use your details only to reply to you. <a class="ul-link" href={link('privacy', site)}>Privacy policy</a></p>
+</form></div>
+</div></div>

@@ -1,0 +1,14 @@
+---
+// brightyard.in home page: Start your way Pick the first step that fits. Ready to talk Talk to an engineer
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec alt"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Start your way</span><h2 class="split">Pick the first step that fits.</h2></div>
+<div class="g3">
+<a class="card rv" href={link('contact', site)}><span class="tag">Ready to talk</span><h3>Talk to an engineer</h3><p>30 minutes with a senior engineer, not a salesperson. Bring the problem, leave with a next step.</p><span class="more">Book a call <span class="arrow">&rarr;</span></span></a>
+<a class="card rv" style="--d:100ms" href={link('contact', site)}><span class="tag">Want a second opinion</span><h3>Architecture review</h3><p>We review your system and send a written report with prioritised fixes within 10 working days.</p><span class="more">Request a review <span class="arrow">&rarr;</span></span></a>
+<a class="card rv" style="--d:200ms" href={link('contact', site)}><span class="tag">Accessibility deadline</span><h3>Accessibility review</h3><p>A prioritised list of barriers on your key user journeys, with fixes your developers can act on.</p><span class="more">Request a review <span class="arrow">&rarr;</span></span></a>
+</div>
+<p class="fine rv" style="margin-top:24px">Just researching? <a class="ul-link" href={link('insights', site)}>Read our field notes &rarr;</a></p>
+</div></div>

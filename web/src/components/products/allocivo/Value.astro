@@ -1,0 +1,41 @@
+---
+// Allocivo (#al-value): Operational and financial efficiency Where the time and money come back. Five le
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec" id="al-value"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Operational and financial efficiency</span><h2 class="split">Where the time and money come back.</h2><p class="lead rv">Five levers, each tied to a number your hotel already tracks or can start tracking.</p></div>
+<div class="levers rv">
+<div><b>Less chasing</b><span>One live board replaces radio calls and group chats</span><em>Supervisor minutes per shift</em></div>
+<div><b>Faster assignment</b><span>Agents pick an eligible person the moment work appears</span><em>Time from task to assignment</em></div>
+<div><b>Fewer late rooms</b><span>Deadline risk is flagged while there's still time to act</span><em>Rooms ready by target time</em></div>
+<div><b>Less overtime</b><span>Workload is balanced before the shift runs long</span><em>Overtime hours and cost</em></div>
+<div><b>Less rework</b><span>Failed inspections loop straight back to the right person</span><em>Repeat tasks and rework hours</em></div>
+</div>
+
+<div class="calc rv" id="al-calc">
+<div class="calc-in">
+<h3>Estimate the value for your property</h3>
+<p class="fine">Enter your own numbers. The formulas come from our product model; the result is an estimate, not a promise.</p>
+<select data-k="cur" hidden aria-hidden="true"><option value="$">$</option></select>
+<label>Supervisor shifts per day <output data-o="shifts">3</output><input type="range" data-k="shifts" min="1" max="12" value="3"></label>
+<label>Minutes each supervisor spends coordinating per shift <output data-o="mins">90</output><input type="range" data-k="mins" min="0" max="240" step="5" value="90"></label>
+<label>Supervisor hourly cost<input type="number" data-k="sup" value="20" min="0" inputmode="decimal"></label>
+<label>Annual overtime cost<input type="number" data-k="ot" value="30000" min="0" inputmode="decimal"></label>
+<label>Rework hours per month <output data-o="rw">40</output><input type="range" data-k="rw" min="0" max="300" step="5" value="40"></label>
+<label>Staff hourly cost<input type="number" data-k="staff" value="12" min="0" inputmode="decimal"></label>
+<label>Share you believe is avoidable <output data-o="share">20%</output><input type="range" data-k="share" min="0" max="50" value="20"></label>
+</div>
+<div class="calc-out" aria-live="polite">
+<span class="co-h">Potential annual value</span>
+<b class="co-total" data-r="total">0</b>
+<div class="co-bars">
+<div><span>Coordination time freed</span><i><s data-b="coord"></s></i><b data-r="coord">0</b><small data-r="hours">0 hours</small></div>
+<div><span>Overtime avoided</span><i><s data-b="ot"></s></i><b data-r="ot">0</b></div>
+<div><span>Rework avoided</span><i><s data-b="rw"></s></i><b data-r="rw">0</b></div>
+</div>
+<p class="co-note">Time freed is capacity your team can spend on guests, not automatic cash savings. Subtract Allocivo's cost for net value; we'll confirm it with a baseline from your property.</p>
+<a class="btn lime" href={link('allocivo/al-demo', site)}>Check these numbers with us</a>
+</div>
+</div>
+</div></div>

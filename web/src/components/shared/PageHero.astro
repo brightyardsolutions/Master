@@ -1,0 +1,9 @@
+---
+// The dark banner that opens most brightyard.in pages: eyebrow, heading (slot "title", with a <mark>ed phrase),
+// lead text (slot "lead") and optional buttons (default slot). `doc` is the plain variant used by the privacy policy.
+interface Props { eyebrow: string; doc?: boolean }
+const { eyebrow, doc = false } = Astro.props;
+---
+{doc
+  ? <div class="ph ph-doc"><div class="wrap"><span class="eyebrow">{eyebrow}</span><h1><slot name="title" /></h1><p class="lead"><slot name="lead" /></p><slot /></div></div>
+  : <div class="ph" data-dark><div class="wrap"><span class="eyebrow rv">{eyebrow}</span><h1 class="split"><slot name="title" /></h1><p class="lead rv"><slot name="lead" /></p><slot /></div></div>}

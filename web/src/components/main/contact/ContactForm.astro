@@ -1,0 +1,27 @@
+---
+// brightyard.in contact page: Website What do you want to build or fix? Name Work email + Add more details (op
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec"><div class="wrap story" style="align-items:start">
+<div class="card rv" id="formcard">
+<form id="cf" novalidate><label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<label>What do you want to build or fix?<textarea id="goal" rows="4" placeholder="A sentence is enough. For example: our checkout slows down on sale days."></textarea><span class="err" id="e-goal"></span></label>
+<div class="row2">
+<label>Name<input id="name" autocomplete="name"><span class="err" id="e-name"></span></label>
+<label>Work email<input id="email" type="email" autocomplete="email"><span class="err" id="e-email"></span></label>
+</div>
+<button type="button" class="optb" id="optb" aria-expanded="false" aria-controls="opt">+ Add more details (optional)</button>
+<div id="opt"><div class="row2"><label>Company<input id="co" autocomplete="organization"></label>
+<label>Interested in<select id="int"><option>Services</option><option>Allocivo</option><option>Xessly</option><option>A fixed-price review</option></select></label></div>
+<label>Industry<select id="ind"><option>Hospitality and travel</option><option>Retail and e-commerce</option><option>Financial services</option><option>Healthcare</option><option>Logistics</option><option>SaaS and technology</option><option>Public sector and education</option><option>Other</option></select></label></div>
+<p class="fnote" id="fnote" role="status" aria-live="polite"></p>
+<button class="btn pri mag" type="submit" id="fsend" style="justify-self:start"><span>Send message</span><span class="arrow">&rarr;</span></button>
+<p class="fine" style="margin:0">Prefer email? Write to <a class="ul-link" href="mailto:hello@brightyard.in">hello@brightyard.in</a>. We use your details only to reply to you. <a class="ul-link" href={link('privacy', site)}>Privacy policy</a></p>
+</form>
+</div>
+<div class="rv" style="--d:120ms;display:grid;gap:16px">
+<div class="card ind" data-draft><h3>Reach us directly</h3><p style="margin-top:16px"><span class="tbd">[hello@brightyard.com]</span></p><p><span class="tbd">[+91 phone number]</span></p><p><span class="tbd">[Office address, city, country]</span></p></div>
+<div class="card lm"><h3>What happens next</h3><p>1. We read your message.<br>2. A senior engineer replies within one business day.<br>3. If it helps, we book a free 30-minute call.</p></div>
+</div>
+</div></div>

@@ -1,0 +1,19 @@
+---
+// The pinned ten-step product story with its 3D stage (Allocivo and Xessly). The steps are the default slot.
+// `skip` is an old-style link target (e.g. "allocivo/al-problem"), turned into an address by link().
+import { link } from '../../lib/links.mjs';
+interface Props { product: 'al' | 'xs'; label: string; skip: string }
+const { product, label, skip } = Astro.props;
+const site = import.meta.env.SITE_KEY;
+---
+<section class={`s3 ${product}`} data-story={product} data-dark aria-label={label}>
+<div class="s3-pin">
+<div class="s3-stage" aria-hidden="true"><canvas></canvas></div>
+<div class="wrap s3-in"><ol class="s3-steps">
+<slot />
+</ol></div>
+<div class="s3-rail"></div>
+<span class="s3-note">Illustrative demo data</span>
+<a class="s3-skip" href={link(skip, site)}>Skip the story</a>
+</div>
+</section>

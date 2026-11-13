@@ -1,0 +1,77 @@
+---
+// Allocivo: the ten-step story (3D stage added by the script).
+import ProductStory from '../../shared/ProductStory.astro';
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<ProductStory product="al" label="Allocivo story: the problem and the solution, in ten steps" skip="allocivo/al-problem">
+<li class="s3-step" data-i="0">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-al"/></svg>
+<span class="k a" style="--i:1">Allocivo &middot; by Brightyard</span>
+<h2 class="a" style="--i:2">Your hotel is always moving.<br>Your workforce decisions should too.</h2>
+<p class="s a" style="--i:3">Real-time workforce orchestration for hospitality. Here's the problem it solves, and how.</p></div>
+</li>
+<li class="s3-step" data-i="1">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Your systems record the work. Your team still connects the dots.</h2><p class="s a" style="--i:2">The PMS knows which rooms need attention. Attendance knows who arrived. Task tools hold the list. Nothing decides who should act next, so a supervisor does it by radio and WhatsApp.</p></div>
+<div class="vstack">
+<div class="vgrid3 a" style="--i:2"><div class="vcard"><small>PMS</small><b>Room 418</b><span>Ready by 14:00</span></div><div class="vcard"><small>Attendance</small><b>Daniel</b><span>On shift</span></div><div class="vcard"><small>Task tool</small><b>T-104</b><span>Assigned to Daniel</span></div></div>
+<div class="gapline a" style="--i:3">no shared decision</div>
+<div class="vcard a" style="--i:4"><small>Supervisor, floor 4</small><span class="bub">Who's free on 4?</span><br><span class="bub r">Is 418 done yet?</span><br><span class="bub">Front desk says 512 is here early</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="2">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Then the day changes.</h2><p class="s a" style="--i:2">Hotel operations are event-driven. Workforce allocation usually isn't. Every change lands on the same few people.</p></div>
+<div class="vstack">
+<div class="vcard a" style="--i:2"><small>Demand changes</small><b>Early arrival for Room 512 at 12:30</b><span>Priorities shift from the morning plan.</span></div>
+<div class="vcard a" style="--i:3"><small>Availability changes</small><b>Daniel is running 25 minutes late</b><span>Absences, breaks and workload change what the team can deliver.</span></div>
+<div class="vcard vbad a" style="--i:4"><small>Work gets disconnected</small><b>Room 206 is blocked by maintenance</b><span>Housekeeping can't finish until the repair is closed.</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="3">
+<div><span class="k a">The cost</span><h2 class="a" style="--i:1">Risk shows up when the deadline is already close.</h2><p class="s a" style="--i:2">Without a live view, nobody sees that Room 418 will miss its target until a guest is waiting at the desk.</p></div>
+<div class="tline a" style="--i:2"><div class="bar"><span class="fill"></span></div>
+<div class="tl-ev"><div><b>12:30</b><span>Early arrival for 512</span></div><div><b>13:05</b><span>Daniel running late</span></div><div class="hot"><b>13:40</b><span>Supervisor finds out 418 isn't started</span></div><div class="hot"><b>14:00</b><span>Room 418 target missed</span></div></div></div>
+</li>
+<li class="s3-step" data-i="4">
+<div><span class="k a">The solution</span><h2 class="a" style="--i:1">Allocivo's agents connect the signals and decide the next move.</h2><p class="s a" style="--i:2">They sit above the systems you already run, combine demand, availability and your operating rules, and decide who should do what next.</p></div>
+<div class="flow a" style="--i:2">
+<div class="ins"><div>Demand: arrivals, room status</div><div>Availability: who's on shift</div><div>Context: skills, workload, rules</div></div>
+<svg class="hub" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-al"/></svg>
+<div class="vcard vacc"><small>Recommendation</small><b>Move Room 418 to Asha</b><span>Free now, qualified for room turns, already on floor 4.</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="5">
+<div><span class="k a">How it works</span><h2 class="a" style="--i:1">Sense. Understand. Decide. Adapt.</h2><p class="s a" style="--i:2">A continuous loop, with people in control at every step.</p></div>
+<div class="steps4">
+<div class="vcard a" style="--i:2"><small>1 Sense</small><b>Bring in live signals</b><span>Room status, arrivals, attendance and task status, from systems you already use.</span></div>
+<div class="vcard a" style="--i:3"><small>2 Understand</small><b>Read the situation</b><span>Workload, skills, location, deadlines and dependencies.</span></div>
+<div class="vcard a" style="--i:4"><small>3 Decide</small><b>Recommend the next action</b><span>Who should do what next, using your rules.</span></div>
+<div class="vcard a" style="--i:5"><small>4 Adapt</small><b>Recalculate on change</b><span>When reality moves, the plan moves with it.</span></div>
+</div>
+</li>
+<li class="s3-step" data-i="6">
+<div><span class="k a">In action</span><h2 class="a" style="--i:1">When the plan breaks, the next move is already on screen.</h2><p class="s a" style="--i:2">Daniel is late. Room 418 turns at risk. Allocivo proposes Asha, the supervisor approves, and the queue settles.</p></div>
+<div class="a" style="--i:2"><div data-ui="al"></div></div>
+</li>
+<li class="s3-step" data-i="7">
+<div><span class="k a">Autonomy you set</span><h2 class="a" style="--i:1">Agents act where you allow them. Managers handle the exceptions.</h2><p class="s a" style="--i:2">Low-risk work moves automatically. Bigger changes wait for approval. Every action shows its reason.</p><div class="levels a" style="--i:3"><span><b>Automatic</b>Low-risk reassignments</span><span><b>Approval</b>Moderate changes</span><span><b>Sign-off</b>High-impact actions</span></div></div>
+<div class="vcard a" style="--i:2"><small>Why this assignment?</small><b>Room 418 &rarr; Asha</b>
+<div class="why"><div><i>&#10003;</i>Ready-by deadline is 14:00</div><div><i>&#10003;</i>Qualified for room turns</div><div><i>&#10003;</i>Lowest current workload on shift</div><div><i>&#10003;</i>Already on floor 4</div><div><i class="no">&times;</i>Daniel: running 25 minutes late</div></div>
+<div class="acts3"><span>Approve</span><span>Change</span><span>Dismiss</span></div></div>
+</li>
+<li class="s3-step" data-i="8">
+<div><span class="k a">Outcomes</span><h2 class="a" style="--i:1">Measured against your own baseline.</h2><p class="s a" style="--i:2">Results depend on each property's data and workflow. We track what changes; we don't promise numbers we haven't measured.</p></div>
+<div class="vgrid2">
+<div class="vcard a" style="--i:2"><small>Track</small><b>Priority work completed within target</b></div>
+<div class="vcard a" style="--i:3"><small>Track</small><b>Rooms ready by target time</b></div>
+<div class="vcard a" style="--i:4"><small>Track</small><b>Time from exception to action</b></div>
+<div class="vcard a" style="--i:5"><small>Track</small><b>Manager coordination effort</b></div>
+</div>
+</li>
+<li class="s3-step" data-i="9">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-al"/></svg>
+<h2 class="a" style="--i:1">Give your team a better way to decide what happens next.</h2>
+<p class="s a" style="--i:2">Show us how your hotel works. We'll explore where better coordination could help.</p>
+<div class="dkcta a" style="--i:3"><a class="btn lime" href={link('allocivo/al-demo', site)}>Book a demo</a><a class="btn out" href={link('allocivo/al-problem', site)}>Read the details</a></div></div>
+</li>
+</ProductStory>

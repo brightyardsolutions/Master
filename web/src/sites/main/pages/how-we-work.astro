@@ -1,7 +1,19 @@
 ---
 // https://brightyard.in/how-we-work
-// Step 2 of the migration moves the how page content from today’s index.html (#p-how) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PageHero from '../../../components/shared/PageHero.astro';
+import WhoDoesWhat from '../../../components/main/how-we-work/WhoDoesWhat.astro';
+import Promises from '../../../components/main/how-we-work/Promises.astro';
+import Beliefs from '../../../components/main/how-we-work/Beliefs.astro';
+import PressB from '../../../components/main/how-we-work/PressB.astro';
 ---
 <MainLayout id="how">
+<PageHero eyebrow="How we work">
+<Fragment slot="title">Our playbook, <mark>in public.</mark></Fragment>
+<Fragment slot="lead">Agents build. Engineers understand your business and make the work better. This is how we actually run projects; if something here doesn't match your experience with us, tell us.</Fragment>
+</PageHero>
+<WhoDoesWhat />
+<Promises />
+<Beliefs />
+<PressB />
 </MainLayout>

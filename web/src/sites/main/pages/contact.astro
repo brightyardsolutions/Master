@@ -1,7 +1,13 @@
 ---
 // https://brightyard.in/contact
-// Step 2 of the migration moves the contact page content from today’s index.html (#p-contact) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PageHero from '../../../components/shared/PageHero.astro';
+import ContactForm from '../../../components/main/contact/ContactForm.astro';
 ---
 <MainLayout id="contact">
+<PageHero eyebrow="Contact">
+<Fragment slot="title">Tell us what you're <mark>building.</mark></Fragment>
+<Fragment slot="lead">A senior engineer reads every message and replies within one business day.</Fragment>
+</PageHero>
+<ContactForm />
 </MainLayout>

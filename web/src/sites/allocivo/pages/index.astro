@@ -1,7 +1,14 @@
 ---
 // https://allocivo.brightyard.in/
-// Step 2 of the migration moves these sections here, as components: prodhero, s3, note, al-value.
 import ProductLayout from "../../../layouts/ProductLayout.astro";
+import Hero from "../../../components/products/allocivo/Hero.astro";
+import Story from "../../../components/products/allocivo/Story.astro";
+import StoryNote from "../../../components/products/allocivo/StoryNote.astro";
+import Value from "../../../components/products/allocivo/Value.astro";
 ---
 <ProductLayout path="/">
+<Hero />
+<Story />
+<StoryNote />
+<Value />
 </ProductLayout>

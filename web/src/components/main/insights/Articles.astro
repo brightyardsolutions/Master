@@ -1,0 +1,17 @@
+---
+// brightyard.in insights page: [Draft: show only published articles. Each card links to its article.] AI How to
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec"><div class="wrap">
+<p class="fine opt" style="margin-bottom:20px"><span class="tbd">[Draft: show only published articles. Each card links to its article.]</span></p>
+<div class="g3" data-draft>
+<article class="card rv"><span class="tag">AI</span><h3>How to take an AI pilot to production</h3><p>The checks that separate a demo from a system your team can rely on.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:80ms"><span class="tag">Accessibility</span><h3>Why accessibility overlays won't save you</h3><p>What overlays can and can't do, and what fixes the underlying problems.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:160ms"><span class="tag">Hospitality</span><h3>Room readiness is a coordination problem, not a cleaning task</h3><p>Arrivals, absences and maintenance blockers, and why static task lists can't keep up.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv"><span class="tag">Cloud</span><h3>A practical cloud cost checklist</h3><p>Seven places most teams overspend, and how to find them in a week.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:80ms"><span class="tag">Software</span><h3>Modernising legacy systems in slices</h3><p>Why incremental replacement beats the big rewrite.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:160ms"><span class="tag">Buying</span><h3>Choosing an IT partner: 12 questions to ask</h3><p>And the answers that should make you walk away.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+</div>
+<div class="card launch-only empty"><h3>Our first field notes are on the way.</h3><p>Practical guides on AI, cloud, accessibility and delivery. Want one on a specific topic? Tell us.</p><a class="btn pri" style="margin-top:20px" href={link('contact', site)}>Suggest a topic</a></div>
+</div></div>

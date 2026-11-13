@@ -1,7 +1,21 @@
 ---
 // https://brightyard.in/services
-// Step 2 of the migration moves the services page content from today’s index.html (#p-services) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PageHero from '../../../components/shared/PageHero.astro';
+import ServiceLines from '../../../components/main/services/ServiceLines.astro';
+import WaysToWork from '../../../components/main/services/WaysToWork.astro';
+import Starters from '../../../components/main/services/Starters.astro';
+import Faq from '../../../components/main/services/Faq.astro';
+import NotSure from '../../../components/main/services/NotSure.astro';
 ---
 <MainLayout id="services">
+<PageHero eyebrow="Services">
+<Fragment slot="title">Engineering for the systems you <mark>can't afford</mark> to get wrong.</Fragment>
+<Fragment slot="lead">Five service lines, one delivery model, one team. Start with what's urgent and grow from there.</Fragment>
+</PageHero>
+<ServiceLines />
+<WaysToWork />
+<Starters />
+<Faq />
+<NotSure />
 </MainLayout>

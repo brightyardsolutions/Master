@@ -12,7 +12,7 @@
     "dev:allocivo": "node tools/dev.mjs allocivo",
     "dev:xessly": "node tools/dev.mjs xessly",
     "build:functions": "node tools/build-functions.mjs",
-    "test:shell": "node tests/compare-shell.mjs"
+    "test:compare": "node tests/compare.mjs"
   },
   "devDependencies": {
     "astro": "7.4.4"

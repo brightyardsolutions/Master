@@ -1,7 +1,18 @@
 ---
 // https://brightyard.in/products
-// Step 2 of the migration moves the products page content from today’s index.html (#p-products) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PageHero from '../../../components/shared/PageHero.astro';
+import ProductRows from '../../../components/main/products/ProductRows.astro';
+import WhyWeBuildProducts from '../../../components/main/products/WhyWeBuildProducts.astro';
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
 ---
 <MainLayout id="products">
+<PageHero eyebrow="Products">
+<Fragment slot="title">Two products. Built by <mark>the same engineers</mark> who'd build yours.</Fragment>
+<Fragment slot="lead">Allocivo and Xessly are built by Brightyard's agents and engineers. They're how we prove our way of working on problems of our own.</Fragment>
+<div class="acts rv"><a class="btn pri" href={link('allocivo', site)}>Explore Allocivo</a><a class="btn out" href={link('xessly', site)}>Explore Xessly</a></div>
+</PageHero>
+<ProductRows />
+<WhyWeBuildProducts />
 </MainLayout>

@@ -1,0 +1,18 @@
+---
+// Allocivo (#al-demo): Book a demo Show us how your hotel works. Tell us about your property, current s
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="sec alt" id="al-demo"><div class="wrap story" style="align-items:start">
+<div><span class="eyebrow rv">Book a demo</span><h2 class="split">Show us how your hotel works.</h2><p class="lead rv">Tell us about your property, current systems and operational challenges. We'll focus on your actual workflow, not a generic software presentation.</p></div>
+<div class="card rv"><form class="lf" data-kind="Allocivo demo" novalidate><label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<div class="row2"><label>Full name<input name="name" data-req="Enter your name." autocomplete="name"><span class="err"></span></label><label>Work email<input name="email" type="email" data-req="Enter a valid work email." autocomplete="email"><span class="err"></span></label></div>
+<div class="row2"><label>Hotel or group name<input name="company" data-req="Enter your hotel or group name." autocomplete="organization"><span class="err"></span></label><label>Your role<input name="role" placeholder="e.g. Executive housekeeper"></label></div>
+<div class="lf row3"><label>Country<input name="country" autocomplete="country-name"></label><label>Properties<input name="properties" inputmode="numeric"></label><label>Approx. rooms<input name="rooms" inputmode="numeric"></label></div>
+<div class="row2"><label>Current PMS <span class="help">(optional)</span><input name="pms"></label><label>Attendance or workforce system <span class="help">(optional)</span><input name="workforce"></label></div>
+<label>Biggest operational challenge<textarea name="goal" rows="3" data-req="Tell us a little about the challenge."></textarea><span class="err"></span></label>
+<label class="chk"><input type="checkbox" name="consent" data-req="Please confirm we can contact you."><span>I agree to be contacted about Allocivo. <a class="ul-link" href={link('privacy', site)}>Privacy policy</a></span></label><span class="err" data-for="consent"></span>
+<p class="fnote" role="status" aria-live="polite"></p>
+<button class="btn pri" type="submit"><span>Request a demo</span><span class="arrow">&rarr;</span></button>
+</form></div>
+</div></div>

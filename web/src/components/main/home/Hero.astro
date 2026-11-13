@@ -1,0 +1,20 @@
+---
+// brightyard.in home page: Built by AI agents. Reviewed by engineers. Built for what happens next. Brightya
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="hero3" id="hero" data-dark>
+<div class="h3-stage" role="img" aria-label="Animated Brightyard logo above a moving field of dots, with signals flowing into it."><canvas id="hero-c"></canvas></div>
+<div class="wrap h3-in">
+<div class="h3-copy">
+<span class="h3-kick"><i class="live"></i>Built by AI agents. Reviewed by engineers.</span>
+<h1 class="split">Built for <mark>what happens next.</mark></h1>
+<p class="lead" id="seg-p">Brightyard designs, builds and runs software that turns data, signals and requests into the next right action. We do it for our clients, and in our own products.</p>
+<div class="acts"><a class="btn pri mag" id="seg-b" href={link('contact', site)}><span>Talk to an engineer</span><span class="arrow">&rarr;</span></a><a class="btn out" href={link('work', site)}>See our work</a></div>
+<p class="micro">No sales deck. A senior engineer replies within one business day.</p>
+<div class="segs"><span>I'm with a</span><button class="sg on" data-s="all">Growing company</button><button class="sg" data-s="startup">Startup</button><button class="sg" data-s="enterprise">Enterprise</button><button class="sg" data-s="public">Public sector</button></div>
+</div>
+</div>
+<div class="h3-meta"><button type="button" class="h3-pause" id="hero-pause" aria-pressed="false">Pause animation</button></div>
+<a class="h3-scroll" href={link('home/bpgen', site)} aria-label="Scroll to the blueprint generator"><i></i>Scroll</a>
+</div>

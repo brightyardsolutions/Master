@@ -1,10 +1,11 @@
 // Compares the new Astro pages with today's live files, page by page.
 //   1. the page shell (head, header, mega menu, footer, dock, templates, data): same HTML, once old #/ links
-//      are converted with the link table;
+//      are converted with the link table; the stylesheet: same text;
 //   2. screenshots of the header and footer on desktop and phone: identical pixels;
-//   3. old brightyard.in/#/... addresses forward to the right new page.
+//   3. every page's content: same HTML, and identical full-page screenshots on desktop and phone;
+//   4. old brightyard.in/#/... addresses forward to the right new page.
 // Both sides run with JavaScript off, because the scripts are ported in step 3.
-// Run from web/ after `npm run build`:  node tests/compare-shell.mjs
+// Run from web/ after `npm run build`:  npm run test:compare
 // Starts its own servers. Screenshots of any difference go to tests/out/.
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
@@ -19,7 +20,7 @@ import { NO_SCRIPT_CSS } from '../src/lib/page.mjs';
 // header is shot over the same background, floating buttons are hidden, and the no-JavaScript rules apply to both.
 // brightyard.in pages are compared with all content hidden; product pages keep only their closing band.
 const SHOT_CSS = NO_SCRIPT_CSS + 'html:not([data-product]) main{display:none!important}main section.page>:not(.sec:has(.band)){display:none!important}#dock,#astb,#astp{display:none!important}'
-  // on the empty step-1 pages the band is the first section, which new.css pads by 168px (.page>.sec:first-child): pin it
+  // with the content hidden the band becomes the first section, which new.css pads by 168px (.page>.sec:first-child): pin it
   + 'main section.page>.sec:has(.band){padding-top:40px!important}';
 // while shooting the footer or the band, the fixed bars at the top are hidden so they cannot overlap them
 const NO_TOP_BARS = '#hdr,#draftbar,#prog{visibility:hidden!important}';
@@ -184,7 +185,41 @@ try {
       });
     }
     await compareShots(browser, key, `http://localhost:838${port}/how-it-works/`.replace('how-it-works', key === 'xessly' ? 'agent-flow' : 'how-it-works'),
-      `http://localhost:839${port}/` + (key === 'xessly' ? 'agent-flow/' : 'how-it-works/'), ['#hdr', 'footer', '.band'], VIEWPORTS);
+      `http://localhost:839${port}/` + (key === 'xessly' ? 'agent-flow/' : 'how-it-works/'), ['#hdr', 'footer'], VIEWPORTS);   // the band is covered by the full-page screenshots below
+  }
+
+  console.log('Whole pages: same content, identical full-page screenshots on desktop and phone');
+  const strip = h => h.replace(/<!--[\s\S]*?-->/g, '');
+  // today's brightyard.in is one page with every section in it: show the wanted one, as the router would
+  const showOld = (p, id) => p.evaluate(id => document.querySelectorAll('.page').forEach(s => s.classList.toggle('on', s.id === 'p-' + id)), id);
+  const PAGES = [
+    ...SITES.main.routes.filter(r => r.hash).map(r => ({ name: 'main' + r.path, here: 'main', oldUrl: 'http://localhost:8380/', oldId: r.id, newUrl: 'http://localhost:8390' + r.path })),
+    ...['allocivo', 'xessly'].flatMap((k, i) => SITES[k].routes.filter(r => r.sections).map(r => ({ name: k + r.path, here: k, oldUrl: `http://localhost:838${i + 1}${r.path}`, newUrl: `http://localhost:839${i + 1}${r.path}` }))),
+  ];
+  for (const P of PAGES) {
+    const a = await ctx.newPage(), b = await ctx.newPage();
+    await a.goto(P.oldUrl); await b.goto(P.newUrl);
+    if (P.oldId) await showOld(a, P.oldId);
+    const x = norm(strip(oldHref(P.here)(await a.evaluate(s => document.querySelector(s).innerHTML, P.oldId ? '#p-' + P.oldId : 'main'))));
+    const y = norm(strip(await b.evaluate(s => document.querySelector(s).innerHTML, P.oldId ? 'section.page.on' : 'main')));
+    if (x !== y) { let i = 0; while (x[i] === y[i]) i++; ok(false, `${P.name}: page content differs at ${i}\n    old: ${x.slice(Math.max(0, i - 80), i + 100)}\n    new: ${y.slice(Math.max(0, i - 80), i + 100)}`); } else checks++;
+    await a.close(); await b.close();
+  }
+  for (const [label, vp] of Object.entries(VIEWPORTS)) {
+    const sctx = await browser.newContext({ javaScriptEnabled: false, viewport: vp, deviceScaleFactor: 1 });
+    for (const P of PAGES) {
+      const a = await sctx.newPage(), b = await sctx.newPage();
+      await a.goto(P.oldUrl); await b.goto(P.newUrl);
+      if (P.oldId) await showOld(a, P.oldId);
+      for (const p of [a, b]) { await p.evaluate(css => { const st = document.createElement('style'); st.textContent = css; document.head.append(st); }, NO_SCRIPT_CSS); await p.evaluate(() => document.fonts.ready); }
+      const x = await a.screenshot({ fullPage: true, animations: 'disabled' }), y = await b.screenshot({ fullPage: true, animations: 'disabled' });
+      const d = Buffer.compare(x, y) === 0 ? { same: true } : await pixelDiff(b, x, y);
+      const same = d.same || (d.sameSize && d.max <= TOLERANCE);
+      ok(same, `${P.name} ${label}: full-page screenshot differs (${d.sameSize === false ? 'different size' : `${d.count} pixels, up to ${d.max}/255`}; saved to tests/out)`);
+      if (!same) { const f = `page-${P.name}-${label}`.replace(/\W+/g, '_'); writeFileSync(join(OUT, f + '-old.png'), x); writeFileSync(join(OUT, f + '-new.png'), y); }
+      await a.close(); await b.close();
+    }
+    await sctx.close();
   }
 
   console.log('brightyard.in: old #/ addresses');

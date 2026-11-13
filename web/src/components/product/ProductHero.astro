@@ -1,0 +1,14 @@
+---
+// The opening banner of a product site: product mark and name, the one-line pitch (default slot)
+// and two buttons (slot "actions").
+import { PRODUCTS } from '../../sites/index.mjs';
+interface Props { product: 'allocivo' | 'xessly' }
+const P = PRODUCTS[Astro.props.product];
+---
+<div class={`prodhero ${P.short}`} data-dark><div class="wrap">
+<div class="phl rv">
+<div class="pl"><svg aria-hidden="true"><use href={`#${P.mark}`}/></svg><span>{P.name}<small>by Brightyard &middot; Early access</small></span></div>
+<h1><slot /></h1>
+<slot name="actions" />
+</div>
+</div></div>

@@ -1,7 +1,16 @@
 ---
 // https://xessly.brightyard.in/
-// Step 2 of the migration moves these sections here, as components: prodhero, s3, note, xs-problem, xs-routes.
 import ProductLayout from "../../../layouts/ProductLayout.astro";
+import Hero from "../../../components/products/xessly/Hero.astro";
+import Story from "../../../components/products/xessly/Story.astro";
+import StoryNote from "../../../components/products/xessly/StoryNote.astro";
+import Problem from "../../../components/products/xessly/Problem.astro";
+import Coverage from "../../../components/products/xessly/Coverage.astro";
 ---
 <ProductLayout path="/">
+<Hero />
+<Story />
+<StoryNote />
+<Problem />
+<Coverage />
 </ProductLayout>
