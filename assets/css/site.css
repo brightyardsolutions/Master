@@ -1605,6 +1605,15 @@ body.ast-away .astb:not([aria-expanded="true"]){opacity:0;pointer-events:none;tr
 .pp h3{font-size:clamp(22px,2.2vw,27px)}
 .pp.al .pp-now,.pp.xs .pp-now{color:#fff}
 
+/* ---------- product subdomain sites ---------- */
+.plogo span{display:flex;flex-direction:column;line-height:1.05}
+.plogo small{font-size:11.5px;font-weight:500;letter-spacing:0;opacity:.7;margin-top:2px}
+body.prod-al{--ind:#0C5A60;--ind2:#08454A}
+body.prod-xs{--lime:#8FF2CC}
+/* the header already names the product, so the intro starts with its promise */
+.prod-site .prodhero .phl>.pl{display:none}
+.prod-site .prodhero{padding-top:150px}
+
 /* ===================================================================== */
 /* Glass header: frosted surfaces with a thin neon edge (lime, indigo, mint). */
 /* Light glass over light sections, dark glass over dark ones.             */

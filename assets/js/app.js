@@ -1,10 +1,12 @@
 /* Brightyard site script. Sections: settings and forms, menus, live demos, signature layer, core. */
+try{
 /* ===== Brightyard site settings: edit these before launch ===== */
 window.SITE = {
   mode: 'launch',       // 'draft' shows highlighted placeholders; 'launch' hides every incomplete section
   formEndpoint: '/api/contact',    // e.g. 'https://formspree.io/f/xxxx' or '/api/contact'. Empty = form not connected yet.
   contactEmail: 'hello@brightyard.in',
-  api: true            // false = never call /api (the blueprint dialog then offers link, print and email instead)
+  api: true,           // false = never call /api (the blueprint dialog then offers link, print and email instead)
+  productSites: {}     // once live: { allocivo: 'https://allocivo.brightyard.in/', xessly: 'https://xessly.brightyard.in/' }
 };
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)};
@@ -57,6 +59,7 @@ $$('.aui,.xui').forEach(function(ui){
 });
 
 /* ---------- contact form: honest about whether it is connected ---------- */
+if(!$('#cf'))return;
 var opt=$('#opt'),optb=$('#optb'),note=$('#fnote'),send=$('#fsend');
 optb.addEventListener('click',function(){var o=opt.classList.toggle('open');optb.setAttribute('aria-expanded',o);optb.textContent=o?'- Hide extra details':'+ Add more details (optional)'});
 ['goal','name','email'].forEach(function(i){$('#'+i).addEventListener('input',function(){$('#e-'+i).textContent=''})});
@@ -78,6 +81,8 @@ $('#cf').addEventListener('submit',function(e){
 });
 })();
 
+}catch(e){console.error(e)}
+try{
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
@@ -161,6 +166,8 @@ $$('form.lf').forEach(function(f){
 });
 })();
 
+}catch(e){console.error(e)}
+try{
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
@@ -259,6 +266,8 @@ if(calc){
 }
 })();
 
+}catch(e){console.error(e)}
+try{
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
@@ -556,6 +565,7 @@ if(tpl&&home){
 }
 
 /* ---------- 2. Blueprint lens ---------- */
+if(!$('#bbtn'))return;
 var bp=$('#bp'),ring=$('#bring'),ann=$('#bpann'),bbtn=$('#bbtn'),ro=$('#bro');
 var on=false,x=innerWidth/2,y=innerHeight/2,tx=x,ty=y,R=0,big=false,looping=false,els=[],pool=[],last=0;
 var TARGETS=[['header','header',0],['h1','h1',1],['h2','h2',1],['h3','h3',1],['.lead','lead text',1],['.btn','button',0],['.card','card',0],['.tag','tag',0],['.mini','live widget',0],['.stats b','stat',1],['.ch','chip',0],['.logos','logo strip',0],['.pill','pill',0],['.sg','toggle',0],['footer','footer',0],['.band','cta band',0],['details','accordion',0],['.role','job row',0],['.spanel','sticky visual',0],['.sstep','story step',0],['input','input',0],['textarea','textarea',0],['.demo','demo panel',0],['.bpplan','plan panel',0],['.hero3','hero',0],['.s3-step.on','story step',0]];
@@ -658,6 +668,8 @@ document.addEventListener('keydown',function(e){
 if(fine&&!wasSeen()){setTimeout(function(){if(!wasSeen()&&!glOpen&&!on)say('New: press <b>B</b> to see how this page is built, or <b>G</b> for the yard menu.',9000)},6000)}
 })();
 
+}catch(e){console.error(e)}
+try{
 /* ---------- blueprint lead flow: share link, printable brief, "take it to your team", review request, counts ---------- */
 (function(){
 var B=window.BYBrief;if(!B)return;
@@ -800,6 +812,8 @@ window.BYRunBrief=function(text){
 if(pend)runBrief(pend,'bp_shared_open');
 })();
 
+}catch(e){console.error(e)}
+try{
 /* ===== core: smooth scroll, router, page transitions, scroll animation, 3D stages ===== */
 (function(){
 var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -807,6 +821,7 @@ var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
 var G=window.gsap,ST=window.ScrollTrigger,anim=!!(G&&ST)&&!reduced,root=document.documentElement;
+var PRODUCT=root.dataset.product||'',ASSETS=root.dataset.assets||'';
 if(G&&ST)G.registerPlugin(ST);
 root.classList.remove('anim');root.classList.add(anim?'anim':'noanim');
 $('#yr').textContent=new Date().getFullYear();
@@ -852,7 +867,7 @@ function loadScenes(){
   if(scenesP)return scenesP;
   scenesP=new Promise(function(res){
     if(reduced){res(null);return}
-    var s=document.createElement('script');s.src='assets/js/scenes.js';
+    var s=document.createElement('script');s.src=ASSETS+'assets/js/scenes.js';
     s.onload=function(){res(window.BYScenes&&BYScenes.supported()?BYScenes:null)};
     s.onerror=function(){res(null)};
     document.head.appendChild(s);
@@ -995,7 +1010,7 @@ function enter(pg){
 
 /* ---------- router ---------- */
 var pages=$$('.page'),links=$$('a[data-r],button.mmb[data-r]'),menu=$('#menu'),burger=$('#burger'),curId=null,pt=$('#pt'),busy=false;
-function parse(){var parts=(location.hash.replace('#/','')||'home').split('/'),id=parts[0];if(!document.getElementById('p-'+id))id='home';return {id:id,sub:parts[1]}}
+function parse(){if(PRODUCT){var h=location.hash.replace(/^#\/?/,'');return {id:PRODUCT,sub:h||undefined}}var parts=(location.hash.replace('#/','')||'home').split('/'),id=parts[0];if(!document.getElementById('p-'+id))id='home';return {id:id,sub:parts[1]}}
 function render(first){
   var r=parse(),pg=document.getElementById('p-'+r.id);
   menu.classList.remove('open');burger.setAttribute('aria-expanded','false');
@@ -1023,6 +1038,17 @@ function go(){
     .to(b,{yPercent:0,duration:.5,ease:'power3.inOut'},'-=.38')
     .add(function(){render()})
     .to([a,b],{yPercent:-101,duration:.7,ease:'power3.inOut',stagger:.06},'+=.12');
+}
+/* product subdomains: switched on in SITE.productSites once they are live */
+var PS=(window.SITE&&SITE.productSites)||{},PMAP={
+  allocivo:{'al-problem':'how-it-works/#al-problem','al-how':'how-it-works/#al-how','al-uses':'how-it-works/#al-uses','al-systems':'integrations/','al-demo':'demo/','al-value':'#al-value','al-calc':'#al-calc'},
+  xessly:{'xs-problem':'#xs-problem','xs-routes':'#xs-routes','xs-who':'#xs-routes','xs-how':'agent-flow/','xs-where':'where-fixes-land/','xs-faq':'early-access/#xs-faq','xs-access':'early-access/'}};
+function prodUrl(id,sub){var b=PS[id];if(!b)return null;var m=(PMAP[id]||{})[sub]||'';return b.replace(/\/?$/,'/')+m}
+if(!PRODUCT){
+  $$('a[href^="#/allocivo"],a[href^="#/xessly"]').forEach(function(a){var p=a.getAttribute('href').replace('#/','').split('/'),u=prodUrl(p[0],p[1]);if(u){a.href=u;a.removeAttribute('data-r')}});
+  var leave=function(){var p=location.hash.replace('#/','').split('/'),u=prodUrl(p[0],p[1]);if(u){location.replace(u);return true}return false};
+  if(leave())return;
+  window.addEventListener('hashchange',leave);
 }
 window.addEventListener('hashchange',go);
 burger.addEventListener('click',function(){var o=menu.classList.toggle('open');burger.setAttribute('aria-expanded',o)});
@@ -1109,6 +1135,7 @@ var ans={
   book:'Happy to. <a href="#/contact" style="color:var(--ind);font-weight:500">Open the contact form</a> and a senior engineer will reply within one business day.'
 };
 var astb=$('#astb'),astp=$('#astp');
+if(!astb)return;
 function toggleA(o){astp.classList.toggle('open',o);astb.setAttribute('aria-expanded',o);if(o)$('#astx').focus();else astb.focus()}
 astb.addEventListener('click',function(){toggleA(!astp.classList.contains('open'))});
 $('#astx').addEventListener('click',function(){toggleA(false)});
@@ -1121,6 +1148,8 @@ $('#qr').addEventListener('click',function(e){
 });
 })();
 
+}catch(e){console.error(e)}
+try{
 /* ---------- keyboard: keep focus inside the yard menu; phone menu opens into its links and closes with Escape ---------- */
 (function(){
 var FOC='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
@@ -1177,6 +1206,8 @@ if(astb&&'IntersectionObserver' in window){
 }
 })();
 
+}catch(e){console.error(e)}
+try{
 /* ---------- mega menu: service previews and Yardie, who routes a one-line brief ---------- */
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)};
@@ -1256,3 +1287,5 @@ $$('.pp').forEach(function(card){
   new MutationObserver(sync).observe(ui,{attributes:true,attributeFilter:['data-state']});sync();
 });
 })();
+
+}catch(e){console.error(e)}

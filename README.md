@@ -114,6 +114,34 @@ npm run build:functions
 
 Commit the regenerated `functions/_lib/` files with your change.
 
+## Product sites (allocivo.brightyard.in, xessly.brightyard.in)
+
+`sites/allocivo` and `sites/xessly` are **generated** by the build from the product sections in `index.html`. Each is a complete site with its own pages, header, footer and copy of the API, deployed as its own Cloudflare Pages project.
+
+| Site | Pages |
+|---|---|
+| Allocivo | `/` overview with the 3D story and value calculator, `/how-it-works/`, `/integrations/`, `/demo/` |
+| Xessly | `/` overview with the 3D story, `/agent-flow/`, `/where-fixes-land/`, `/early-access/` |
+
+### Setting up a product site (once per product)
+
+1. Cloudflare > Workers & Pages > Create > Pages > Connect to Git, and choose this repository.
+2. Name the project after the product, for example `allocivo`. Build command: none. **Build output directory:** `sites/allocivo` (or `sites/xessly`). Under **Root directory (advanced)**, also set `sites/allocivo`, so Cloudflare finds that site's `functions/` folder.
+3. Settings > Bindings: add the D1 database `DB` = `brightyard` (the same database, so all leads land in one place).
+4. Settings > Variables and secrets, for Production and Preview: `ZEPTOMAIL_TOKEN` (Secret), `MAIL_FROM`, `TEAM_EMAIL`, and `SITE_URL` = `https://allocivo.brightyard.in/`.
+5. Custom domains > Set up a custom domain: `allocivo.brightyard.in`. Cloudflare adds the DNS record.
+6. Repeat for Xessly with `sites/xessly` and `xessly.brightyard.in`.
+
+### Pointing the main site at the product sites
+
+When both product sites are live, set `productSites` in `window.SITE` (top of `assets/js/app.js`, from `build.py`):
+
+```js
+productSites: { allocivo: 'https://allocivo.brightyard.in/', xessly: 'https://xessly.brightyard.in/' }
+```
+
+Every product link on brightyard.in then goes to the product sites, and old addresses such as `brightyard.in/#/allocivo/al-demo` forward to the matching page (`/demo/`). Leave it empty until then, so nothing points at a site that isn't up yet.
+
 ## Before launch
 
 Check `contactEmail` in `window.SITE` at the top of `assets/js/app.js`. `formEndpoint` is set to `/api/contact`, and `api: true` lets the blueprint dialog call the API.
