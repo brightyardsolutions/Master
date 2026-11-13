@@ -48,10 +48,12 @@ function mount(key,tpl,label){
 mount('al','tpl-al','Illustrative Allocivo demo: Room 418 is at risk because Daniel is running late. Allocivo recommends moving it to Asha, and the supervisor approves.');
 mount('xs','tpl-xs','Illustrative Xessly demo: a sign-in field without a persistent label is flagged, pattern B adds a visible label, and the change is verified.');
 $$('.aui,.xui').forEach(function(ui){
-  if(reduced){ui.dataset.state=3;return}
   var s=0,vis=false,dur=[1500,1700,2600,3200];
+  ui._dur=dur;
+  ui._go=function(k){s=k;ui.dataset.state=k;ui._hold=Date.now()+7000};
+  if(reduced){ui.dataset.state=3;return}
   new IntersectionObserver(function(e){vis=e[0].isIntersecting}).observe(ui);
-  (function step(){if(vis){s=(s+1)%4;ui.dataset.state=s}setTimeout(step,dur[s])})();
+  (function step(){if(vis&&!(ui._hold>Date.now())){s=(s+1)%4;ui.dataset.state=s}setTimeout(step,ui._hold>Date.now()?400:dur[s])})();
 });
 
 /* ---------- contact form: honest about whether it is connected ---------- */
@@ -906,7 +908,7 @@ function stagger(pg){
 }
 function parallax(pg){
   if(!anim)return;
-  $$('.prods .pp',pg).forEach(function(p,i){G.fromTo(p,{y:i%2?90:40},{y:0,ease:'none',scrollTrigger:{trigger:p.parentNode,start:'top 95%',end:'top 35%',scrub:.8}})});
+  $$('.prods .pp',pg).forEach(function(p,i){G.fromTo(p,{y:50},{y:0,ease:'none',scrollTrigger:{trigger:p.parentNode,start:'top 95%',end:'top 35%',scrub:.8}})});
   $$('.pp [data-ui],.pvis [data-ui]',pg).forEach(function(u){G.fromTo(u,{y:26,rotateX:8,transformPerspective:900},{y:0,rotateX:0,ease:'none',scrollTrigger:{trigger:u,start:'top 95%',end:'top 50%',scrub:.6}})});
   stagger(pg);
   $$('.ph',pg).forEach(function(p){G.to($('.wrap',p),{yPercent:18,autoAlpha:.2,ease:'none',scrollTrigger:{trigger:p,start:'top top',end:'bottom top',scrub:true}})});
@@ -1241,5 +1243,16 @@ form.addEventListener('submit',function(e){
   if(v.length<6){bub.innerHTML='A sentence is enough: what isn\'t working?';inp.focus();return}
   var m=panel.closest('.mm');if(m){m.classList.remove('open');var b=$('.mmb',m);if(b)b.setAttribute('aria-expanded','false');var h=$('#hdr');if(h)h.classList.remove('mm-on')}
   inp.blur();if(window.BYRunBrief)window.BYRunBrief(v);
+});
+
+/* product cards: the numbered steps light up with the demo they describe */
+$$('.pp').forEach(function(card){
+  var ui=card.querySelector('.aui,.xui'),steps=$$('.pp-steps li',card),now=card.querySelector('.pp-now');if(!ui||!steps.length)return;
+  var sync=function(){var st=+ui.dataset.state||0,held=ui._hold>Date.now();card.classList.toggle('held',held);
+    steps.forEach(function(li){var k=+li.dataset.s,b=li.querySelector('button');li.classList.toggle('on',k===st);li.classList.toggle('done',k<st);if(b)b.setAttribute('aria-pressed',k===st);
+      if(ui._dur)li.style.setProperty('--sd',ui._dur[k]+'ms')});
+    var cur=steps.filter(function(li){return +li.dataset.s===Math.max(1,st)})[0];if(now&&cur&&now.textContent!==cur.dataset.d){now.textContent=cur.dataset.d;now.classList.remove('fresh');void now.offsetWidth;now.classList.add('fresh')}};
+  steps.forEach(function(li){var b=li.querySelector('button');if(b)b.addEventListener('click',function(){if(ui._go)ui._go(+li.dataset.s);sync();clearTimeout(card._ht);card._ht=setTimeout(sync,7100)})});
+  new MutationObserver(sync).observe(ui,{attributes:true,attributeFilter:['data-state']});sync();
 });
 })();
