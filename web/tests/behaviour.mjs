@@ -306,7 +306,8 @@ try {
       const r = { cards: await p.evaluate(() => document.querySelectorAll('section.page.on .case').length) };
       const fs = await p.evaluate(() => [...document.querySelectorAll('#filters .fb')].map(b => b.dataset.f));
       r.f = [];
-      for (const f of fs) { await p.click(`#filters .fb[data-f="${f}"]`); await p.waitForTimeout(150); r.f.push(await p.evaluate(() => [...document.querySelectorAll('section.page.on .case')].filter(c => !c.classList.contains('hide')).length)); }
+      // the case studies are a draft section, hidden in launch mode on both sites, so the buttons are pressed by script
+      for (const f of fs) { await p.$eval(`#filters .fb[data-f="${f}"]`, b => b.click()); await p.waitForTimeout(150); r.f.push(await p.evaluate(() => [...document.querySelectorAll('section.page.on .case')].filter(c => !c.classList.contains('hide')).length)); }
       return r;
     });
   }
@@ -345,8 +346,8 @@ try {
       const p = await c.newPage(); await p.goto(url(side, 'allocivo', '/', '#al-calc')); await p.waitForTimeout(2500);
       const read = () => p.evaluate(() => [...document.querySelectorAll('#al-calc [data-r],#al-calc [data-o]')].map(e => e.textContent).join('|'));
       const r = [await read()];
-      const keys = await p.evaluate(() => [...document.querySelectorAll('#al-calc [data-k]')].map(e => e.dataset.k + ':' + e.tagName));
-      for (const k of keys) { const [n, tag] = k.split(':'); if (tag === 'SELECT') await p.selectOption(`#al-calc [data-k="${n}"]`, { index: 1 }); else await p.fill(`#al-calc [data-k="${n}"]`, '37'); }
+      // sliders and number fields set as a visitor would (input events); the currency picker is hidden with one option
+      await p.evaluate(() => { for (const e of document.querySelectorAll('#al-calc input[data-k]')) { e.value = String(Math.min(+e.max || 37, 7)); e.dispatchEvent(new Event('input', { bubbles: true })); } });
       await p.waitForTimeout(200); r.push(await read());
       return r;
     });
