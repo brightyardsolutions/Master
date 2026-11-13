@@ -88,13 +88,34 @@ function closeAll(keep){
   mms.forEach(function(m){if(m!==keep){m.classList.remove('open');$('.mmb',m).setAttribute('aria-expanded','false')}});
   hdr.classList.toggle('mm-on',!!(keep&&keep.classList.contains('open')));
 }
-var openedAt=0;
-function openM(m,hov){if(hov&&!m.classList.contains('open'))openedAt=Date.now();closeAll(m);m.classList.add('open');$('.mmb',m).setAttribute('aria-expanded','true');hdr.classList.add('mm-on')}
+var openedAt=0,openT;
+function openM(m,hov){
+  if(hov&&!m.classList.contains('open'))openedAt=Date.now();
+  var prev=$('.mm.open'),from=null;
+  if(prev&&prev!==m&&!reduced){from={g:$('.mmg',prev).getBoundingClientRect(),n:prev.querySelector('.mmb').getBoundingClientRect()}}
+  closeAll(m);m.classList.add('open');$('.mmb',m).setAttribute('aria-expanded','true');hdr.classList.add('mm-on');
+  notch(m,from);
+  if(from){var g=$('.mmg',m),r=g.getBoundingClientRect();hdr.classList.add('mm-swap');clearTimeout(hdr._sw);hdr._sw=setTimeout(function(){hdr.classList.remove('mm-swap')},420);
+    if(g.animate)g.animate([{height:from.g.height+'px'},{height:r.height+'px'}],{duration:320,easing:'cubic-bezier(.2,.7,.2,1)'})}
+}
+/* a small notch on the panel points at the open menu item, and glides between items */
+function notch(m,from){
+  var p=$('.mmp',m),b=$('.mmb',m);if(!p||innerWidth<=940)return;
+  var n=$('.mmn',p);if(!n){n=document.createElement('i');n.className='mmn';n.setAttribute('aria-hidden','true');p.appendChild(n)}
+  var pr=p.getBoundingClientRect(),br=b.getBoundingClientRect(),x=br.left+br.width/2-pr.left;
+  n.style.left=x+'px';
+  if(from&&n.animate)n.animate([{transform:'translateX('+(from.n.left+from.n.width/2-br.left-br.width/2)+'px) rotate(45deg)'},{transform:'translateX(0) rotate(45deg)'}],{duration:320,easing:'cubic-bezier(.2,.7,.2,1)'});
+}
 mms.forEach(function(m){
   var b=$('.mmb',m);
   b.addEventListener('click',function(){if(m.classList.contains('open')){if(Date.now()-openedAt>450)closeAll()}else openM(m)});
-  m.addEventListener('mouseenter',function(){if(innerWidth>940&&matchMedia('(hover:hover)').matches){clearTimeout(closeT);openM(m,true)}});
-  m.addEventListener('mouseleave',function(){if(innerWidth>940&&matchMedia('(hover:hover)').matches){closeT=setTimeout(function(){closeAll()},200)}});
+  /* hover intent: a short pause before the first menu opens, so a cursor crossing the header doesn't flash menus;
+     once one is open, moving to the next switches straight away */
+  m.addEventListener('mouseenter',function(){if(innerWidth>940&&matchMedia('(hover:hover)').matches){clearTimeout(closeT);clearTimeout(openT);
+    if($('.mm.open'))openM(m,true);else openT=setTimeout(function(){openM(m,true)},140)}});
+  m.addEventListener('mouseleave',function(){if(innerWidth>940&&matchMedia('(hover:hover)').matches){clearTimeout(openT);
+    var busy=function(){var f=document.activeElement;return m.contains(f)&&f.tagName==='INPUT'&&f.value.trim()};
+    closeT=setTimeout(function(){if(!busy())closeAll()},260)}});
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=$('.mm.open');if(o){closeAll();$('.mmb',o).focus()}}});
 document.addEventListener('click',function(e){if(!e.target.closest('.mm'))closeAll()});
@@ -647,7 +668,7 @@ var pend=B.readLink(location.hash);
 if(pend){window.BYPending=pend;try{history.replaceState(null,'',location.pathname+location.search+'#/home/bpgen')}catch(e){location.hash='#/home/bpgen'}}
 
 /* privacy-friendly counts: an event name only, no cookies, no ids */
-var EV={bp_ch1:1,bp_ch2:1,bp_ch3:1,bp_ch4:1,bp_start_date:1,bp_take_open:1,bp_pack:1,bp_review:1,bp_share_copy:1,bp_print:1,bp_shared_open:1};
+var EV={bp_ch1:1,bp_ch2:1,bp_ch3:1,bp_ch4:1,bp_start_date:1,bp_take_open:1,bp_pack:1,bp_review:1,bp_share_copy:1,bp_print:1,bp_shared_open:1,bp_menu_brief:1};
 window.BYTrack=function(name){
   if(!API||!EV[name]||/^(localhost|127\.)/.test(location.hostname))return;
   try{var d=JSON.stringify({e:name});if(!(navigator.sendBeacon&&navigator.sendBeacon('/api/event',new Blob([d],{type:'application/json'}))))fetch('/api/event',{method:'POST',body:d,headers:{'Content-Type':'application/json'},keepalive:true}).catch(function(){})}catch(e){}
@@ -757,16 +778,24 @@ window.BYTake=function(h){
   BYTrack('bp_take_open');
 };
 
-/* run a shared brief once the generator is ready */
-if(pend){
-  var tries=0;(function wait(){
-    var ta=$('#bpt'),go=$('#bpgo'),bud=$('#bud');
+/* run a brief once the generator is ready: from a shared link, or from Yardie in the menu */
+function runBrief(p,ev){
+  window.BYPending=p;
+  var tries=0,edited=false;(function wait(){
+    var ta=$('#bpt'),go=$('#bpgo'),bud=$('#bud'),edit=$('.bres.holo .bh-edit');
     if(!ta||!go){if(++tries<60)setTimeout(wait,200);return}
+    if(edit&&!edited){edited=true;edit.click();setTimeout(wait,1100);return}
     if(bud&&!bud.classList.contains('is-live')&&++tries<25){setTimeout(wait,200);return}
-    ta.value=pend.brief;ta.dispatchEvent(new Event('input',{bubbles:true}));
-    setTimeout(function(){go.click();BYTrack('bp_shared_open')},500);
+    ta.value=p.brief;ta.dispatchEvent(new Event('input',{bubbles:true}));
+    setTimeout(function(){go.click();BYTrack(ev)},500);
   })();
 }
+window.BYRunBrief=function(text){
+  var t=String(text||'').trim().slice(0,4000);if(t.length<4)return;
+  if(location.hash!=='#/home/bpgen')location.hash='#/home/bpgen';
+  setTimeout(function(){runBrief({brief:t,start:''},'bp_menu_brief')},400);
+};
+if(pend)runBrief(pend,'bp_shared_open');
 })();
 
 /* ===== core: smooth scroll, router, page transitions, scroll animation, 3D stages ===== */
@@ -1144,4 +1173,73 @@ if(astb&&'IntersectionObserver' in window){
   var watch=function(){var b=document.getElementById('bpplan');if(b)io.observe(b);var f=document.querySelector('footer');if(f)io.observe(f)};
   watch();setTimeout(watch,3000);
 }
+})();
+
+/* ---------- mega menu: service previews and Yardie, who routes a one-line brief ---------- */
+(function(){
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+var panel=$('#mm-services');if(!panel)return;
+var links=$$('.mml1 a[data-svc]',panel),pv=$('#svPrev'),bub=$('#yrBub'),inp=$('#yrIn'),form=$('#yrF'),bot=$('.yr-bot',panel);
+function esc(s){return String(s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]})}
+
+var SVC={
+  eng:{n:'Product engineering',fit:'You need a product built or rebuilt, with one team from design to launch.',get:'Working software every two weeks, in your repositories.',tags:['Web and mobile apps','APIs and integrations','Legacy in safe slices'],st:['Discovery sprint','2 weeks']},
+  cloud:{n:'Cloud and DevOps',fit:'Releases are risky, outages hurt, or the cloud bill keeps surprising you.',get:'A pipeline you trust and a written cost and risk report.',tags:['Cloud migration','CI/CD pipelines','Cost control'],st:['Cloud cost review','1 week']},
+  data:{n:'Data and AI',fit:'An AI pilot stalled before production, or nobody trusts the data.',get:'A working feature with its evaluation set and monitoring.',tags:['Data pipelines','Dashboards','Generative AI'],st:['Discovery sprint','2 weeks']},
+  a11y:{n:'Accessibility and quality',fit:'An audit, a tender or a complaint, or you want your product to work for everyone.',get:'A prioritised report, fixes in your code and a re-test of every fix.',tags:['WCAG reviews','Fixes in your code','Screen reader testing'],st:['Accessibility review','10 working days']},
+  sec:{n:'Security and support',fit:"You need a live system kept safe and running, or support isn't keeping up.",get:'Clear SLAs, a named team and a runbook for every critical system.',tags:['Hardening','Incident readiness','24/7 monitoring'],st:['Architecture review','10 working days']}
+};
+/* engine categories to the service that delivers them */
+var MAP={sw:'eng',legacy:'eng',integ:'eng',ent:'eng',cloud:'cloud',infra:'cloud',data:'data',ai:'data',a11y:'a11y',sec:'sec',msp:'sec'};
+var PROD={Allocivo:['allocivo','Hotels? That\'s exactly what <b>Allocivo</b> does.'],Xessly:['xessly','That\'s what <b>Xessly</b> does: it finds, fixes and proves accessibility fixes.']};
+
+function show(key,why){
+  var S=SVC[key];links.forEach(function(a){a.classList.toggle('cur',a.dataset.svc===key)});
+  if(!S){pv.innerHTML='<a class="sv-st sv-def" href="#/services/starters"><small>Start small</small><b>Fixed-price starters</b><span>Architecture, accessibility and cloud cost reviews, each with a written report you keep.</span></a>';return}
+  pv.innerHTML='<div class="sv-c'+(why?' sv-m':'')+'"><b class="sv-n">'+esc(S.n)+'</b><p><em>Good fit if</em> '+esc(S.fit)+'</p><p><em>You get</em> '+esc(S.get)+'</p>'+
+    '<ul>'+S.tags.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul></div>'+
+    '<a class="sv-st" href="#/services/starters"><small>Start small</small><b>'+esc(S.st[0])+'</b><span>Fixed price &middot; '+esc(S.st[1])+' &rarr;</span></a>';
+}
+show(null);
+var hoverKey=null,matchKey=null;
+links.forEach(function(a){
+  var on=function(){hoverKey=a.dataset.svc;show(hoverKey);look(a)};
+  a.addEventListener('mouseenter',on);a.addEventListener('focus',on);
+  a.addEventListener('mouseleave',function(){hoverKey=null;show(matchKey,!!matchKey);look(matchKey?$('[data-svc="'+matchKey+'"]',panel):null)});
+});
+
+/* Yardie looks at what it's talking about */
+var eyes=bot&&bot.querySelector('.yr-eyes'),head=bot&&bot.querySelector('.yr-head');
+function look(el){
+  if(!eyes)return;
+  if(!el){eyes.style.transform='';head.style.transform='';return}
+  var b=bot.getBoundingClientRect(),r=el.getBoundingClientRect(),dx=(r.left+r.width/2)-(b.left+b.width/2),dy=(r.top+r.height/2)-(b.top+b.height/3);
+  var d=Math.max(1,Math.hypot(dx,dy));eyes.style.transform='translate('+(dx/d*3).toFixed(1)+'px,'+(dy/d*2.4).toFixed(1)+'px)';
+  head.style.transform='rotate('+Math.max(-8,Math.min(8,dx/40)).toFixed(1)+'deg)';
+}
+
+/* read the brief with the same engine as the generator */
+var M=null;function master(){if(!M){try{M=JSON.parse($('#bp-master').textContent)}catch(e){M=null}}return M}
+var t=null,DEF='Not sure which? Tell me in a sentence.';
+function read(){
+  var v=inp.value.trim();bot.classList.toggle('think',false);
+  if(v.length<6){matchKey=null;bub.innerHTML=DEF;links.forEach(function(a){a.classList.remove('match')});show(hoverKey);look(null);return}
+  var bp=null;try{if(window.BYEngine&&master())bp=BYEngine.generate(v,{},master())}catch(e){bp=null}
+  links.forEach(function(a){a.classList.remove('match')});
+  if(!bp||!bp.project.supported){matchKey=null;bub.innerHTML='Hmm. Tell me what isn\'t working, or what you want to build.';show(hoverKey);look(null);return}
+  var prim=(bp.meta.classification[0]||{}).category,dom=null;
+  (master().domains||[]).forEach(function(d){if(d.name===prim)dom=d.id});
+  matchKey=MAP[dom]||'eng';var a=$('[data-svc="'+matchKey+'"]',panel);a.classList.add('match');
+  var pr=PROD[bp.project.related_product];
+  bub.innerHTML=pr?pr[1]+' <a href="#/'+pr[0]+'">See it &rarr;</a>':'Sounds like <b>'+esc(SVC[matchKey].n)+'</b>. Press Enter and I\'ll sketch the plan.';
+  if(!hoverKey)show(matchKey,true);look(a);
+}
+inp.addEventListener('input',function(){clearTimeout(t);bot.classList.add('think');t=setTimeout(read,260)});
+form.addEventListener('submit',function(e){
+  e.preventDefault();var v=inp.value.trim();
+  if(v.length<6){bub.innerHTML='A sentence is enough: what isn\'t working?';inp.focus();return}
+  var m=panel.closest('.mm');if(m){m.classList.remove('open');var b=$('.mmb',m);if(b)b.setAttribute('aria-expanded','false');var h=$('#hdr');if(h)h.classList.remove('mm-on')}
+  inp.blur();if(window.BYRunBrief)window.BYRunBrief(v);
+});
 })();
