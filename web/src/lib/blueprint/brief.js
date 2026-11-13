@@ -91,3 +91,5 @@ function link(base,brief,startISO){return base.replace(/#.*$/,'')+'#/plan/'+b64u
 function readLink(hash){var m=/^#\/plan\/([A-Za-z0-9_-]+)/.exec(hash||'');if(!m)return null;try{var o=JSON.parse(unb64url(m[1]));return o&&typeof o.b==='string'?{brief:o.b.slice(0,4000),start:/^\d{4}-\d{2}-\d{2}$/.test(o.s||'')?o.s:''}:null}catch(e){return null}}
 return {model:model,onePage:onePage,fullPlan:fullPlan,text:text,link:link,readLink:readLink,esc:esc};
 })();
+
+export default BYBrief;

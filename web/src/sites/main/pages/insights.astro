@@ -10,4 +10,5 @@ import Articles from '../../../components/main/insights/Articles.astro';
 <Fragment slot="lead">Practical guides for technology leaders, written by our engineers. No gated PDFs.</Fragment>
 </PageHero>
 <Articles />
+<Fragment slot="scripts"><script>import { startMain } from '../../../scripts/main.js'; startMain();</script></Fragment>
 </MainLayout>

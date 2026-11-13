@@ -58,9 +58,9 @@ All three use **`main` as the production branch**, so a push to `main` updates a
 - axe flags the deliberately low-contrast "Sign in" button in the Xessly demo (it is the "before" state the agents fix);
 - `func-test.js`'s Allocivo part no longer applies since the product pages moved to the subdomains.
 
-## Next: the Astro migration (approved; steps 1 and 2 done)
+## Next: the Astro migration (approved; steps 1 to 3 done)
 
-**Where it stands:** the new project is `web/` (read `web/README.md`). Steps 1 and 2 are done: all three sites build from shared components and every page matches today's in HTML and pixel for pixel (`npm run test:compare`, JavaScript off). No scripts load yet (`SCRIPTS_PORTED` in `web/src/lib/page.mjs`); step 3 must also make `/#bpgen` (formerly `#/home/bpgen`) scroll to the generator the script inserts. brightyard.in's not-found page has no content until the owner approves a design. Approved decisions: the curtain closes on link click and opens on the new page (no client-side router); a real not-found page on brightyard.in (its content still to be proposed); local preview needs Node.js. The live sites still come from the old files until step 4.
+**Where it stands:** the new project is `web/` (read `web/README.md`). Steps 1 to 3 are done: all three sites build from shared components, every page matches today's in HTML and pixels (`npm run test:compare`, scripts off), and the scripts are ported as per-page modules whose behaviour matches today's (`npm run test:behaviour`, scripts on). brightyard.in's not-found page uses the design the owner approved (dark page banner, "Go to the home page" and "Talk to an engineer"). Next is step 4. Approved decisions: the curtain closes on link click and opens on the new page (no client-side router); a real not-found page on brightyard.in (built to the approved design); local preview needs Node.js. The live sites still come from the old files until step 4.
 
 Goal: real pages with their own addresses instead of hash routes, shared components for the three sites, and per-page scripts. **Keep the design and behaviour identical: no redesign during the move.**
 

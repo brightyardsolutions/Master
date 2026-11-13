@@ -11,4 +11,5 @@ const site = import.meta.env.SITE_KEY;
 <Fragment slot="lead">The address may be mistyped, or the page has moved.</Fragment>
 <div class="acts rv"><a class="btn pri" href={link('home', site)}>Go to the home page</a><a class="btn out" href={link('contact', site)}>Talk to an engineer</a></div>
 </PageHero>
+<Fragment slot="scripts"><script>import { startMain } from '../../../scripts/main.js'; startMain();</script></Fragment>
 </MainLayout>

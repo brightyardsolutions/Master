@@ -553,3 +553,5 @@ var qc={k:null,v:null};
 function quickClassify(text,M){var k=normalize(text);if(k===qc.k)return qc.v;var C=prepare(M);var pre=preprocess(text,M,C,{});var c=classify(pre,M,C);qc.k=k;qc.v=c.ranked.filter(function(r){return r.score>=M.scoring.supportedMin});return qc.v}
 return {generate:generate,classify:quickClassify,validate:validate,normalize:normalize};
 })();
+
+export default BYEngine;

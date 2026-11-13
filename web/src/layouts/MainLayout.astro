@@ -30,6 +30,9 @@ const url = SITE.url + (route.path === '/' ? '/' : route.path);
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Brightyard: Built for what happens next.">
 <meta name="twitter:card" content="summary_large_image">
+<!-- arriving from another brightyard.in page: keep the curtain closed until the page is ready (scripts/lib/nav.js) -->
+<script is:inline>try{if(sessionStorage.getItem('by-pt')){sessionStorage.removeItem('by-pt');document.documentElement.classList.add('pt-cover')}}catch(e){}</script>
+<style is:inline>.pt-cover #pt i{transform:none}</style>
 </Fragment>
 {route.id === 'home' && <HashForward />}
 <Preloader />
@@ -59,4 +62,5 @@ const url = SITE.url + (route.path === '/' ? '/' : route.path);
 <BlueprintTemplate />
 
 <MasterData />
+<slot name="scripts" />
 </Base>
