@@ -6,7 +6,7 @@ window.SITE = {
   formEndpoint: '/api/contact',    // e.g. 'https://formspree.io/f/xxxx' or '/api/contact'. Empty = form not connected yet.
   contactEmail: 'hello@brightyard.in',
   api: true,           // false = never call /api (the blueprint dialog then offers link, print and email instead)
-  productSites: {}     // once live: { allocivo: 'https://allocivo.brightyard.in/', xessly: 'https://xessly.brightyard.in/' }
+  productSites: { allocivo: 'https://allocivo.brightyard.in/', xessly: 'https://xessly.brightyard.in/' }   // {} = keep product pages on this site
 };
 (function(){
 var $=function(s,r){return (r||document).querySelector(s)};
