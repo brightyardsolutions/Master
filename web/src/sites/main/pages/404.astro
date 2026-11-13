@@ -1,7 +1,14 @@
 ---
-// https://brightyard.in (any unknown address)
-// Step 2 of the migration moves the page-not-found content (to be proposed with step 2) here, as components.
-import MainLayout from "../../../layouts/MainLayout.astro";
+// brightyard.in: any unknown address. Approved design: the standard dark page banner with two ways forward.
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PageHero from '../../../components/shared/PageHero.astro';
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
 ---
 <MainLayout id="notfound">
+<PageHero eyebrow="Page not found">
+<Fragment slot="title">We couldn't find <mark>that page</mark>.</Fragment>
+<Fragment slot="lead">The address may be mistyped, or the page has moved.</Fragment>
+<div class="acts rv"><a class="btn pri" href={link('home', site)}>Go to the home page</a><a class="btn out" href={link('contact', site)}>Talk to an engineer</a></div>
+</PageHero>
 </MainLayout>
