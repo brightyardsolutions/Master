@@ -132,6 +132,10 @@ Commit the regenerated `functions/_lib/` files with your change.
 5. Custom domains > Set up a custom domain: `allocivo.brightyard.in`. Cloudflare adds the DNS record. The domain serves the production branch, so it shows the product site once this work is merged to `main`; until then, test on the preview link.
 6. Repeat for Xessly with `sites/xessly` and `xessly.brightyard.in`.
 
+### Deploying
+
+All three Cloudflare Pages projects (the main site, `allocivo` and `xessly`) use `main` as their production branch. A push to `main` rebuilds all three; the custom domains always serve each project's latest successful production build. If a project's production branch is changed, it has no production build for the new branch until the next push to it.
+
 ### Pointing the main site at the product sites
 
 When both product sites are live, set `productSites` in `window.SITE` (top of `assets/js/app.js`, from `build.py`):
