@@ -2,6 +2,10 @@
 
 Static site for brightyard.in, served by Cloudflare Pages. There is no build step on deploy: push to `main` and Cloudflare Pages redeploys what is in the repo.
 
+## Where to edit
+
+The site files below are **generated**. Edit the sources in `build-src/` and run `python3 build-src/build.py` (see `build-src/README.md`). `CLAUDE.md` has the project's rules and setup notes.
+
 ## Layout
 
 | Path | What it is |

@@ -1,0 +1,804 @@
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="mk" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#4F46E5"/><g fill="#fff" fill-opacity=".32"><circle cx="50" cy="26" r="7"/><circle cx="26" cy="50" r="7"/><circle cx="74" cy="50" r="7"/><circle cx="26" cy="74" r="7"/><circle cx="74" cy="74" r="7"/></g><g fill="#C6F432"><circle cx="26" cy="26" r="7"/><circle cx="74" cy="26" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="50" cy="74" r="7"/></g></symbol>
+<symbol id="mk-al" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#0C3A3F"/><g fill="#fff" fill-opacity=".26"><circle cx="26" cy="26" r="7"/><circle cx="74" cy="26" r="7"/><circle cx="50" cy="74" r="7"/></g><g fill="#C6F432"><circle cx="50" cy="26" r="7"/><circle cx="26" cy="50" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="74" cy="50" r="7"/><circle cx="26" cy="74" r="7"/><circle cx="74" cy="74" r="7"/></g></symbol>
+<symbol id="mk-xs" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#5146E5"/><g fill="#fff" fill-opacity=".3"><circle cx="50" cy="26" r="7"/><circle cx="26" cy="50" r="7"/><circle cx="74" cy="50" r="7"/><circle cx="50" cy="74" r="7"/></g><g fill="#8FF2CC"><circle cx="26" cy="26" r="7"/><circle cx="74" cy="26" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="26" cy="74" r="7"/><circle cx="74" cy="74" r="7"/></g><circle cx="50" cy="50" r="12.5" fill="none" stroke="#8FF2CC" stroke-width="2.6"/></symbol>
+</svg>
+
+<div id="draftbar" role="region" aria-label="Draft notice"><div class="wrap"><span id="dlabel"><b>Draft preview.</b> Highlighted text needs real Brightyard data before launch.</span><button type="button" id="dmode">Preview launch view</button></div></div>
+<div id="prog"></div><div id="cur"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<header id="hdr">
+<div class="wrap nav">
+<a class="logo" href="#/home" aria-label="Brightyard home"><svg class="mk" aria-hidden="true"><use href="#mk"/></svg><span>Bright<b>Yard</b></span></a>
+<button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+<nav class="menu" id="menu" aria-label="Main">
+
+<div class="mm"><button class="mmb" type="button" aria-expanded="false" aria-controls="mm-services" data-r="services">Services<i class="chev" aria-hidden="true"></i></button>
+<div class="mmp" id="mm-services"><div class="wrap mmg mmx">
+<div class="mmx-l"><span class="mmh">What we do</span>
+<div class="mml1">
+<a href="#/services/svc-eng" data-svc="eng"><b>Product engineering</b><span>Web and mobile products people actually use</span></a>
+<a href="#/services/svc-cloud" data-svc="cloud"><b>Cloud and DevOps</b><span>Releases that don't need a war room</span></a>
+<a href="#/services/svc-data" data-svc="data"><b>Data and AI</b><span>AI features that reach production</span></a>
+<a href="#/services/svc-a11y" data-svc="a11y"><b>Accessibility and quality</b><span>Software that works for everyone</span></a>
+<a href="#/services/svc-sec" data-svc="sec"><b>Security and support</b><span>Secure, watched and on call</span></a>
+</div>
+<a class="mmall" href="#/services">All services, ways to work and pricing &rarr;</a>
+</div>
+<div class="mmx-r">
+<div class="yr">
+<div class="yr-bot"><svg class="yr-svg" viewBox="0 0 72 84" aria-hidden="true" focusable="false">
+<line x1="36" y1="4" x2="36" y2="14" stroke="#7C74FF" stroke-width="2.5" stroke-linecap="round"/><circle class="yr-ant" cx="36" cy="5" r="4" fill="#C6F432"/>
+<g class="yr-head"><rect x="8" y="13" width="56" height="38" rx="12" fill="#7C74FF"/><rect x="14" y="18" width="44" height="28" rx="8" fill="#16133F"/>
+<g class="yr-eyes"><path d="M24 33q4-6 8 0" stroke="#C6F432" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M40 33q4-6 8 0" stroke="#C6F432" stroke-width="3" fill="none" stroke-linecap="round"/></g></g>
+<rect x="22" y="52" width="28" height="20" rx="7" fill="#F3F2FF"/><g fill="#7C74FF"><rect x="29" y="57" width="4" height="4" rx="1"/><rect x="35" y="57" width="4" height="4" rx="1"/><rect x="29" y="63" width="4" height="4" rx="1"/><rect x="35" y="63" width="4" height="4" rx="1"/></g>
+<rect x="18" y="72" width="14" height="9" rx="4" fill="#C6F432"/><rect x="40" y="72" width="14" height="9" rx="4" fill="#C6F432"/></svg></div>
+<div class="yr-main"><p class="yr-bub" id="yrBub" aria-live="polite">Not sure which? Tell me in a sentence.</p>
+<form class="yr-f" id="yrF" novalidate><label class="sr" for="yrIn">Describe what isn't working</label><input id="yrIn" type="text" autocomplete="off" maxlength="400" placeholder="e.g. our checkout crashes on sale days"><button type="submit">Plan it <span aria-hidden="true">&rarr;</span></button></form></div>
+</div>
+<div class="sv" id="svPrev"></div>
+</div>
+</div></div></div>
+
+<div class="mm"><button class="mmb" type="button" aria-expanded="false" aria-controls="mm-products" data-r="products">Products<i class="chev" aria-hidden="true"></i></button>
+<div class="mmp" id="mm-products"><div class="wrap mmg mmpc">
+<div class="pc al">
+<a class="pc-top" href="#/allocivo"><svg aria-hidden="true"><use href="#mk-al"/></svg><span><b>Allocivo</b><small>For hotels</small></span></a>
+<p class="pc-what">Spots the rooms at risk, moves the work to the right person and gets a supervisor's OK, as the day changes.</p>
+<div class="pc-demo" data-ui="al"></div>
+<ul class="pc-out"><li>Fewer late rooms</li><li>Less overtime</li><li>Live reassignments</li></ul>
+<div class="pc-act"><a class="pc-btn" href="#/allocivo/al-demo">Book a demo</a><a class="pc-lnk" href="#/allocivo/al-how">How it works &rarr;</a></div>
+</div>
+<div class="pc xs">
+<a class="pc-top" href="#/xessly"><svg aria-hidden="true"><use href="#mk-xs"/></svg><span><b>Xessly</b><small>For websites</small></span></a>
+<p class="pc-what">Finds accessibility issues, fixes them in your code or CMS and proves every fix before it counts.</p>
+<div class="pc-demo" data-ui="xs"></div>
+<ul class="pc-out"><li>WCAG 2.2 issues fixed</li><li>Fixes as pull requests</li><li>Every fix re-tested</li></ul>
+<div class="pc-act"><a class="pc-btn" href="#/xessly/xs-access">Get early access</a><a class="pc-lnk" href="#/xessly/xs-how">Agent flow &rarr;</a></div>
+</div>
+<a class="mmall pc-why" href="#/products">Why a services company builds its own products &rarr;</a>
+</div></div></div>
+
+<a class="l" data-r="work" href="#/work">Work</a>
+
+<div class="mm"><button class="mmb" type="button" aria-expanded="false" aria-controls="mm-res" data-r="insights">Resources<i class="chev" aria-hidden="true"></i></button>
+<div class="mmp" id="mm-res"><div class="wrap mmg">
+<div><span class="mmh">Learn how we think</span>
+<div class="mml">
+<a href="#/how"><b>How we work</b><span>Our delivery playbook, in public</span></a>
+<a href="#/insights"><b>Insights</b><span>Field notes on AI, cloud, accessibility and delivery</span></a>
+<a href="#/home/bpgen"><b>Brief to blueprint</b><span>Describe a problem, get a first-draft plan in seconds</span></a>
+<a href="#/work"><b>Case studies</b><span>Client results, with the numbers attached</span></a>
+</div></div>
+<a class="mmf" href="#/how/pressb"><span class="tag">Try it</span><b>See how this site is built</b><span>Press B anywhere to turn on Blueprint mode.</span><em>Learn more &rarr;</em></a>
+</div></div></div>
+
+<a class="btn pri mag" href="#/contact"><span>Talk to an engineer</span></a>
+</nav>
+</div>
+</header>
+
+<main id="main">
+
+<!-- ================= HOME ================= -->
+<section class="page on" id="p-home" data-title="Brightyard | Software built for what happens next">
+<div class="hero" id="hero">
+<canvas id="dots" aria-hidden="true"></canvas>
+<div class="wrap hg">
+<div>
+<h1 class="split">Built for <mark>what happens next.</mark></h1>
+<p class="lead rv" id="seg-p" style="--d:200ms">Brightyard designs, builds and runs software that turns data, signals and requests into the next right action. We do it for our clients, and in our own products.</p>
+<div class="acts rv" style="--d:300ms"><a class="btn pri mag" id="seg-b" href="#/contact"><span>Talk to an engineer</span><span class="arrow">&rarr;</span></a><a class="btn out" href="#/work">See our work</a></div>
+<p class="micro rv" style="--d:350ms">No sales deck. A senior engineer replies within one business day.</p>
+<div class="segs rv" style="--d:400ms"><span>I'm with a</span><button class="sg on" data-s="all">Growing company</button><button class="sg" data-s="startup">Startup</button><button class="sg" data-s="enterprise">Enterprise</button><button class="sg" data-s="public">Public sector</button></div>
+</div>
+<div class="hv" role="img" aria-label="Illustrative: Brightyard's AI agents build, test and check accessibility on every change, and an engineer reviews each release.">
+<div class="mini c1 rv"><div class="mh"><span>Agent team</span><em><i class="live"></i>Working</em></div>
+<div class="agl" id="agl"><div class="agr" data-i="0"><i class="sdot run"></i><b>build-agent</b><span>Writing checkout cache</span></div><div class="agr" data-i="1"><i class="sdot ok"></i><b>test-agent</b><span>412 tests passed</span></div><div class="agr" data-i="2"><i class="sdot ok"></i><b>a11y-agent</b><span>3 fixes verified</span></div></div>
+<span class="illus" style="margin-top:10px">Illustrative</span></div>
+<div class="mini c2 rv" style="--d:150ms"><div class="mh"><span>Every change</span><em>Automated</em></div><div class="pipe"><span>Plan</span><span>Build</span><span>Test</span><span>A11y</span><span>Ship</span></div></div>
+<div class="mini c3 rv" style="--d:300ms"><div class="mh"><span>Engineer review</span></div><b style="font-size:24px;line-height:1.2">Every release</b><div class="erv"><span class="hx-av">E</span><span>PR #128 approved</span></div></div>
+</div>
+</div>
+</div>
+
+<div class="logos" data-draft><small>Teams we've built with</small>
+<div class="mq" aria-hidden="true"><div class="track"><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span><span class="tbd">[CLIENT LOGO]</span></div></div>
+<p class="logo-alt">Only approved logos. No logos yet? Use: <span class="tbd">[X]</span> projects &middot; <span class="tbd">[X]</span> countries &middot; <span class="tbd">[X]</span> industries &middot; since <span class="tbd">[year]</span></p></div>
+
+<!-- Brief to blueprint is injected here by the signature layer -->
+
+<div class="sec"><div class="wrap">
+<div class="head"><span class="eyebrow rv">What we do</span><h2 class="split">Five things we do. One team that does all of them.</h2><p class="lead rv">Every service runs the same way: AI agents do the building, and engineers who understand your business make it better.</p></div>
+<div class="bento">
+<a class="card b3 rv" href="#/services"><span class="tag">Product engineering</span><h3>Software people actually use</h3><p>Web and mobile products, APIs and integrations, designed with the people who will use them every day.</p><div class="demo"><pre id="code"></pre></div></a>
+<a class="card b3 rv" style="--d:100ms" href="#/services"><span class="tag">Cloud and DevOps</span><h3>Releases that don't need a war room</h3><p>Migrations, infrastructure as code and pipelines that keep shipping boring.</p><div class="demo"><div class="pipe" style="margin:0"><span>Build</span><span>Test</span><span>A11y</span><span>Ship</span></div><div class="dots8"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></a>
+<a class="card b2 rv" href="#/services"><span class="tag">Data and AI</span><h3>AI that reaches production</h3><p>Clean data first, then AI features with evaluation and guardrails built in.</p><div class="demo"><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></a>
+<a class="card b2 rv" style="--d:100ms" href="#/services"><span class="tag">Accessibility and quality</span><h3>Software that works for everyone</h3><p>Reviews, fixes and testing from the team that builds Xessly.</p><div class="demo"><div class="radar"><i></i><i></i><i></i><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.2"/><path d="M5 9h14M12 9v6m0 0l-3.5 6M12 15l3.5 6" fill="none"/></svg></div></div></a>
+<a class="card b2 rv lm" style="--d:200ms" href="#/services"><span class="tag" style="background:rgba(255,255,255,.6)">Security and support</span><h3>Secure, watched, on call</h3><p>Hardening, incident readiness and a support desk that knows your system.</p><div class="big" style="margin-top:22px">24/7</div></a>
+<a class="card b6 rv ind" href="#/products" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap"><div><span class="tag">Our products</span><h3 style="font-size:26px">We build our own, too.</h3><p>Allocivo and Xessly are Brightyard products. They keep our engineers close to the same problems our clients face.</p></div><span class="btn lime">Meet our products <span class="arrow">&rarr;</span></span></a>
+</div>
+</div></div>
+
+<div class="sec alt"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Our products</span><h2 class="split">The only portfolio we can show you without an NDA.</h2><p class="lead rv">Most of our client work is confidential. Our products aren't. Allocivo and Xessly are built by the same agent team and engineers who would work on your project.</p></div>
+<div class="prods">
+<div class="pp al rv"><div class="pl"><svg aria-hidden="true"><use href="#mk-al"/></svg><span>Allocivo<small>by Brightyard</small></span></div><span class="tag">For hotel housekeeping and front office &middot; Early access</span><h3>AI agents that turn your workforce availability into action.</h3><div data-ui="al"></div><ol class="pp-steps" aria-label="What the demo shows. Choose a step to see it."><li data-s="1" data-d="Room 418 will miss 14:00, because Daniel is running late."><button type="button"><b>1</b><span>Spots the risk</span></button></li><li data-s="2" data-d="Asha is free, qualified and already on floor 4."><button type="button"><b>2</b><span>Picks the right person</span></button></li><li data-s="3" data-d="A supervisor approves in one tap and the plan updates."><button type="button"><b>3</b><span>Gets the OK</span></button></li></ol><p class="pp-now">Room 418 will miss 14:00, because Daniel is running late.</p><ul class="pp-out"><li>Fewer late rooms</li><li>Less overtime</li><li>Live reassignments</li></ul><div class="pp-act"><a class="btn lime" href="#/allocivo">Explore Allocivo <span class="arrow">&rarr;</span></a><a class="pp-lnk" href="#/allocivo/al-demo">Book a demo</a></div></div>
+<div class="pp xs rv" style="--d:120ms"><div class="pl"><svg aria-hidden="true"><use href="#mk-xs"/></svg><span>Xessly<small>by Brightyard</small></span></div><span class="tag">For product and web teams &middot; Early access</span><h3>AI agents make your website and app accessible. You just watch.</h3><div data-ui="xs"></div><ol class="pp-steps" aria-label="What the demo shows. Choose a step to see it."><li data-s="1" data-d="The email field loses its label while you type (WCAG 1.3.1)."><button type="button"><b>1</b><span>Finds the issue</span></button></li><li data-s="2" data-d="Adds a visible label in your code, as a pull request."><button type="button"><b>2</b><span>Writes the fix</span></button></li><li data-s="3" data-d="Re-tested with keyboard and screen reader: it passes."><button type="button"><b>3</b><span>Proves it</span></button></li></ol><p class="pp-now">The email field loses its label while you type (WCAG 1.3.1).</p><ul class="pp-out"><li>WCAG 2.2 issues fixed</li><li>Fixes as pull requests</li><li>Every fix re-tested</li></ul><div class="pp-act"><a class="btn mint" href="#/xessly">Explore Xessly <span class="arrow">&rarr;</span></a><a class="pp-lnk" href="#/xessly/xs-access">Get early access</a></div></div>
+</div>
+</div></div>
+
+<div class="sec"><div class="wrap">
+<div class="head"><span class="eyebrow rv">How we work</span><h2 class="split">Agents build every day. You see working software every two weeks.</h2></div>
+<div class="story">
+<div class="spanel" aria-hidden="true">
+<div class="vs on" data-s="0"><svg viewBox="0 0 300 220"><g stroke="#4F46E5" stroke-width="2" fill="none" class="dr"><path d="M60 110 L130 50 L220 70 L240 150 L150 180 L60 110 M130 50 L150 180 M220 70 L60 110"/></g><g fill="#C6F432" stroke="#4F46E5" stroke-width="2"><circle cx="60" cy="110" r="12"/><circle cx="130" cy="50" r="12"/><circle cx="220" cy="70" r="12"/><circle cx="240" cy="150" r="12"/><circle cx="150" cy="180" r="12"/></g></svg></div>
+<div class="vs" data-s="1"><svg viewBox="0 0 300 220"><rect x="30" y="30" width="240" height="160" rx="16" fill="#fff" stroke="#E4E0FB" stroke-width="2"/><g fill="#C6F432" stroke="#4F46E5" stroke-width="1.5"><rect class="pl" x="54" y="60" width="150" height="14" rx="7"/><rect class="pl" style="animation-delay:.3s" x="54" y="92" width="190" height="14" rx="7"/><rect class="pl" style="animation-delay:.6s" x="54" y="124" width="110" height="14" rx="7"/><rect class="pl" style="animation-delay:.9s" x="54" y="156" width="170" height="14" rx="7"/></g></svg></div>
+<div class="vs" data-s="2"><svg viewBox="0 0 300 220"><rect x="30" y="86" width="240" height="48" rx="24" fill="#fff" stroke="#E4E0FB" stroke-width="2"/><rect class="pl" x="38" y="94" width="224" height="32" rx="16" fill="#C6F432" stroke="#4F46E5" stroke-width="2"/><text x="150" y="170" text-anchor="middle" font-size="16" font-weight="600" fill="#1E1B4B" font-family="Inter,sans-serif">Staged rollout</text></svg></div>
+<div class="vs" data-s="3"><svg viewBox="0 0 300 220"><path class="ecg" d="M20 110 H90 L110 60 L135 160 L158 90 L172 110 H280" fill="none" stroke="#4F46E5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="150" cy="190" r="6" fill="#22C55E"/><text x="164" y="195" font-size="13" fill="#1E1B4B" font-family="Inter,sans-serif">All systems healthy</text></svg></div>
+</div>
+<div>
+<div class="sstep on" data-s="0"><span class="n">01</span><h3>Discover</h3><p>Agents turn your brief, documents and existing systems into user stories and an architecture draft. Engineers sit with you to understand what really matters, and agree in writing what "done" looks like.</p></div>
+<div class="sstep" data-s="1"><span class="n">02</span><h3>Build in slices</h3><p>Agents write the code, tests and documentation. Every two weeks you see working software, and an engineer has reviewed every change before you do.</p></div>
+<div class="sstep" data-s="2"><span class="n">03</span><h3>Launch quietly</h3><p>Test, security and accessibility agents check every change, then roll it out in stages. The best launches are the ones nobody notices.</p></div>
+<div class="sstep" data-s="3"><span class="n">04</span><h3>Run and improve</h3><p>Ops agents watch your system around the clock. Engineers study what they find and make the next version better.</p><a class="more" href="#/how">Read the full playbook <span class="arrow">&rarr;</span></a></div>
+</div>
+</div>
+</div></div>
+
+<div class="sec alt" data-draft><div class="wrap">
+<div class="head"><span class="eyebrow rv">Five years of delivery</span><h2 class="split">Numbers we can back up.</h2><p class="lead rv">Every figure links to how we measured it. If we couldn't measure it, it isn't here.</p></div>
+<div class="stats">
+<div class="rv"><b><span class="tbd">[X]</span></b><span>Projects delivered since <span class="tbd">[year]</span></span></div>
+<div class="rv" style="--d:100ms"><b><span class="tbd">[X]%</span></b><span>Clients who came back for a second project</span></div>
+<div class="rv" style="--d:200ms"><b><span class="tbd">[X]%</span></b><span>Releases shipped on the agreed date</span></div>
+<div class="rv" style="--d:300ms"><b><span class="tbd">[X] yrs</span></b><span>Average client relationship</span></div>
+</div>
+<p class="fine rv" style="margin-top:28px">How we measured this: across <span class="tbd">[n]</span> projects from <span class="tbd">[month year]</span> to <span class="tbd">[month year]</span>, using <span class="tbd">[source, e.g. our project tracker and invoices]</span>.</p>
+</div></div>
+
+<div class="sec"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Industries</span><h2 class="split">Where we've done the work.</h2></div>
+<div class="chips rv">
+<a class="ch" href="#/work"><i></i>Hospitality and travel</a><a class="ch" href="#/work"><i></i>Retail and e-commerce</a><a class="ch" href="#/work"><i></i>Financial services</a><a class="ch" href="#/work"><i></i>Healthcare</a><a class="ch" href="#/work"><i></i>Logistics</a><a class="ch" href="#/work"><i></i>SaaS and technology</a><a class="ch" href="#/work"><i></i>Public sector and education</a>
+</div>
+<p class="fine rv opt" style="margin-top:20px"><span class="tbd">[Keep only industries with at least one completed project you can describe]</span></p>
+</div></div>
+
+<div class="sec alt" data-draft><div class="wrap">
+<div class="head" style="display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;gap:20px;max-width:none"><div><span class="eyebrow rv">Case studies</span><h2 class="split">Proof, with the numbers attached.</h2></div><a class="btn out rv" href="#/work">View all work <span class="arrow">&rarr;</span></a></div>
+<div class="g3">
+<a class="card tilt case rv" href="#/work"><div><span class="tag"><span class="tbd">[Service]</span></span><h3><span class="tbd">[Client type]</span> <span class="tbd">[what we built or changed]</span></h3><p><span class="tbd">[What was true before, in one sentence]</span></p></div><div class="num"><span class="tbd">[Metric]</span><small><span class="tbd">[unit and timeframe]</span></small></div><span class="go">&nearr;</span></a>
+<a class="card tilt case rv" style="--d:100ms" href="#/work"><div><span class="tag"><span class="tbd">[Service]</span></span><h3><span class="tbd">[Client type]</span> <span class="tbd">[what we built or changed]</span></h3><p><span class="tbd">[What was true before, in one sentence]</span></p></div><div class="num"><span class="tbd">[Metric]</span><small><span class="tbd">[unit and timeframe]</span></small></div><span class="go">&nearr;</span></a>
+<a class="card tilt case rv" style="--d:200ms" href="#/work"><div><span class="tag"><span class="tbd">[Service]</span></span><h3><span class="tbd">[Client type]</span> <span class="tbd">[what we built or changed]</span></h3><p><span class="tbd">[What was true before, in one sentence]</span></p></div><div class="num"><span class="tbd">[Metric]</span><small><span class="tbd">[unit and timeframe]</span></small></div><span class="go">&nearr;</span></a>
+</div></div></div>
+
+<div class="sec" data-draft><div class="wrap">
+<span class="eyebrow rv">In their words</span>
+<p class="quote rv">&ldquo;<span class="tbd">[Client quote, 15 to 35 words, about a specific moment or result. Their words, lightly edited, approved in writing.]</span>&rdquo;</p>
+<div class="who rv"><div class="av">??</div><div><b><span class="tbd">[Full name]</span></b><small><span class="tbd">[Role]</span>, <span class="tbd">[Company]</span></small></div></div>
+</div></div>
+
+<div class="sec alt"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Start your way</span><h2 class="split">Pick the first step that fits.</h2></div>
+<div class="g3">
+<a class="card rv" href="#/contact"><span class="tag">Ready to talk</span><h3>Talk to an engineer</h3><p>30 minutes with a senior engineer, not a salesperson. Bring the problem, leave with a next step.</p><span class="more">Book a call <span class="arrow">&rarr;</span></span></a>
+<a class="card rv" style="--d:100ms" href="#/contact"><span class="tag">Want a second opinion</span><h3>Architecture review</h3><p>We review your system and send a written report with prioritised fixes within 10 working days.</p><span class="more">Request a review <span class="arrow">&rarr;</span></span></a>
+<a class="card rv" style="--d:200ms" href="#/contact"><span class="tag">Accessibility deadline</span><h3>Accessibility review</h3><p>A prioritised list of barriers on your key user journeys, with fixes your developers can act on.</p><span class="more">Request a review <span class="arrow">&rarr;</span></span></a>
+</div>
+<p class="fine rv" style="margin-top:24px">Just researching? <a class="ul-link" href="#/insights">Read our field notes &rarr;</a></p>
+</div></div>
+
+<div class="sec"><div class="wrap"><div class="band rv"><div><h2>Tell us what's stuck.</h2><p>A senior engineer replies within one business day, with a question or a next step. Never a template.</p></div><a class="btn lime mag" href="#/contact"><span>Talk to our team</span><span class="arrow">&rarr;</span></a></div></div></div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="page" id="p-services" data-title="Services | Brightyard">
+<div class="ph"><div class="wrap"><span class="eyebrow rv">Services</span><h1 class="split">Engineering for the systems you <mark>can't afford</mark> to get wrong.</h1><p class="lead rv">Five service lines, one delivery model, one team. Start with what's urgent and grow from there.</p></div></div>
+<div class="sec"><div class="wrap"><div class="g3 svc">
+<div id="svc-eng" class="card rv"><span class="tag">01</span><h3>Product engineering</h3><p>Products and platforms designed with your users and built to be handed over.</p><ul class="ul"><li>Web and mobile applications</li><li>APIs and integrations</li><li>Product design and UX research</li><li>Legacy modernisation in safe slices</li></ul><div class="fit"><b>Good fit if</b>You need a product built or rebuilt and want one team from design to launch.</div><div class="fit"><b>What you get</b>Working software every two weeks, a documented codebase in your repositories, and a team that can stay on after launch.</div></div>
+<div id="svc-cloud" class="card rv" style="--d:100ms"><span class="tag">02</span><h3>Cloud and DevOps</h3><p>Infrastructure that scales, deploys often and stays calm on your busiest day.</p><ul class="ul"><li>Cloud migration</li><li>Infrastructure as code</li><li>CI/CD pipelines</li><li>Observability and cost control</li></ul><div class="fit"><b>Good fit if</b>Releases are risky, outages hurt, or the cloud bill keeps surprising you.</div><div class="fit"><b>What you get</b>A pipeline you trust, dashboards you can read, and a written cost and risk report.</div></div>
+<div id="svc-data" class="card rv" style="--d:200ms"><span class="tag">03</span><h3>Data and AI</h3><p>From clean data foundations to AI features that hold up with real users.</p><ul class="ul"><li>Data platforms and pipelines</li><li>Dashboards and analytics</li><li>Machine learning and generative AI</li><li>Evaluation, guardrails and AI governance</li></ul><div class="fit"><b>Good fit if</b>An AI pilot impressed in a demo and stalled before production, or nobody trusts the data.</div><div class="fit"><b>What you get</b>A working feature with its evaluation set, monitoring, and a plain-language note on its limits.</div></div>
+<div id="svc-a11y" class="card rv"><span class="tag">04</span><h3>Accessibility and quality</h3><p>Find and fix the barriers that stop people using your product, from the team building Xessly.</p><ul class="ul"><li>Accessibility reviews against WCAG</li><li>Remediation in your codebase</li><li>Accessible design systems and components</li><li>Automated and manual testing, including screen readers</li></ul><div class="fit"><b>Good fit if</b>You have an audit, a tender requirement or a customer complaint, or you simply want your product to work for everyone.</div><div class="fit"><b>What you get</b>A prioritised report, fixes in your code and a re-test of every fix. We don't sell overlays and we don't promise compliance; we fix the underlying issues and show you the evidence.</div></div>
+<div id="svc-sec" class="card rv" style="--d:100ms"><span class="tag">05</span><h3>Security and support</h3><p>A dependable team behind the systems you run on.</p><ul class="ul"><li>Security reviews and hardening</li><li>Cloud and identity security</li><li>Incident readiness</li><li>24/7 monitoring, service desk and SLAs</li></ul><div class="fit"><b>Good fit if</b>You need someone to keep a live system safe and running, or your current support isn't keeping up.</div><div class="fit"><b>What you get</b>Clear SLAs, a named team, monthly reports and a runbook for every critical system.</div></div>
+<a class="card ind rv" style="--d:200ms" href="#/contact"><span class="tag">Not sure yet</span><h3>Start with a conversation</h3><p>Thirty minutes with a senior engineer is enough to point you in the right direction, even if the answer is "not us".</p><span class="btn lime" style="margin-top:22px">Talk to an engineer <span class="arrow">&rarr;</span></span></a>
+</div></div></div>
+
+<div class="sec alt"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Ways to work with us</span><h2 class="split">Three models. Agreed before any work starts.</h2></div>
+<div class="g3">
+<div class="card rv"><span class="tag">Fixed scope</span><h3>For well-defined projects</h3><p>We run discovery, then agree a fixed price for a fixed scope. Changes are priced and approved before work starts.</p></div>
+<div class="card rv" style="--d:100ms"><span class="tag">Dedicated team</span><h3>For ongoing product work</h3><p>A monthly team that scales up or down with 30 days' notice. You set priorities every two weeks.</p></div>
+<div class="card rv" style="--d:200ms"><span class="tag">Run and support</span><h3>For live systems</h3><p>Monthly support with agreed response times.<span class="opt"> <span class="tbd">[Tier names and response times]</span></span></p></div>
+</div></div></div>
+
+<div class="sec" id="starters"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Fixed-price starters</span><h2 class="split">Try us on something small first.</h2><p class="lead rv">Short, priced engagements with a written deliverable. If we're not the right fit, you still keep the report.</p></div>
+<div class="sttab rv" role="table" aria-label="Fixed-price starter offers">
+<div class="st sth" role="row"><span role="columnheader">Offer</span><span role="columnheader">What you get</span><span role="columnheader">Time</span></div>
+<div class="st" role="row"><b role="cell">Discovery sprint</b><span role="cell">Goals, user research, architecture outline, backlog and a costed plan</span><span role="cell">2 weeks</span></div>
+<div class="st" role="row"><b role="cell">Architecture review</b><span role="cell">Written review of your system with prioritised risks and fixes</span><span role="cell">10 working days</span></div>
+<div class="st" role="row"><b role="cell">Accessibility review</b><span role="cell">Barriers on 3 to 5 key journeys, prioritised, with fix guidance</span><span role="cell">10 working days</span></div>
+<div class="st" role="row"><b role="cell">Cloud cost review</b><span role="cell">Where your cloud spend goes and what to change first</span><span role="cell">1 week</span></div>
+</div>
+<p class="stnote rv">Each starter has a fixed price in US dollars, quoted after a free 30-minute call.</p>
+</div></div>
+
+<div class="sec alt"><div class="wrap"><div class="head"><span class="eyebrow rv">Frequently asked</span><h2 class="split">Questions we hear most</h2></div>
+<div class="rv">
+<details><summary>How quickly can a project start?</summary><p>Most projects start within two to three weeks of the first call, after a short discovery workshop to agree scope and team.</p></details>
+<details><summary>Do you work with our in-house team?</summary><p>Yes. We can embed with your engineers, lead delivery end to end, or mix both.</p></details>
+<details><summary>Who owns the code?</summary><p>You do, from day one. Code, documentation and infrastructure definitions live in your repositories, not ours.</p></details>
+<details><summary>Which technologies do you use?</summary><p>Modern web, mobile, cloud and data stacks. Tell us yours, and we'll say honestly if it's outside our strengths.</p></details>
+<details><summary>Which time zones do you cover?</summary><p>Our team works from India (IST). We agree overlapping working hours and meeting times with your team at kickoff.</p></details>
+<details><summary>Will you sign an NDA?</summary><p>Yes, before we see anything confidential.</p></details>
+<details><summary>What if we want to stop?</summary><p>Give us 30 days' notice. We hand over code, documentation and access, and walk your team through it. No lock-in.</p></details>
+</div></div></div>
+<div class="sec"><div class="wrap"><div class="band rv"><div><h2>Not sure which service fits?</h2><p>Thirty minutes with a senior engineer is enough to point you in the right direction.</p></div><a class="btn lime mag" href="#/contact"><span>Talk to an engineer</span><span class="arrow">&rarr;</span></a></div></div></div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="page" id="p-products" data-title="Allocivo and Xessly | Brightyard products">
+<div class="ph"><div class="wrap"><span class="eyebrow rv">Products</span><h1 class="split">Two products. Built by <mark>the same engineers</mark> who'd build yours.</h1><p class="lead rv">Allocivo and Xessly are built by Brightyard's agents and engineers. They're how we prove our way of working on problems of our own.</p><div class="acts rv"><a class="btn pri" href="#/allocivo">Explore Allocivo</a><a class="btn out" href="#/xessly">Explore Xessly</a></div></div></div>
+<div class="sec"><div class="wrap">
+<div class="prods">
+<div class="pp al rv"><div class="pl"><svg aria-hidden="true"><use href="#mk-al"/></svg><span>Allocivo<small>by Brightyard</small></span></div><span class="tag">For hotel housekeeping and front office &middot; Early access</span><h3>AI agents that turn your workforce availability into action.</h3><div data-ui="al"></div><ol class="pp-steps" aria-label="What the demo shows. Choose a step to see it."><li data-s="1" data-d="Room 418 will miss 14:00, because Daniel is running late."><button type="button"><b>1</b><span>Spots the risk</span></button></li><li data-s="2" data-d="Asha is free, qualified and already on floor 4."><button type="button"><b>2</b><span>Picks the right person</span></button></li><li data-s="3" data-d="A supervisor approves in one tap and the plan updates."><button type="button"><b>3</b><span>Gets the OK</span></button></li></ol><p class="pp-now">Room 418 will miss 14:00, because Daniel is running late.</p><ul class="pp-out"><li>Fewer late rooms</li><li>Less overtime</li><li>Live reassignments</li></ul><div class="pp-act"><a class="btn lime" href="#/allocivo">Explore Allocivo <span class="arrow">&rarr;</span></a><a class="pp-lnk" href="#/allocivo/al-demo">Book a demo</a></div></div>
+<div class="pp xs rv" style="--d:120ms"><div class="pl"><svg aria-hidden="true"><use href="#mk-xs"/></svg><span>Xessly<small>by Brightyard</small></span></div><span class="tag">For product and web teams &middot; Early access</span><h3>AI agents make your website and app accessible. You just watch.</h3><div data-ui="xs"></div><ol class="pp-steps" aria-label="What the demo shows. Choose a step to see it."><li data-s="1" data-d="The email field loses its label while you type (WCAG 1.3.1)."><button type="button"><b>1</b><span>Finds the issue</span></button></li><li data-s="2" data-d="Adds a visible label in your code, as a pull request."><button type="button"><b>2</b><span>Writes the fix</span></button></li><li data-s="3" data-d="Re-tested with keyboard and screen reader: it passes."><button type="button"><b>3</b><span>Proves it</span></button></li></ol><p class="pp-now">The email field loses its label while you type (WCAG 1.3.1).</p><ul class="pp-out"><li>WCAG 2.2 issues fixed</li><li>Fixes as pull requests</li><li>Every fix re-tested</li></ul><div class="pp-act"><a class="btn mint" href="#/xessly">Explore Xessly <span class="arrow">&rarr;</span></a><a class="pp-lnk" href="#/xessly/xs-access">Get early access</a></div></div>
+</div>
+</div></div>
+<div class="sec alt"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Why we build products</span><h2 class="split">Why a services company builds products.</h2></div>
+<div class="g3">
+<div class="card rv"><span class="tag">On call</span><h3>We carry our own pager.</h3><p>When our product breaks, we fix it. That's the standard we bring to systems we run for clients.</p></div>
+<div class="card rv" style="--d:100ms"><span class="tag">Real users</span><h3>We design for real users.</h3><p>Hotel supervisors on a busy floor and people using screen readers don't forgive vague interfaces.</p></div>
+<div class="card rv" style="--d:200ms"><span class="tag">Honesty</span><h3>We say what's proven.</h3><p>Our product pages use illustrative data until real results exist. Our client pages follow the same rule.</p></div>
+</div></div></div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section class="page" id="p-work" data-title="Case studies | Brightyard">
+<div class="ph"><div class="wrap"><span class="eyebrow rv">Case studies</span><h1 class="split">Results our clients can <mark>point to</mark>.</h1><p class="lead rv">Each story shows the problem, what we changed and one number that moved, with the timeframe. Client names appear only with permission.</p></div></div>
+<div class="sec"><div class="wrap">
+<div data-draft>
+<div class="filters rv" id="filters"><button class="fb on" data-f="all">All</button><button class="fb" data-f="eng">Product engineering</button><button class="fb" data-f="cloud">Cloud</button><button class="fb" data-f="data">Data and AI</button><button class="fb" data-f="a11y">Accessibility</button><button class="fb" data-f="sec">Security and support</button></div>
+<div class="g3" id="cases"></div>
+</div>
+<div class="card launch-only empty"><h3>Case studies are being prepared.</h3><p>We're getting client approval for each one. In the meantime, ask us for references from projects like yours.</p><a class="btn pri" style="margin-top:20px" href="#/contact">Ask for references</a></div>
+</div></div>
+</section>
+
+<!-- ================= HOW WE WORK ================= -->
+<section class="page" id="p-how" data-title="How we work | Brightyard playbook">
+<div class="ph"><div class="wrap"><span class="eyebrow rv">How we work</span><h1 class="split">Our playbook, <mark>in public.</mark></h1><p class="lead rv">Agents build. Engineers understand your business and make the work better. This is how we actually run projects; if something here doesn't match your experience with us, tell us.</p></div></div>
+<div class="sec"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Who does what</span><h2 class="split">Agents do the building. Engineers do the understanding.</h2></div>
+<div class="wwd">
+<div class="card rv"><span class="tag">AI agents</span><h3>Build everything needed</h3><ul class="ul"><li>Turn briefs into user stories and architecture drafts</li><li>Write code, tests and documentation</li><li>Run test, security and accessibility checks on every change</li><li>Deploy in stages and monitor around the clock</li></ul></div>
+<div class="card ind rv" style="--d:100ms"><span class="tag">Engineers</span><h3>Understand and make it better</h3><ul class="ul"><li>Learn your business, users and constraints</li><li>Make the architecture and trade-off calls</li><li>Review every change before it ships</li><li>Turn what the agents learn into a better next version</li></ul></div>
+</div>
+<div style="margin-top:64px"></div>
+<div class="pbk">
+<div class="pbr rv"><span class="n">01</span><h3>Before we start</h3><p>A one-to-two-week discovery. You get a written summary of goals, users, risks, architecture and a costed plan. If we think you shouldn't build it, we'll say so.</p></div>
+<div class="pbr rv"><span class="n">02</span><h3>Every two weeks</h3><p>A demo of working software and a written update in four parts: done, next, risks, and decisions we need from you.</p></div>
+<div class="pbr rv"><span class="n">03</span><h3>How we talk</h3><p>A shared channel with your team, replies the same working day, and one named delivery lead accountable for the project.</p></div>
+<div class="pbr rv"><span class="n">04</span><h3>Our quality bar</h3><p>Agents write tests for every change. Every release passes automated tests, a security scan and accessibility checks, and an engineer reviews it before it ships.</p></div>
+<div class="pbr rv"><span class="n">05</span><h3>Handover</h3><p>Documentation, runbooks, architecture notes and a recorded walkthrough. Your team should be able to run the system without us.</p></div>
+<div class="pbr rv"><span class="n">06</span><h3>Your code, your access</h3><p>Code lives in your repositories from day one. When we finish, we remove our access and confirm it in writing.</p></div>
+</div>
+</div></div>
+<div class="sec alt"><div class="wrap">
+<div class="head"><span class="eyebrow rv">What we won't do</span><h2 class="split">Seven promises, in writing.</h2></div>
+<ul class="wont">
+<li class="rv">We won't ship agent-written code that no engineer has reviewed.</li>
+<li class="rv">We won't sell you a rewrite you don't need.</li>
+<li class="rv">We won't hide bad news until the next meeting.</li>
+<li class="rv">We won't hold your code or your data hostage.</li>
+<li class="rv">We won't put unsupervised junior engineers on your project.</li>
+<li class="rv">We won't put a number on our website we can't show you how we measured.</li>
+<li class="rv">We won't sell accessibility overlays or promise legal compliance.</li>
+</ul>
+</div></div>
+<div class="sec"><div class="wrap"><div class="head"><span class="eyebrow rv">What we believe</span><h2 class="split">Four things we hold ourselves to.</h2></div>
+<div class="g4">
+<div class="card rv"><span class="tag">Show the work</span><h3>Nothing hidden</h3><p>Public playbook, working software every two weeks, and a site you can inspect with Blueprint mode.</p></div>
+<div class="card rv" style="--d:80ms"><span class="tag">Measure, don't claim</span><h3>Numbers with sources</h3><p>If we can't show how we measured it, we don't say it.</p></div>
+<div class="card rv" style="--d:160ms"><span class="tag">Built to hand over</span><h3>No lock-in</h3><p>Software that's easy to run, grow and own without us.</p></div>
+<div class="card rv" style="--d:240ms"><span class="tag">Accessible by default</span><h3>Software for everyone</h3><p>Accessibility is part of every release, not a project at the end.</p></div>
+</div></div></div>
+<div class="sec" style="padding-top:0"><div class="wrap"><div class="band rv" id="pressb"><div><h2>Press B.</h2><p>Blueprint mode shows how every page on this site is built: sizes, fonts, colours, components. We think the people building your software should be comfortable showing their work.</p></div><button class="btn lime mag" type="button" id="bpon"><span>Turn on Blueprint mode</span></button></div></div></div>
+</section>
+
+<!-- ================= INSIGHTS ================= -->
+<section class="page" id="p-insights" data-title="Insights | Brightyard field notes">
+<div class="ph"><div class="wrap"><span class="eyebrow rv">Insights</span><h1 class="split">Field notes from the people who <mark>build.</mark></h1><p class="lead rv">Practical guides for technology leaders, written by our engineers. No gated PDFs.</p></div></div>
+<div class="sec"><div class="wrap">
+<p class="fine opt" style="margin-bottom:20px"><span class="tbd">[Draft: show only published articles. Each card links to its article.]</span></p>
+<div class="g3" data-draft>
+<article class="card rv"><span class="tag">AI</span><h3>How to take an AI pilot to production</h3><p>The checks that separate a demo from a system your team can rely on.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:80ms"><span class="tag">Accessibility</span><h3>Why accessibility overlays won't save you</h3><p>What overlays can and can't do, and what fixes the underlying problems.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:160ms"><span class="tag">Hospitality</span><h3>Room readiness is a coordination problem, not a cleaning task</h3><p>Arrivals, absences and maintenance blockers, and why static task lists can't keep up.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv"><span class="tag">Cloud</span><h3>A practical cloud cost checklist</h3><p>Seven places most teams overspend, and how to find them in a week.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:80ms"><span class="tag">Software</span><h3>Modernising legacy systems in slices</h3><p>Why incremental replacement beats the big rewrite.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+<article class="card rv" style="--d:160ms"><span class="tag">Buying</span><h3>Choosing an IT partner: 12 questions to ask</h3><p>And the answers that should make you walk away.</p><span class="more">Read article <span class="arrow">&rarr;</span></span></article>
+</div>
+<div class="card launch-only empty"><h3>Our first field notes are on the way.</h3><p>Practical guides on AI, cloud, accessibility and delivery. Want one on a specific topic? Tell us.</p><a class="btn pri" style="margin-top:20px" href="#/contact">Suggest a topic</a></div>
+</div></div>
+</section>
+
+<!-- ================= ALLOCIVO ================= -->
+<section class="page" id="p-allocivo" data-title="Allocivo | Real-time workforce orchestration for hotels">
+<div class="prodhero al"><div class="wrap">
+<div class="phl rv">
+<div class="pl"><svg aria-hidden="true"><use href="#mk-al"/></svg><span>Allocivo<small>by Brightyard &middot; Early access</small></span></div>
+<h1><b>Allocivo</b> is a team of AI agents for hotel operations. It turns workforce availability into action, in real time.</h1>
+<div class="acts"><a class="btn pri" href="#/allocivo/al-demo">Book a demo</a><a class="btn out" href="#/allocivo/al-how">See how it works</a></div>
+</div>
+
+<div class="deck dk-al rv" data-deck aria-roledescription="carousel" aria-label="Allocivo presentation: the problem and the solution">
+<div class="dk-stage">
+
+<section class="sl cen" aria-roledescription="slide" aria-label="Slide 1 of 10">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-al"/></svg>
+<span class="k a" style="--i:1">Allocivo &middot; by Brightyard</span>
+<h2 class="a" style="--i:2">Your hotel is always moving.<br>Your workforce decisions should too.</h2>
+<p class="s a" style="--i:3">Real-time workforce orchestration for hospitality. Here's the problem it solves, and how.</p></div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 2 of 10">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Your systems record the work. Your team still connects the dots.</h2><p class="s a" style="--i:2">The PMS knows which rooms need attention. Attendance knows who arrived. Task tools hold the list. Nothing decides who should act next, so a supervisor does it by radio and WhatsApp.</p></div>
+<div class="vstack">
+<div class="vgrid3 a" style="--i:2"><div class="vcard"><small>PMS</small><b>Room 418</b><span>Ready by 14:00</span></div><div class="vcard"><small>Attendance</small><b>Daniel</b><span>On shift</span></div><div class="vcard"><small>Task tool</small><b>T-104</b><span>Assigned to Daniel</span></div></div>
+<div class="gapline a" style="--i:3">no shared decision</div>
+<div class="vcard a" style="--i:4"><small>Supervisor, floor 4</small><span class="bub">Who's free on 4?</span><br><span class="bub r">Is 418 done yet?</span><br><span class="bub">Front desk says 512 is here early</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 3 of 10">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Then the day changes.</h2><p class="s a" style="--i:2">Hotel operations are event-driven. Workforce allocation usually isn't. Every change lands on the same few people.</p></div>
+<div class="vstack">
+<div class="vcard a" style="--i:2"><small>Demand changes</small><b>Early arrival for Room 512 at 12:30</b><span>Priorities shift from the morning plan.</span></div>
+<div class="vcard a" style="--i:3"><small>Availability changes</small><b>Daniel is running 25 minutes late</b><span>Absences, breaks and workload change what the team can deliver.</span></div>
+<div class="vcard vbad a" style="--i:4"><small>Work gets disconnected</small><b>Room 206 is blocked by maintenance</b><span>Housekeeping can't finish until the repair is closed.</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 4 of 10">
+<div><span class="k a">The cost</span><h2 class="a" style="--i:1">Risk shows up when the deadline is already close.</h2><p class="s a" style="--i:2">Without a live view, nobody sees that Room 418 will miss its target until a guest is waiting at the desk.</p></div>
+<div class="tline a" style="--i:2"><div class="bar"><span class="fill"></span></div>
+<div class="tl-ev"><div><b>12:30</b><span>Early arrival for 512</span></div><div><b>13:05</b><span>Daniel running late</span></div><div class="hot"><b>13:40</b><span>Supervisor finds out 418 isn't started</span></div><div class="hot"><b>14:00</b><span>Room 418 target missed</span></div></div></div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 5 of 10">
+<div><span class="k a">The solution</span><h2 class="a" style="--i:1">Allocivo's agents connect the signals and decide the next move.</h2><p class="s a" style="--i:2">They sit above the systems you already run, combine demand, availability and your operating rules, and decide who should do what next.</p></div>
+<div class="flow a" style="--i:2">
+<div class="ins"><div>Demand: arrivals, room status</div><div>Availability: who's on shift</div><div>Context: skills, workload, rules</div></div>
+<svg class="hub" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-al"/></svg>
+<div class="vcard vacc"><small>Recommendation</small><b>Move Room 418 to Asha</b><span>Free now, qualified for room turns, already on floor 4.</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 6 of 10">
+<div><span class="k a">How it works</span><h2 class="a" style="--i:1">Sense. Understand. Decide. Adapt.</h2><p class="s a" style="--i:2">A continuous loop, with people in control at every step.</p></div>
+<div class="steps4">
+<div class="vcard a" style="--i:2"><small>1 Sense</small><b>Bring in live signals</b><span>Room status, arrivals, attendance and task status, from systems you already use.</span></div>
+<div class="vcard a" style="--i:3"><small>2 Understand</small><b>Read the situation</b><span>Workload, skills, location, deadlines and dependencies.</span></div>
+<div class="vcard a" style="--i:4"><small>3 Decide</small><b>Recommend the next action</b><span>Who should do what next, using your rules.</span></div>
+<div class="vcard a" style="--i:5"><small>4 Adapt</small><b>Recalculate on change</b><span>When reality moves, the plan moves with it.</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 7 of 10">
+<div><span class="k a">In action</span><h2 class="a" style="--i:1">When the plan breaks, the next move is already on screen.</h2><p class="s a" style="--i:2">Daniel is late. Room 418 turns at risk. Allocivo proposes Asha, the supervisor approves, and the queue settles.</p></div>
+<div class="a" style="--i:2"><div data-ui="al"></div></div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 8 of 10">
+<div><span class="k a">Autonomy you set</span><h2 class="a" style="--i:1">Agents act where you allow them. Managers handle the exceptions.</h2><p class="s a" style="--i:2">Low-risk work moves automatically. Bigger changes wait for approval. Every action shows its reason.</p><div class="levels a" style="--i:3"><span><b>Automatic</b>Low-risk reassignments</span><span><b>Approval</b>Moderate changes</span><span><b>Sign-off</b>High-impact actions</span></div></div>
+<div class="vcard a" style="--i:2"><small>Why this assignment?</small><b>Room 418 &rarr; Asha</b>
+<div class="why"><div><i>&#10003;</i>Ready-by deadline is 14:00</div><div><i>&#10003;</i>Qualified for room turns</div><div><i>&#10003;</i>Lowest current workload on shift</div><div><i>&#10003;</i>Already on floor 4</div><div><i class="no">&times;</i>Daniel: running 25 minutes late</div></div>
+<div class="acts3"><span>Approve</span><span>Change</span><span>Dismiss</span></div></div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 9 of 10">
+<div><span class="k a">Outcomes</span><h2 class="a" style="--i:1">Measured against your own baseline.</h2><p class="s a" style="--i:2">Results depend on each property's data and workflow. We track what changes; we don't promise numbers we haven't measured.</p></div>
+<div class="vgrid2">
+<div class="vcard a" style="--i:2"><small>Track</small><b>Priority work completed within target</b></div>
+<div class="vcard a" style="--i:3"><small>Track</small><b>Rooms ready by target time</b></div>
+<div class="vcard a" style="--i:4"><small>Track</small><b>Time from exception to action</b></div>
+<div class="vcard a" style="--i:5"><small>Track</small><b>Manager coordination effort</b></div>
+</div>
+</section>
+
+<section class="sl cen" aria-roledescription="slide" aria-label="Slide 10 of 10">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-al"/></svg>
+<h2 class="a" style="--i:1">Give your team a better way to decide what happens next.</h2>
+<p class="s a" style="--i:2">Show us how your hotel works. We'll explore where better coordination could help.</p>
+<div class="dkcta a" style="--i:3"><a class="btn lime" href="#/allocivo/al-demo">Book a demo</a><a class="btn out" href="#/allocivo/al-problem">Read the details</a></div></div>
+</section>
+
+</div>
+</div>
+<p class="fine" style="margin-top:14px">Presentation uses illustrative demo data (Northstar Hotel is fictional). Use the controls to pause or move between slides.</p>
+</div></div>
+
+<div class="sec" id="al-problem"><div class="wrap">
+<div class="head"><span class="eyebrow rv">The difference</span><h2 class="split">One afternoon on floor 4, two ways.</h2></div>
+<div class="twoway rv">
+<div class="tw bad"><span class="tw-h">Without Allocivo</span>
+<ol><li><time>12:30</time>Early arrival for 512 spotted by the front desk</li><li><time>12:45</time>Six radio calls to find who's free</li><li><time>13:05</time>Daniel running late, nobody knows</li><li><time>13:40</time>Supervisor finds 418 not started</li><li class="end"><time>14:00</time>418 misses its target. Guest waits.</li></ol></div>
+<div class="tw good"><span class="tw-h">With Allocivo agents</span>
+<ol><li><time>12:30</time>Agent moves 512 to the top of the queue</li><li><time>12:31</time>Asha assigned to 512 automatically</li><li><time>13:05</time>Agent sees Daniel is late, moves 418 to Asha</li><li><time>13:20</time>Supervisor gets one notification, not six calls</li><li class="end"><time>13:52</time>418 ready, 8 minutes early</li></ol></div>
+</div>
+<p class="fine rv" style="margin-top:14px">Illustrative scenario with fictional data.</p>
+</div></div>
+
+<div class="sec alt" id="al-how"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Watch the agents work</span><h2 class="split">Events in. Decisions out. All day.</h2><p class="lead rv">Allocivo's agents read what's happening, rank the work, assign the right person and keep watching. A simulated shift:</p></div>
+<div class="sim rv" data-live="al">
+<div class="lv-col"><span class="lv-h">Events in</span><ol class="lv-ev" aria-hidden="true"></ol></div>
+<div class="lv-col"><span class="lv-h">Allocivo agents</span>
+<div class="ags"><div class="ag" data-a="observe"><i></i><b>Observe</b><span>Reads PMS, attendance and tasks</span></div><div class="ag" data-a="prioritise"><i></i><b>Prioritise</b><span>Ranks work by deadline and your rules</span></div><div class="ag" data-a="assign"><i></i><b>Assign</b><span>Picks the best eligible person</span></div><div class="ag" data-a="watch"><i></i><b>Watch</b><span>Tracks progress, replans on change</span></div></div></div>
+<div class="lv-col"><span class="lv-h">Floor 4 &middot; live board</span>
+<div class="rooms" aria-hidden="true"></div>
+<div class="legend"><span class="s-dirty">To clean</span><span class="s-clean">Cleaning</span><span class="s-insp">Inspect</span><span class="s-ready">Ready</span><span class="s-block">Blocked</span><span class="s-risk">At risk</span></div></div>
+<div class="lv-foot"><span class="lv-dec" aria-live="off"></span><span class="illus">Illustrative demo data</span></div>
+</div>
+</div></div>
+
+<div class="sec" id="al-value"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Operational and financial efficiency</span><h2 class="split">Where the time and money come back.</h2><p class="lead rv">Five levers, each tied to a number your hotel already tracks or can start tracking.</p></div>
+<div class="levers rv">
+<div><b>Less chasing</b><span>One live board replaces radio calls and group chats</span><em>Supervisor minutes per shift</em></div>
+<div><b>Faster assignment</b><span>Agents pick an eligible person the moment work appears</span><em>Time from task to assignment</em></div>
+<div><b>Fewer late rooms</b><span>Deadline risk is flagged while there's still time to act</span><em>Rooms ready by target time</em></div>
+<div><b>Less overtime</b><span>Workload is balanced before the shift runs long</span><em>Overtime hours and cost</em></div>
+<div><b>Less rework</b><span>Failed inspections loop straight back to the right person</span><em>Repeat tasks and rework hours</em></div>
+</div>
+
+<div class="calc rv" id="al-calc">
+<div class="calc-in">
+<h3>Estimate the value for your property</h3>
+<p class="fine">Enter your own numbers. The formulas come from our product model; the result is an estimate, not a promise.</p>
+<select data-k="cur" hidden aria-hidden="true"><option value="$">$</option></select>
+<label>Supervisor shifts per day <output data-o="shifts">3</output><input type="range" data-k="shifts" min="1" max="12" value="3"></label>
+<label>Minutes each supervisor spends coordinating per shift <output data-o="mins">90</output><input type="range" data-k="mins" min="0" max="240" step="5" value="90"></label>
+<label>Supervisor hourly cost<input type="number" data-k="sup" value="20" min="0" inputmode="decimal"></label>
+<label>Annual overtime cost<input type="number" data-k="ot" value="30000" min="0" inputmode="decimal"></label>
+<label>Rework hours per month <output data-o="rw">40</output><input type="range" data-k="rw" min="0" max="300" step="5" value="40"></label>
+<label>Staff hourly cost<input type="number" data-k="staff" value="12" min="0" inputmode="decimal"></label>
+<label>Share you believe is avoidable <output data-o="share">20%</output><input type="range" data-k="share" min="0" max="50" value="20"></label>
+</div>
+<div class="calc-out" aria-live="polite">
+<span class="co-h">Potential annual value</span>
+<b class="co-total" data-r="total">0</b>
+<div class="co-bars">
+<div><span>Coordination time freed</span><i><s data-b="coord"></s></i><b data-r="coord">0</b><small data-r="hours">0 hours</small></div>
+<div><span>Overtime avoided</span><i><s data-b="ot"></s></i><b data-r="ot">0</b></div>
+<div><span>Rework avoided</span><i><s data-b="rw"></s></i><b data-r="rw">0</b></div>
+</div>
+<p class="co-note">Time freed is capacity your team can spend on guests, not automatic cash savings. Subtract Allocivo's cost for net value; we'll confirm it with a baseline from your property.</p>
+<a class="btn lime" href="#/allocivo/al-demo">Check these numbers with us</a>
+</div>
+</div>
+</div></div>
+
+<div class="sec alt" id="al-uses"><div class="wrap">
+<div class="split2">
+<div><span class="eyebrow rv">Autonomy you set</span><h2 class="split">Agents act where you allow them.</h2>
+<div class="auto rv"><div class="lv1"><b>Automatic</b><span>Low-risk reassignments and reprioritising</span></div><div class="lv2"><b>Approval</b><span>Moderate changes wait for a supervisor's tap</span></div><div class="lv3"><b>Sign-off</b><span>Anything high-impact needs explicit authorisation</span></div></div>
+<p class="fine rv" style="margin-top:14px">Every action shows its reason. Pause the agents any time.</p></div>
+<div><span class="eyebrow rv">Use cases</span><h2 class="split">Built for the moments that change.</h2>
+<div class="pills rv"><span class="hot">Room readiness</span><span class="hot">Housekeeping allocation</span><span>Staff absence</span><span>Guest requests</span><span>Maintenance blockers</span><span>Inspection rework</span><span>Shift handover</span><span>Multi-property view</span></div>
+</div>
+</div>
+</div></div>
+
+<div class="sec" id="al-systems"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Integrations</span><h2 class="split">Keep your systems. Add the decisions between them.</h2></div>
+<div class="flowmap rv" aria-label="Conceptual architecture">
+<div class="fm-src"><span>PMS</span><span>Attendance</span><span>Housekeeping</span><span>Maintenance</span><span>Guest requests</span></div>
+<div class="fm-arrow" aria-hidden="true"></div>
+<div class="fm-core"><svg aria-hidden="true"><use href="#mk-al"/></svg><b>Allocivo agents</b><span>Observe &middot; Prioritise &middot; Assign &middot; Watch</span></div>
+<div class="fm-arrow" aria-hidden="true"></div>
+<div class="fm-out"><span>Manager console</span><span>Staff task app</span><span>Front desk view</span><span>Reports</span></div>
+</div>
+<p class="fine rv" style="margin-top:14px">Conceptual architecture. Read-only first; write-back only where supported and authorised.<span class="opt"> <span class="tbd">[List confirmed integrations only]</span></span></p>
+</div></div>
+
+<div class="sec alt" id="al-demo"><div class="wrap story" style="align-items:start">
+<div><span class="eyebrow rv">Book a demo</span><h2 class="split">Show us how your hotel works.</h2><p class="lead rv">Tell us about your property, current systems and operational challenges. We'll focus on your actual workflow, not a generic software presentation.</p></div>
+<div class="card rv"><form class="lf" data-kind="Allocivo demo" novalidate><label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<div class="row2"><label>Full name<input name="name" data-req="Enter your name." autocomplete="name"><span class="err"></span></label><label>Work email<input name="email" type="email" data-req="Enter a valid work email." autocomplete="email"><span class="err"></span></label></div>
+<div class="row2"><label>Hotel or group name<input name="company" data-req="Enter your hotel or group name." autocomplete="organization"><span class="err"></span></label><label>Your role<input name="role" placeholder="e.g. Executive housekeeper"></label></div>
+<div class="lf row3"><label>Country<input name="country" autocomplete="country-name"></label><label>Properties<input name="properties" inputmode="numeric"></label><label>Approx. rooms<input name="rooms" inputmode="numeric"></label></div>
+<div class="row2"><label>Current PMS <span class="help">(optional)</span><input name="pms"></label><label>Attendance or workforce system <span class="help">(optional)</span><input name="workforce"></label></div>
+<label>Biggest operational challenge<textarea name="goal" rows="3" data-req="Tell us a little about the challenge."></textarea><span class="err"></span></label>
+<label class="chk"><input type="checkbox" name="consent" data-req="Please confirm we can contact you."><span>I agree to be contacted about Allocivo. <a class="ul-link" href="#/privacy">Privacy policy</a></span></label><span class="err" data-for="consent"></span>
+<p class="fnote" role="status" aria-live="polite"></p>
+<button class="btn pri" type="submit"><span>Request a demo</span><span class="arrow">&rarr;</span></button>
+</form></div>
+</div></div>
+</section>
+
+<!-- ================= XESSLY ================= -->
+<section class="page" id="p-xessly" data-title="Xessly | Accessibility, fixed by AI agents">
+<div class="prodhero xs"><div class="wrap">
+<div class="phl rv">
+<div class="pl"><svg aria-hidden="true"><use href="#mk-xs"/></svg><span>Xessly<small>by Brightyard &middot; Early access</small></span></div>
+<h1><b>Xessly</b> is a team of AI agents that finds website accessibility issues, fixes them in your code or CMS, and verifies every change.</h1>
+<div class="acts"><a class="btn pri" href="#/xessly/xs-access">Request early access</a><a class="btn out" href="#/xessly/xs-how">See the agent flow</a></div>
+</div>
+
+<div class="deck dk-xs rv" data-deck aria-roledescription="carousel" aria-label="Xessly presentation: the problem and the agent-run solution">
+<div class="dk-stage">
+
+<section class="sl cen" aria-roledescription="slide" aria-label="Slide 1 of 10">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-xs"/></svg>
+<span class="k a" style="--i:1">Xessly &middot; by Brightyard</span>
+<h2 class="a" style="--i:2">Find it. Fix it. Prove it.<br>Automatically.</h2>
+<p class="s a" style="--i:3">AI agents that work on every WCAG issue they find, ship the fix and verify it. People step in only when an agent asks.</p></div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 2 of 10">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Every scanner hands you a list. Nobody hands you the fix.</h2><p class="s a" style="--i:2">Reports say something may be wrong. Then the real work starts: understanding it, fixing it in the right place, and checking it worked.</p></div>
+<div class="vcard rep a" style="--i:2"><small>Typical scan report (illustrative)</small>
+<div><b>Contrast (minimum)</b><span>37 instances</span></div>
+<div><b>Name, role, value</b><span>12 instances</span></div>
+<div><b>Info and relationships</b><span>58 instances</span></div>
+<div><b>Keyboard</b><span>9 instances</span></div>
+<div style="border:none"><b style="color:var(--ac)">Who fixes all of this, and when?</b><span></span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 3 of 10">
+<div><span class="k a">The problem</span><h2 class="a" style="--i:1">Fixing is the slow part.</h2></div>
+<div class="vstack">
+<div class="vcard a" style="--i:1"><small>Reports pile up</small><b>Findings without action</b><span>Hundreds of rule violations, little sense of what to change first.</span></div>
+<div class="vcard a" style="--i:2"><small>Fixes wait</small><b>Accessibility sits in the backlog</b><span>Every fix competes with feature work for the same developers.</span></div>
+<div class="vcard vbad a" style="--i:3"><small>Nobody re-checks</small><b>"Done" is rarely verified</b><span>Changes ship without anyone confirming they worked, or broke something else.</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 4 of 10">
+<div><span class="k a">The cost</span><h2 class="a" style="--i:1">One finding, passed between four people.</h2><p class="s a" style="--i:2">Each handoff loses time. The person using a screen reader or a keyboard waits for all of it.</p></div>
+<div class="chain">
+<div class="a" style="--i:2"><b>Product lead</b><span class="bub">Is this urgent, or can it wait?</span></div>
+<div class="a" style="--i:3"><b>Designer</b><span class="bub">What should it look like instead?</span></div>
+<div class="a" style="--i:4"><b>Developer</b><span class="bub">Which element? When do I fit it in?</span></div>
+<div class="a" style="--i:5"><b>Everyone</b><span class="bub r">Did the fix actually work?</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 5 of 10">
+<div><span class="k a">The solution</span><h2 class="a" style="--i:1">Five agents. One continuous flow.</h2><p class="s a" style="--i:2">Xessly runs the whole job, from first scan to verified fix, without waiting on a meeting.</p></div>
+<div class="agents a" style="--i:2">
+<div><i>1</i><b>Scan agent</b><span>Crawls pages and journeys on desktop and mobile</span></div>
+<div><i>2</i><b>Triage agent</b><span>Groups duplicates and maps each issue to WCAG 2.2</span></div>
+<div><i>3</i><b>Fix agent</b><span>Writes the fix in your code or your CMS</span></div>
+<div><i>4</i><b>Test agent</b><span>Re-runs checks and catches regressions</span></div>
+<div><i>5</i><b>Verify agent</b><span>Closes what's proven, flags what isn't</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 6 of 10">
+<div><span class="k a">In action</span><h2 class="a" style="--i:1">A full run, start to finish, no clicks.</h2><p class="s a" style="--i:2">This is what one run looks like on a fictional store.</p></div>
+<div class="vcard term a" style="--i:2"><small>Agent run &middot; Northstar Store &middot; illustrative</small>
+<div class="tl1"><em>scan</em>Crawled 48 pages, desktop and mobile</div>
+<div class="tl1"><em>triage</em>126 findings &rarr; 31 unique issues (WCAG 2.2 A and AA)</div>
+<div class="tl1"><em>fix</em>PR #42: labels for 6 form fields (1.3.1, 4.1.2)</div>
+<div class="tl1"><em>fix</em>CMS: alt text for 18 product images (1.1.1)</div>
+<div class="tl1"><em>test</em>Automated, keyboard and contrast checks: 0 regressions</div>
+<div class="tl1 ok"><em>verify</em>29 verified &middot; 2 flagged with drafts</div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 7 of 10">
+<div><span class="k a">Where fixes land</span><h2 class="a" style="--i:1">It fixes the problem where it lives.</h2><p class="s a" style="--i:2">Code issues become pull requests in your repository. Content issues are fixed in your CMS. No overlay painted on top.</p></div>
+<div class="vgrid2">
+<div class="vcard a" style="--i:2"><small>Your repository</small><b>Pull request</b><pre class="diff"><span class="m">- &lt;input placeholder="Email"&gt;</span>
+<span class="p">+ &lt;label for="email"&gt;Email&lt;/label&gt;</span>
+<span class="p">+ &lt;input id="email" type="email"&gt;</span></pre></div>
+<div class="vcard a" style="--i:3"><small>Your CMS</small><b>Content update</b><span>Alt text added to 18 product images, link text clarified on 4 pages, with a change log you can roll back.</span></div>
+</div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 8 of 10">
+<div><span class="k a">Proof</span><h2 class="a" style="--i:1">Every fix is tested before it counts.</h2><p class="s a" style="--i:2">The test agent re-checks each change and looks for anything it might have broken. One click rolls a change back.</p></div>
+<div class="vcard a" style="--i:2"><small>Verification &middot; PR #42</small><b>Sign-in form labels</b>
+<div class="why"><div><i>&#10003;</i>Each field has an accessible name</div><div><i>&#10003;</i>Labels stay visible while typing</div><div><i>&#10003;</i>Keyboard order unchanged</div><div><i>&#10003;</i>Contrast still passes</div><div><i>&#10003;</i>No new violations introduced</div></div></div>
+</section>
+
+<section class="sl" aria-roledescription="slide" aria-label="Slide 9 of 10">
+<div><span class="k a">Honest by design</span><h2 class="a" style="--i:1">When an agent isn't sure, it says so.</h2><p class="s a" style="--i:2">Nothing is marked fixed until it's verified. If an agent can't prove a fix, it flags the issue with its best draft instead of guessing.</p></div>
+<div class="vstack">
+<div class="vcard a" style="--i:2"><small>Flagged &middot; draft ready</small><b>Hero image: meaning unclear</b><span>Decorative or informative? Draft alt text attached for a quick yes or no.</span></div>
+<div class="vcard a" style="--i:3"><small>Flagged &middot; draft ready</small><b>Custom date picker</b><span>Two keyboard patterns are possible. Both drafted, waiting for a choice.</span></div>
+</div>
+</section>
+
+<section class="sl cen" aria-roledescription="slide" aria-label="Slide 10 of 10">
+<div><svg class="dkmk a" viewBox="0 0 100 100" aria-hidden="true"><use href="#mk-xs"/></svg>
+<h2 class="a" style="--i:1">Let the agents take the backlog.</h2>
+<p class="s a" style="--i:2">Point Xessly at your site. Get fixes, not reports.</p>
+<div class="dkcta a" style="--i:3"><a class="btn lime" href="#/xessly/xs-access">Request early access</a><a class="btn out" href="#/xessly/xs-how">See the agent flow</a></div></div>
+</section>
+
+</div>
+</div>
+<p class="fine" style="margin-top:14px">Presentation uses illustrative demo data. Northstar Store is fictional and nothing here scans a live site.</p>
+</div></div>
+
+<div class="sec" id="xs-problem"><div class="wrap">
+<div class="head"><span class="eyebrow rv">The difference</span><h2 class="split">From a report to a verified fix.</h2></div>
+<div class="tracks rv">
+<div class="trk slow"><span class="trk-h">The usual way</span><div class="trk-row"><span>Scan report</span><i></i><span>Triage meeting</span><i></i><span>Design ticket</span><i></i><span>Dev sprint</span><i></i><span>Re-test, maybe</span></div><em>Four handoffs. Weeks of waiting.</em></div>
+<div class="trk fast"><span class="trk-h">With Xessly agents</span><div class="trk-row"><span>Scan</span><i></i><span>Triage</span><i></i><span>Fix</span><i></i><span>Test</span><i></i><span>Verify</span></div><em>One continuous run. No handoffs.</em></div>
+</div>
+</div></div>
+
+<div class="sec alt" id="xs-how"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Watch the agents work</span><h2 class="split">Five agents. One run. No waiting.</h2><p class="lead rv">A simulated run on a fictional store, from first scan to verified fixes.</p></div>
+<div class="sim xlive rv" data-live="xs">
+<div class="lv-col"><span class="lv-h">northstar-store.example &middot; sign in</span>
+<div class="site" aria-hidden="true">
+<div class="s-nav"><i></i><i></i><i></i><span class="pin" data-p="0">1</span></div>
+<div class="s-hero"><span class="pin" data-p="1">2</span></div>
+<div class="s-form"><i class="s-lbl">Email</i><i class="s-in"></i><span class="pin" data-p="2">3</span><i class="s-lbl">Password</i><i class="s-in"></i></div>
+<div class="s-btn">Sign in<span class="pin" data-p="3">4</span></div>
+</div></div>
+<div class="lv-col"><span class="lv-h">Xessly agents</span>
+<div class="ags"><div class="ag" data-a="scan"><i></i><b>Scan</b><span>Desktop and mobile</span></div><div class="ag" data-a="triage"><i></i><b>Triage</b><span>Maps to WCAG 2.2</span></div><div class="ag" data-a="fix"><i></i><b>Fix</b><span>Code and CMS</span></div><div class="ag" data-a="test"><i></i><b>Test</b><span>Catches regressions</span></div><div class="ag" data-a="verify"><i></i><b>Verify</b><span>Proves or flags</span></div></div></div>
+<div class="lv-col"><span class="lv-h" data-out-h>Output</span><div class="xo" aria-hidden="true"></div></div>
+<div class="lv-foot"><span class="cnts"><span>Found <b data-c="found">0</b></span><span>Fixed <b data-c="fixed">0</b></span><span>Verified <b data-c="ver">0</b></span><span>Flagged <b data-c="flag">0</b></span></span><span class="illus">Illustrative demo data</span></div>
+</div>
+</div></div>
+
+<div class="sec" id="xs-where"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Where fixes land</span><h2 class="split">Real fixes, in your code and your CMS.</h2><p class="lead rv">No overlay painted on top. The page itself changes, so the fix works for every visitor and every assistive technology.</p></div>
+<div class="g2">
+<div class="card rv"><span class="tag">Your repository</span><h3>A pull request, tested and explained</h3><pre class="diff lt"><span class="m">- &lt;button&gt;&lt;svg .../&gt;&lt;/button&gt;</span>
+<span class="p">+ &lt;button aria-label="Open cart"&gt;</span>
+<span class="p">+   &lt;svg aria-hidden="true" .../&gt;&lt;/button&gt;</span></pre><p>WCAG 4.1.2 &middot; tests passed &middot; merge yourself or auto-merge low-risk fixes.</p></div>
+<div class="card rv" style="--d:100ms"><span class="tag">Your CMS</span><h3>Content fixed in place</h3><div class="cmsv"><div><span>Product image 14</span><em>alt added</em></div><div><span>"Click here" &rarr; "View delivery options"</span><em>link text</em></div><div><span>Size guide table</span><em>headers set</em></div></div><p>Logged, verified and reversible in one click.<span class="opt"> <span class="tbd">[Supported CMSs]</span></span></p></div>
+</div></div></div>
+
+<div class="sec alt" id="xs-routes"><div class="wrap">
+<div class="head"><span class="eyebrow rv">Coverage</span><h2 class="split">Every WCAG issue gets worked on. Every fix gets proven.</h2></div>
+<div class="cover rv">
+<div><b>Structure</b><span>Labels, headings, landmarks, names</span><em class="v">Fixed &amp; verified</em></div>
+<div><b>Visual</b><span>Contrast, focus, target size, reflow</span><em class="v">Fixed &amp; verified</em></div>
+<div><b>Content</b><span>Alt text, link text, titles, language</span><em class="v">Fixed &amp; verified</em><em class="f">or flagged if meaning is unclear</em></div>
+<div><b>Interaction</b><span>Menus, dialogs, custom inputs</span><em class="v">Rebuilt &amp; tested</em><em class="f">or flagged with drafts</em></div>
+<div><b>Media</b><span>Captions, transcripts</span><em class="f">Drafted, flagged for a quick yes</em></div>
+</div>
+<p class="fine rv" style="margin-top:16px">Automated checks can't detect every barrier, so we recommend periodic testing with disabled users. Xessly doesn't guarantee legal compliance.</p>
+<div id="xs-who" class="pills rv" style="margin-top:36px"><span>Engineering teams</span><span>Product teams</span><span>Content teams</span><span>Accessibility specialists</span><span>Agencies</span><span>Digital leaders</span></div>
+</div></div>
+
+<div class="sec" id="xs-faq"><div class="wrap"><div class="head"><span class="eyebrow rv">Frequently asked</span><h2 class="split">Straight answers.</h2></div>
+<div class="rv">
+<details><summary>Does Xessly really fix issues without people?</summary><p>Yes, for every fix its agents can verify. If an agent can't prove a fix, it flags the issue with a ready draft instead of guessing.</p></details>
+<details><summary>Is it an overlay?</summary><p>No. Xessly changes your actual code and content through pull requests and CMS updates.</p></details>
+<details><summary>What if a fix breaks something?</summary><p>The test agent checks every change for regressions before it counts, and every change rolls back in one click.</p></details>
+<details><summary>Does it guarantee WCAG or legal compliance?</summary><p>No tool can honestly guarantee that. Xessly gives you a verified record of every fix; pair it with periodic testing by disabled users and legal advice for your situation.</p></details>
+<details><summary>Is Xessly available now?</summary><p>Xessly is in early access. Request access and we'll be in touch.</p></details>
+</div></div></div>
+
+<div class="sec alt" id="xs-access"><div class="wrap story" style="align-items:start">
+<div><span class="eyebrow rv">Early access</span><h2 class="split">Let the agents take your accessibility backlog.</h2><p class="lead rv">Tell us about your site and how you ship changes, and we'll be in touch about early access.</p></div>
+<div class="card rv"><form class="lf" data-kind="Xessly early access" novalidate><label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<div class="row2"><label>Name<input name="name" data-req="Enter your name." autocomplete="name"><span class="err"></span></label><label>Work email<input name="email" type="email" data-req="Enter a valid work email." autocomplete="email"><span class="err"></span></label></div>
+<div class="row2"><label>Role<input name="role" data-req="Enter your role." placeholder="e.g. Frontend engineer"><span class="err"></span></label><label>Organisation<input name="company" data-req="Enter your organisation." autocomplete="organization"><span class="err"></span></label></div>
+<div class="row2"><label>Where should fixes go?<select name="where"><option>Code repository (pull requests)</option><option>CMS</option><option>Both</option><option>Not sure yet</option></select></label><label>Repository or CMS <span class="help">(optional)</span><input name="platform" placeholder="e.g. GitHub, WordPress"></label></div>
+<label>Website URL <span class="help">(optional, for context only. This form does not scan your website.)</span><input name="url" type="url" inputmode="url"></label>
+<label>Anything else? <span class="help">(optional)</span><textarea name="message" rows="3"></textarea></label>
+<p class="fnote" role="status" aria-live="polite"></p>
+<button class="btn pri" type="submit"><span>Request early access</span><span class="arrow">&rarr;</span></button>
+<p class="fine" style="margin:0">We use your details only to reply to you. <a class="ul-link" href="#/privacy">Privacy policy</a></p>
+</form></div>
+</div></div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="page" id="p-contact" data-title="Contact Brightyard">
+<div class="ph"><div class="wrap"><span class="eyebrow rv">Contact</span><h1 class="split">Tell us what you're <mark>building.</mark></h1><p class="lead rv">A senior engineer reads every message and replies within one business day.</p></div></div>
+<div class="sec"><div class="wrap story" style="align-items:start">
+<div class="card rv" id="formcard">
+<form id="cf" novalidate><label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+<label>What do you want to build or fix?<textarea id="goal" rows="4" placeholder="A sentence is enough. For example: our checkout slows down on sale days."></textarea><span class="err" id="e-goal"></span></label>
+<div class="row2">
+<label>Name<input id="name" autocomplete="name"><span class="err" id="e-name"></span></label>
+<label>Work email<input id="email" type="email" autocomplete="email"><span class="err" id="e-email"></span></label>
+</div>
+<button type="button" class="optb" id="optb" aria-expanded="false" aria-controls="opt">+ Add more details (optional)</button>
+<div id="opt"><div class="row2"><label>Company<input id="co" autocomplete="organization"></label>
+<label>Interested in<select id="int"><option>Services</option><option>Allocivo</option><option>Xessly</option><option>A fixed-price review</option></select></label></div>
+<label>Industry<select id="ind"><option>Hospitality and travel</option><option>Retail and e-commerce</option><option>Financial services</option><option>Healthcare</option><option>Logistics</option><option>SaaS and technology</option><option>Public sector and education</option><option>Other</option></select></label></div>
+<p class="fnote" id="fnote" role="status" aria-live="polite"></p>
+<button class="btn pri mag" type="submit" id="fsend" style="justify-self:start"><span>Send message</span><span class="arrow">&rarr;</span></button>
+<p class="fine" style="margin:0">Prefer email? Write to <a class="ul-link" href="mailto:hello@brightyard.in">hello@brightyard.in</a>. We use your details only to reply to you. <a class="ul-link" href="#/privacy">Privacy policy</a></p>
+</form>
+</div>
+<div class="rv" style="--d:120ms;display:grid;gap:16px">
+<div class="card ind" data-draft><h3>Reach us directly</h3><p style="margin-top:16px"><span class="tbd">[hello@brightyard.com]</span></p><p><span class="tbd">[+91 phone number]</span></p><p><span class="tbd">[Office address, city, country]</span></p></div>
+<div class="card lm"><h3>What happens next</h3><p>1. We read your message.<br>2. A senior engineer replies within one business day.<br>3. If it helps, we book a free 30-minute call.</p></div>
+</div>
+</div></div>
+</section>
+
+<!-- ================= PRIVACY ================= -->
+<section class="page" id="p-privacy" data-title="Privacy | Brightyard">
+<div class="ph ph-doc"><div class="wrap"><span class="eyebrow">Privacy</span><h1>Privacy policy</h1><p class="lead">We collect only what you choose to send us, use it to help with your project, and delete it when we no longer need it. We don't sell it, use it for advertising, or put you on a mailing list.</p></div></div>
+<div class="sec pv-s"><div class="wrap"><div class="pv">
+<p class="pv-upd">Last updated 12 November 2026</p>
+
+<h2>Who we are</h2>
+<p>Brightyard runs brightyard.in and decides how the data described here is used. For anything about your data, email <a class="ul-link" href="mailto:hello@brightyard.in">hello@brightyard.in</a>.</p>
+
+<h2>What we collect, and why</h2>
+<div class="pv-t" role="region" aria-label="What we collect" tabindex="0"><table>
+<thead><tr><th scope="col">When you…</th><th scope="col">We receive</th><th scope="col">We use it to</th></tr></thead>
+<tbody>
+<tr><td data-l="When you…">Type a brief into Brief to blueprint</td><td data-l="We receive">Nothing. The blueprint is drawn in your browser.</td><td data-l="We use it to">-</td></tr>
+<tr><td data-l="When you…">Ask us to email your blueprint</td><td data-l="We receive">Your email address, your brief and the start date you picked</td><td data-l="We use it to">Send you the blueprint. We may follow up once.</td></tr>
+<tr><td data-l="When you…">Ask an engineer to check it</td><td data-l="We receive">The above, plus your name, company, role and when you'd start</td><td data-l="We use it to">Review your blueprint and reply within one business day</td></tr>
+<tr><td data-l="When you…">Send a contact or product form</td><td data-l="We receive">What you enter in the form</td><td data-l="We use it to">Reply to you</td></tr>
+<tr><td data-l="When you…">Open the 3D blueprint</td><td data-l="We receive">A daily count of steps such as "chapter 2 viewed". No cookies, IP addresses or visitor IDs.</td><td data-l="We use it to">See which parts of the blueprint are useful</td></tr>
+<tr><td data-l="When you…">Send any form</td><td data-l="We receive">A scrambled form of your network address that changes every hour</td><td data-l="We use it to">Stop spam floods. We delete it within a day.</td></tr>
+</tbody></table></div>
+<p>We rely on your consent, which you give by sending the form. You can withdraw it at any time by emailing us; we then stop and delete your details.</p>
+
+<h2>Who else handles it</h2>
+<ul class="pv-l">
+<li><b>Cloudflare</b> hosts this site and the database that stores your requests, and sees network addresses to deliver and protect the site.</li>
+<li><b>Zoho</b> sends our emails (ZeptoMail) and hosts our inbox (Zoho Mail).</li>
+</ul>
+<p>These providers may process data in India and other countries. They act on our instructions and may not use your data for their own purposes. We share nothing with anyone else unless the law requires it.</p>
+
+<h2>How long we keep it</h2>
+<ul class="pv-l">
+<li>Blueprint and form requests: 12 months, then deleted automatically. If you become a client, we keep what the contract needs.</li>
+<li>Scrambled network addresses used against spam: deleted within a day.</li>
+<li>Daily counts contain no personal data, so we keep them.</li>
+</ul>
+
+<h2>Cookies and storage</h2>
+<p>We don't use tracking or advertising cookies. The site remembers for the current browser tab that you've seen its welcome hint; closing the tab clears it.</p>
+
+<h2>Your rights</h2>
+<p>You can ask us to show you what we hold about you, correct it, delete it, or stop using it, and you can name someone to act for you. Email <a class="ul-link" href="mailto:hello@brightyard.in">hello@brightyard.in</a>. We confirm within one business day and act within 30 days. If you're not satisfied with our answer, you can complain to the Data Protection Board of India, or to the data protection authority where you live.</p>
+
+<h2>Children</h2>
+<p>This site is for businesses. We don't knowingly collect data from anyone under 18.</p>
+
+<h2>Changes</h2>
+<p>If we change how we use your data, we'll update this page and the date at the top.</p>
+</div></div></div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">
+<div class="fg">
+<div><a class="logo" href="#/home"><svg class="mk" aria-hidden="true"><use href="#mk"/></svg><span>Bright<b>Yard</b></span></a><p style="margin-top:16px;max-width:300px;color:var(--mute)">Brightyard builds software for what happens next: for our clients, and in our own products, Allocivo and Xessly.</p><p class="trust">Your code lives in your repositories from day one.</p></div>
+<div><h4>Company</h4><ul><li><a href="#/how">How we work</a></li><li><a href="#/work">Case studies</a></li><li><a href="#/contact">Contact</a></li></ul></div>
+<div><h4>Services</h4><ul><li><a href="#/services">Product engineering</a></li><li><a href="#/services">Cloud and DevOps</a></li><li><a href="#/services">Data and AI</a></li><li><a href="#/services">Accessibility and quality</a></li><li><a href="#/services">Security and support</a></li></ul></div>
+<div><h4>Products</h4><ul><li><a href="#/allocivo">Allocivo</a></li><li><a href="#/xessly">Xessly</a></li></ul></div>
+<div><h4>Resources</h4><ul><li><a href="#/insights">Insights</a></li><li><a href="#/home/bpgen">Brief to blueprint</a></li><li><a href="#/contact">Talk to an engineer</a></li></ul></div>
+</div>
+<div class="legal"><span>&copy; <span id="yr">2026</span> Brightyard. All rights reserved.</span><span><a href="#/privacy">Privacy policy</a></span></div>
+</div>
+<div class="giant" aria-hidden="true">Brightyard</div>
+</footer>
+
+<button class="astb mag" id="astb" aria-expanded="false" aria-controls="astp"><i class="live"></i><span>Ask Brightyard</span></button>
+<div class="ast" id="astp" role="dialog" aria-label="Chat assistant">
+<header><span>Brightyard assistant<br><small>Preset answers</small></span><button id="astx" aria-label="Close" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink)">&times;</button></header>
+<div class="msgs" id="msgs" aria-live="polite"><div class="m b">Hi. I can answer a few quick questions about Brightyard. What would you like to know?</div></div>
+<div class="qr" id="qr"><button data-q="services">What do you offer?</button><button data-q="products">What are Allocivo and Xessly?</button><button data-q="start">How fast can we start?</button><button data-q="price">How is pricing set?</button><button data-q="book">Book a call</button></div>
+</div>
+
