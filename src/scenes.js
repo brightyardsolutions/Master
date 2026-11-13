@@ -96,7 +96,7 @@ class Stage {
     const p = this.canvas.parentNode, w = p.clientWidth, h = p.clientHeight; if (!w || !h) return;
     this.W = w; this.H = h; this.r.setSize(w, h, false); if (this.comp) this.comp.setSize(w, h);
     this.cam.aspect = w / h;
-    if (this.offset && w > 900) this.cam.setViewOffset(w, h, -w * this.offset, 0, w, h); else this.cam.clearViewOffset();
+    if (this.offset && w > 900) this.cam.setViewOffset(w, h, -w * this.offset, 0, w, h); else if (this.offY && w < 700) this.cam.setViewOffset(w, h, 0, h * this.offY, w, h); else this.cam.clearViewOffset();
     this.cam.updateProjectionMatrix(); this.layout && this.layout(w, h);
   }
   start() { if (this.on) return; this.on = true; this.resize(); requestAnimationFrame(this.tick); }
@@ -104,7 +104,7 @@ class Stage {
   tick() {
     if (!this.on) return; requestAnimationFrame(this.tick);
     if (!this.vis || document.hidden) return;
-    const now = performance.now(), dt = Math.min(0.1, (now - (this.ln || now)) / 1000); this.ln = now; if (!this.paused) this.time = (this.time || 0) + dt; this.update(this.time || 0);
+    const now = performance.now(), dt = Math.min(0.1, (now - (this.ln || now)) / 1000); this.ln = now; if (!this.paused) this.time = (this.time || 0) + dt; if (this.preUpdate) this.preUpdate(); this.update(this.time || 0); if (this.postUpdate) this.postUpdate(dt);
     if (this.comp) this.comp.render(); else this.r.render(this.scene, this.cam);
   }
   renderOnce() { this.resize(); this.update(2); if (this.comp) this.comp.render(); else this.r.render(this.scene, this.cam); }
@@ -192,10 +192,35 @@ export class Hero extends Stage {
 class Story extends Stage {
   constructor(canvas, o) { super(canvas, o); this.p = 0; this.tp = 0; this.cp = new Vector3(); this.ct = new Vector3(); this._a = new Vector3(); this._b = new Vector3(); this.offset = 0.19; }
   setProgress(p) { this.tp = p; }
+  /* Labels: each frame, work out where every label lands on screen. Fade any that would sit under the text column,
+     over the badges or the progress rail, or off screen, and when two collide keep the one added later (story callouts
+     are added after structural labels). On narrow screens labels are hidden: the text carries the story there. */
+  preUpdate() { if (this._labs) for (const s of this._labs) if (s.userData.dk != null) { s.material.opacity = s.userData.op; s.visible = s.userData.vis0; } }
+  postUpdate(dt) {
+    if (!this._labs) { this._labs = []; this.scene.traverse(o => { if (o.isSprite && o.userData.base && o.material && o.material.map) this._labs.push(o); }); this._labs.forEach((l, i) => { l.userData.pri = i; }); }
+    const W = this.W, H = this.H, cam = this.cam, small = W < 700, left = W > 900 ? W * 0.44 : 0;
+    const v = this._dv || (this._dv = new Vector3()), f = this._df || (this._df = new Vector3()), sc = this._ds || (this._ds = new Vector3());
+    cam.getWorldDirection(f); const tanH = Math.tan(cam.fov * Math.PI / 360), cand = [], kept = [];
+    for (const l of this._labs) {
+      const u = l.userData; u.op = l.material.opacity; u.vis0 = l.visible; u.tgt = 0;
+      let vis = !small && l.visible && u.op > 0.03; for (let q = l.parent; vis && q; q = q.parent) if (!q.visible) vis = false;
+      if (!vis) continue;
+      l.getWorldPosition(v); const d = v.clone().sub(cam.position).dot(f); if (d <= 0.1) continue;
+      l.getWorldScale(sc); const ppu = H / (2 * d * tanH), w = sc.x * ppu, h = sc.y * ppu;
+      v.project(cam); const x = (v.x * 0.5 + 0.5) * W, y = (-v.y * 0.5 + 0.5) * H, r = [x - w / 2, y - h / 2, x + w / 2, y + h / 2];
+      if (r[0] < Math.max(6, left) || r[2] > W - 6 || r[1] < 70 || r[3] > H - 96) continue;
+      if (r[2] > W - 340 && r[1] < 150) continue;
+      cand.push({ l, r });
+    }
+    cand.sort((a, b) => b.l.userData.pri - a.l.userData.pri);
+    for (const c of cand) { const r = c.r; if (!kept.some(q => r[0] < q[2] + 4 && r[2] > q[0] - 4 && r[1] < q[3] + 3 && r[3] > q[1] - 3)) { kept.push(r); c.l.userData.tgt = 1; } }
+    const k = 1 - Math.exp(-(dt || 0.016) * 10);
+    for (const l of this._labs) { const u = l.userData; u.dk = u.dk == null ? u.tgt : u.dk + (u.tgt - u.dk) * k; l.material.opacity = u.op * u.dk; l.visible = u.vis0 && u.dk > 0.02; }
+  }
   step(t) { const dt = Math.min(0.12, Math.max(0, t - (this.lt == null ? t : this.lt))); this.lt = t; this.p += (this.tp - this.p) * (1 - Math.exp(-dt * 6.5)); }
   camera(t) {
     const K = this.K, p = clamp(this.p, 0, K.length - 1), i = Math.min(Math.floor(p), K.length - 2), f = ease(ease(p - i)), a = K[i], b = K[i + 1];
-    const z = this.W < 900 ? (this.W / this.H < 1.1 ? (this.pz || 1.5) : 1.3) : 1.2;
+    const z = this.W < 900 ? (this.W < 700 || this.W / this.H < 1.1 ? (this.pz || 1.5) : 1.3) : (this.dz || 1.2);
     this._a.set(lerp(a.p[0], b.p[0], f), lerp(a.p[1], b.p[1], f), lerp(a.p[2], b.p[2], f));
     this._b.set(lerp(a.t[0], b.t[0], f), lerp(a.t[1], b.t[1], f), lerp(a.t[2], b.t[2], f));
     this._a.sub(this._b).multiplyScalar(z).add(this._b);
@@ -216,7 +241,7 @@ export class Allocivo extends Story {
       { p: [14, 7, 13], t: [3.2, 2.7, 0.3] }, { p: [8, 12, 27], t: [-1, 5.8, 0] }, { p: [7, 11, 17], t: [0, 6.6, 0] },
       { p: [13.5, 7.5, 13.5], t: [2.6, 2.8, 0.2] }, { p: [2, 12.5, 23], t: [0, 5.6, 0] }, { p: [16, 10.5, 18], t: [0, 2.9, 0] }, { p: [19, 12.5, 23], t: [0, 3.2, 0] }
     ];
-    this.pz = 1.55;
+    this.pz = 1.7; this.offY = 0.05;
     const S = this.scene, FY = [0, 2.1, 4.2], FN = [2, 4, 5];
     this.rooms = {}; this.all = [];
     const rg = new RoundedBoxGeometry(1.2, 0.86, 1.5, 3, 0.12);
@@ -340,7 +365,7 @@ export class Xessly extends Story {
       { p: [0, 1.4, 18], t: [0, -0.2, 0] }, { p: [6, 1.6, 16], t: [0, -0.9, 1.2] }, { p: [5.6, 0.8, 14.5], t: [0, -0.3, 1.2] },
       { p: [5.4, -0.2, 13.5], t: [0.2, -0.8, 1.4] }, { p: [5.6, 1.2, 14.5], t: [0, -0.4, 1.2] }, { p: [4.6, 1.4, 14], t: [0, 0, 1] }, { p: [0.5, 0.3, 15], t: [0, 0, 0] }
     ];
-    this.pz = 1.1;
+    this.pz = 1.3; this.dz = 1.34;
     const S = this.scene; this.page = new Group(); S.add(this.page); this.layers = [];
     const box = (w, h, color, x, y, layer, o = {}) => {
       const m = new Mesh(new RoundedBoxGeometry(w, h, o.d || 0.05, 2, Math.min(o.r == null ? 0.06 : o.r, h / 2 - 0.001)), new MeshStandardMaterial({ color, roughness: 0.6, transparent: true, opacity: o.a == null ? 1 : o.a }));
@@ -388,7 +413,7 @@ export class Xessly extends Story {
     this.agents = ['Scan', 'Triage', 'Fix', 'Test', 'Verify'].map((n, i) => {
       const g = new Group(), m = new MeshStandardMaterial({ color: 0x2A3642, emissive: MINT, emissiveIntensity: 0.05, roughness: 0.35 });
       g.add(new Mesh(new SphereGeometry(0.34, 28, 18), m)); const l = label(n, { size: 36, bg: 'rgba(16,22,29,.9)' }); l.position.y = -0.7; g.add(l);
-      g.position.set((i - 2) * 1.7, -4.4, 1.6); g.userData = { m, l }; S.add(g); return g;
+      g.position.set((i - 2) * 1.45, -3.35, 1.6); g.userData = { m, l }; S.add(g); return g;
     });
     this.beam = new Beam(S, MINT, 3);
     this.scan = new Group();
@@ -429,7 +454,7 @@ export class Xessly extends Story {
     });
     const av = ease(seg(p, 3.6, 4.2)) * (1 - seg(p, 8.8, 9.2));
     const act = p < 4.4 ? -1 : p < 5.0 ? 0 : p < 5.75 ? 1 : p < 6.6 ? 2 : p < 7.6 ? 3 : p < 8.7 ? 4 : -1;
-    this.agents.forEach((g, i) => { g.visible = av > 0.01; const on = i === act; g.scale.setScalar(Math.max(0.001, av * (on ? 1.25 + Math.sin(t * 4) * 0.05 : 1))); g.position.y = -4.4 + Math.sin(t * 1.2 + i) * 0.08 + (on ? 0.25 : 0); g.userData.m.emissiveIntensity = on ? 0.7 : 0.06; g.userData.m.color.setHex(on ? MINT : 0x2A3642); show(g.userData.l, av); });
+    this.agents.forEach((g, i) => { g.visible = av > 0.01; const on = i === act; g.scale.setScalar(Math.max(0.001, av * (on ? 1.25 + Math.sin(t * 4) * 0.05 : 1))); g.position.y = -3.35 + Math.sin(t * 1.2 + i) * 0.08 + (on ? 0.25 : 0); g.userData.m.emissiveIntensity = on ? 0.7 : 0.06; g.userData.m.color.setHex(on ? MINT : 0x2A3642); show(g.userData.l, av); });
     if (act > -1) { this._v.copy(this.agents[act].position); this._w.set(0, -1.2, 3 * ex + 0.4); this.beam.set(this._v, this._w, 0.2); }
     this.beam.update(t, act > -1 ? av : 0, 0.9);
   }
