@@ -1,0 +1,23 @@
+---
+// Mega menu: Products panel (glass panel opened by the script).
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="mm"><button class="mmb" type="button" aria-expanded="false" aria-controls="mm-products" data-r="products">Products<i class="chev" aria-hidden="true"></i></button>
+<div class="mmp" id="mm-products"><div class="wrap mmg mmpc">
+<div class="pc al">
+<a class="pc-top" href={link('allocivo', site)}><svg aria-hidden="true"><use href="#mk-al"/></svg><span><b>Allocivo</b><small>For hotels</small></span></a>
+<p class="pc-what">Spots the rooms at risk, moves the work to the right person and gets a supervisor's OK, as the day changes.</p>
+<div class="pc-demo" data-ui="al"></div>
+<ul class="pc-out"><li>Fewer late rooms</li><li>Less overtime</li><li>Live reassignments</li></ul>
+<div class="pc-act"><a class="pc-btn" href={link('allocivo/al-demo', site)}>Book a demo</a><a class="pc-lnk" href={link('allocivo/al-how', site)}>How it works &rarr;</a></div>
+</div>
+<div class="pc xs">
+<a class="pc-top" href={link('xessly', site)}><svg aria-hidden="true"><use href="#mk-xs"/></svg><span><b>Xessly</b><small>For websites</small></span></a>
+<p class="pc-what">Finds accessibility issues, fixes them in your code or CMS and proves every fix before it counts.</p>
+<div class="pc-demo" data-ui="xs"></div>
+<ul class="pc-out"><li>WCAG 2.2 issues fixed</li><li>Fixes as pull requests</li><li>Every fix re-tested</li></ul>
+<div class="pc-act"><a class="pc-btn" href={link('xessly/xs-access', site)}>Get early access</a><a class="pc-lnk" href={link('xessly/xs-how', site)}>Agent flow &rarr;</a></div>
+</div>
+<a class="mmall pc-why" href={link('products', site)}>Why a services company builds its own products &rarr;</a>
+</div></div></div>

@@ -1,0 +1,18 @@
+---
+// brightyard.in footer.
+import { link } from '../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<footer>
+<div class="wrap">
+<div class="fg">
+<div><a class="logo" href={link('home', site)}><svg class="mk" aria-hidden="true"><use href="#mk"/></svg><span>Bright<b>Yard</b></span></a><p style="margin-top:16px;max-width:300px;color:var(--mute)">Brightyard builds software for what happens next: for our clients, and in our own products, Allocivo and Xessly.</p><p class="trust">Your code lives in your repositories from day one.</p></div>
+<div><h4>Company</h4><ul><li><a href={link('how', site)}>How we work</a></li><li><a href={link('work', site)}>Case studies</a></li><li><a href={link('contact', site)}>Contact</a></li></ul></div>
+<div><h4>Services</h4><ul><li><a href={link('services', site)}>Product engineering</a></li><li><a href={link('services', site)}>Cloud and DevOps</a></li><li><a href={link('services', site)}>Data and AI</a></li><li><a href={link('services', site)}>Accessibility and quality</a></li><li><a href={link('services', site)}>Security and support</a></li></ul></div>
+<div><h4>Products</h4><ul><li><a href={link('allocivo', site)}>Allocivo</a></li><li><a href={link('xessly', site)}>Xessly</a></li></ul></div>
+<div><h4>Resources</h4><ul><li><a href={link('insights', site)}>Insights</a></li><li><a href={link('home/bpgen', site)}>Brief to blueprint</a></li><li><a href={link('contact', site)}>Talk to an engineer</a></li></ul></div>
+</div>
+<div class="legal"><span>&copy; <span id="yr">2026</span> Brightyard. All rights reserved.</span><span><a href={link('privacy', site)}>Privacy policy</a></span></div>
+</div>
+<div class="giant" aria-hidden="true">Brightyard</div>
+</footer>

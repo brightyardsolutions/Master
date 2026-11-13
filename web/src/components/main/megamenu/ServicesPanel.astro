@@ -1,0 +1,31 @@
+---
+// Mega menu: Services panel (glass panel opened by the script).
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="mm"><button class="mmb" type="button" aria-expanded="false" aria-controls="mm-services" data-r="services">Services<i class="chev" aria-hidden="true"></i></button>
+<div class="mmp" id="mm-services"><div class="wrap mmg mmx">
+<div class="mmx-l"><span class="mmh">What we do</span>
+<div class="mml1">
+<a href={link('services/svc-eng', site)} data-svc="eng"><b>Product engineering</b><span>Web and mobile products people actually use</span></a>
+<a href={link('services/svc-cloud', site)} data-svc="cloud"><b>Cloud and DevOps</b><span>Releases that don't need a war room</span></a>
+<a href={link('services/svc-data', site)} data-svc="data"><b>Data and AI</b><span>AI features that reach production</span></a>
+<a href={link('services/svc-a11y', site)} data-svc="a11y"><b>Accessibility and quality</b><span>Software that works for everyone</span></a>
+<a href={link('services/svc-sec', site)} data-svc="sec"><b>Security and support</b><span>Secure, watched and on call</span></a>
+</div>
+<a class="mmall" href={link('services', site)}>All services, ways to work and pricing &rarr;</a>
+</div>
+<div class="mmx-r">
+<div class="yr">
+<div class="yr-bot"><svg class="yr-svg" viewBox="0 0 72 84" aria-hidden="true" focusable="false">
+<line x1="36" y1="4" x2="36" y2="14" stroke="#7C74FF" stroke-width="2.5" stroke-linecap="round"/><circle class="yr-ant" cx="36" cy="5" r="4" fill="#C6F432"/>
+<g class="yr-head"><rect x="8" y="13" width="56" height="38" rx="12" fill="#7C74FF"/><rect x="14" y="18" width="44" height="28" rx="8" fill="#16133F"/>
+<g class="yr-eyes"><path d="M24 33q4-6 8 0" stroke="#C6F432" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M40 33q4-6 8 0" stroke="#C6F432" stroke-width="3" fill="none" stroke-linecap="round"/></g></g>
+<rect x="22" y="52" width="28" height="20" rx="7" fill="#F3F2FF"/><g fill="#7C74FF"><rect x="29" y="57" width="4" height="4" rx="1"/><rect x="35" y="57" width="4" height="4" rx="1"/><rect x="29" y="63" width="4" height="4" rx="1"/><rect x="35" y="63" width="4" height="4" rx="1"/></g>
+<rect x="18" y="72" width="14" height="9" rx="4" fill="#C6F432"/><rect x="40" y="72" width="14" height="9" rx="4" fill="#C6F432"/></svg></div>
+<div class="yr-main"><p class="yr-bub" id="yrBub" aria-live="polite">Not sure which? Tell me in a sentence.</p>
+<form class="yr-f" id="yrF" novalidate><label class="sr" for="yrIn">Describe what isn't working</label><input id="yrIn" type="text" autocomplete="off" maxlength="400" placeholder="e.g. our checkout crashes on sale days"><button type="submit">Plan it <span aria-hidden="true">&rarr;</span></button></form></div>
+</div>
+<div class="sv" id="svPrev"></div>
+</div>
+</div></div></div>

@@ -1,0 +1,62 @@
+---
+// brightyard.in: the same shell as today's index.html, around one page.
+import Base from './Base.astro';
+import Preloader from '../components/main/Preloader.astro';
+import Curtain from '../components/shared/Curtain.astro';
+import IconSprite from '../components/shared/IconSprite.astro';
+import DraftBar from '../components/main/DraftBar.astro';
+import Header from '../components/main/Header.astro';
+import Footer from '../components/main/Footer.astro';
+import Assistant from '../components/main/Assistant.astro';
+import DemoTemplates from '../components/shared/DemoTemplates.astro';
+import SignatureLayer from '../components/main/SignatureLayer.astro';
+import BlueprintTemplate from '../components/main/BlueprintTemplate.astro';
+import MasterData from '../components/shared/MasterData.astro';
+import HashForward from '../components/main/HashForward.astro';
+import { SITES } from '../sites/index.mjs';
+
+interface Props { id: string }
+const SITE = SITES.main;
+const route = SITE.routes.find(r => r.id === Astro.props.id);
+if (!route) throw new Error(`No brightyard.in route with id "${Astro.props.id}"`);
+const url = SITE.url + (route.path === '/' ? '/' : route.path);
+---
+<Base title={route.title} description={SITE.description} url={url} siteName="Brightyard" noindex={route.noindex} htmlClass="anim">
+<Fragment slot="head">
+<meta property="og:title" content="Brightyard | Built for what happens next">
+<meta property="og:description" content="Software designed, built and run by AI agents, reviewed by engineers. Describe your problem and get a 3D blueprint with a plan and dates in seconds.">
+<meta property="og:image" content="https://brightyard.in/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Brightyard: Built for what happens next.">
+<meta name="twitter:card" content="summary_large_image">
+</Fragment>
+{route.id === 'home' && <HashForward />}
+<Preloader />
+<Curtain />
+
+<IconSprite />
+
+<DraftBar />
+<div id="prog"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<Header />
+
+<main id="main">
+<section class="page on" id={`p-${route.id}`} data-title={route.title}>
+<slot />
+</section>
+</main>
+
+<Footer />
+
+<Assistant />
+
+<DemoTemplates />
+
+<SignatureLayer />
+<BlueprintTemplate />
+
+<MasterData />
+</Base>

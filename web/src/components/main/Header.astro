@@ -1,0 +1,26 @@
+---
+// brightyard.in header: logo, mega menu (Services, Products, Resources), Work link and the main call to action.
+import { link } from '../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+import ServicesPanel from './megamenu/ServicesPanel.astro';
+import ProductsPanel from './megamenu/ProductsPanel.astro';
+import ResourcesPanel from './megamenu/ResourcesPanel.astro';
+---
+<header id="hdr">
+<div class="wrap nav">
+<a class="logo" href={link('home', site)} aria-label="Brightyard home"><svg class="mk" aria-hidden="true"><use href="#mk"/></svg><span>Bright<b>Yard</b></span></a>
+<button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+<nav class="menu" id="menu" aria-label="Main">
+
+<ServicesPanel />
+
+<ProductsPanel />
+
+<a class="l" data-r="work" href={link('work', site)}>Work</a>
+
+<ResourcesPanel />
+
+<a class="btn pri mag" href={link('contact', site)}><span>Talk to an engineer</span></a>
+</nav>
+</div>
+</header>

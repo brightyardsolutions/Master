@@ -1,0 +1,45 @@
+---
+// Shared by all three sites: <head> basics, the one stylesheet (same parts, same order as today's site.css)
+// and the self-hosted fonts.
+import '../styles/fonts.css';
+import '../styles/base.css';
+import '../styles/signature.css';
+import '../styles/new.css';
+import '../styles/glass.css';
+import interUrl from '../assets/fonts/inter-latin-wght-normal.woff2?url';
+import { NO_SCRIPT_CSS, SCRIPTS_PORTED } from '../lib/page.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  url: string;            // this page's full address (canonical and og:url)
+  siteName: string;
+  noindex?: boolean;
+  htmlClass?: string;
+  product?: string;       // 'allocivo' | 'xessly' on product sites: switches the script and styles to product mode
+  bodyClass?: string;
+}
+const { title, description, url, siteName, noindex = false, htmlClass, product, bodyClass } = Astro.props;
+---
+<!doctype html>
+<html lang="en" class={htmlClass} data-product={product} data-assets={product ? '/' : undefined}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="theme-color" content="#0B0A24">
+{noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={url}>}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content={siteName}>
+<meta property="og:url" content={url}>
+<slot name="head" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin>
+<noscript><style is:inline set:html={NO_SCRIPT_CSS}></style></noscript>
+{!SCRIPTS_PORTED && <style is:inline set:html={NO_SCRIPT_CSS}></style>}
+</head>
+<body class={bodyClass}>
+<slot />
+</body>
+</html>

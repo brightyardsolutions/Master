@@ -1,0 +1,39 @@
+---
+// allocivo.brightyard.in and xessly.brightyard.in: the same page shell build-src/src/products.py writes today.
+import Base from './Base.astro';
+import Curtain from '../components/shared/Curtain.astro';
+import IconSprite from '../components/shared/IconSprite.astro';
+import DemoTemplates from '../components/shared/DemoTemplates.astro';
+import ProductHeader from '../components/product/Header.astro';
+import ProductFooter from '../components/product/Footer.astro';
+import CtaBand from '../components/product/CtaBand.astro';
+import { SITES } from '../sites/index.mjs';
+
+interface Props { path: string }
+const SITE = SITES[import.meta.env.SITE_KEY];
+if (!SITE.product) throw new Error('ProductLayout is only for the product sites');
+const route = SITE.routes.find(r => r.path === Astro.props.path);
+if (!route) throw new Error(`No ${SITE.name} route with path "${Astro.props.path}"`);
+const notFound = route.path === '/404';
+const url = SITE.url + route.path;
+---
+<Base title={route.title} description={SITE.description} url={url} siteName={SITE.name} noindex={route.noindex} product={SITE.key} bodyClass={`prod-site prod-${SITE.short}`}>
+<Fragment slot="head">
+<meta property="og:title" content={route.title}>
+<meta property="og:description" content={SITE.description}>
+<meta name="twitter:card" content="summary">
+</Fragment>
+<Curtain />
+<IconSprite />
+<div id="prog"></div>
+<a class="skip" href="#main">Skip to content</a>
+<ProductHeader current={route.path} />
+<DemoTemplates />
+<main id="main">
+<section class="page on" id={`p-${SITE.key}`} data-title={route.title}>
+<slot />
+{!notFound && route.path !== SITE.cta.path && <CtaBand />}
+</section>
+</main>
+<ProductFooter />
+</Base>

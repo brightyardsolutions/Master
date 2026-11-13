@@ -1,0 +1,20 @@
+---
+// Old addresses keep working: brightyard.in/#/services/svc-eng -> /services#svc-eng, #/how -> /how-we-work,
+// #/allocivo/al-demo -> https://allocivo.brightyard.in/demo/. Runs first thing on the home page only, because every
+// old address arrives there. #/home/... and share links (#/plan/...) stay on the home page for its own script.
+import { SITES, PRODUCTS } from '../../sites/index.mjs';
+import { PRODUCT_LINKS } from '../../lib/links.mjs';
+const MAP = {
+  pages: Object.fromEntries(SITES.main.routes.filter(r => r.hash && r.hash !== 'home').map(r => [r.hash, r.path])),
+  products: Object.fromEntries(Object.entries(PRODUCTS).map(([k, p]) => [k, { base: p.url + '/', links: PRODUCT_LINKS[k] }])),
+};
+---
+<script is:inline define:vars={{ MAP }}>
+var h = location.hash;
+if (/^#\/[a-z]/.test(h)) {
+  var p = h.slice(2).split('/'), id = p[0], sub = p[1], to = null;
+  if (MAP.pages[id]) to = MAP.pages[id] + (sub ? '#' + sub : '');
+  else if (MAP.products[id]) to = MAP.products[id].base + ((sub && MAP.products[id].links[sub]) || '');
+  if (to) location.replace(to);
+}
+</script>

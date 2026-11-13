@@ -58,7 +58,9 @@ All three use **`main` as the production branch**, so a push to `main` updates a
 - axe flags the deliberately low-contrast "Sign in" button in the Xessly demo (it is the "before" state the agents fix);
 - `func-test.js`'s Allocivo part no longer applies since the product pages moved to the subdomains.
 
-## Next: the Astro migration (approved in principle)
+## Next: the Astro migration (approved; step 1 done)
+
+**Where it stands:** the new project is `web/` (read `web/README.md`). Step 1 is done: all three sites build from shared components, every page has the real shell and passes `npm run test:shell`; page bodies are empty and no scripts load yet (`SCRIPTS_PORTED` in `web/src/lib/page.mjs`). Approved decisions: the curtain closes on link click and opens on the new page (no client-side router); a real not-found page on brightyard.in (its content still to be proposed); local preview needs Node.js. The live sites still come from the old files until step 4.
 
 Goal: real pages with their own addresses instead of hash routes, shared components for the three sites, and per-page scripts. **Keep the design and behaviour identical: no redesign during the move.**
 

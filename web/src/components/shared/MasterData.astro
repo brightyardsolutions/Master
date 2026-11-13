@@ -1,0 +1,7 @@
+---
+// Blueprint master data (categories, problems, plans), read by the blueprint engine in the browser.
+import master from '../../data/master.json';
+const json = JSON.stringify(master);
+if (json.includes('</')) throw new Error('master.json must not contain "</"');
+---
+<script type="application/json" id="bp-master" is:inline set:html={json}></script>

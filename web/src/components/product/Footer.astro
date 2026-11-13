@@ -1,0 +1,14 @@
+---
+// Product site footer: product pages, and links back to Brightyard and the other product.
+import { SITES, PRODUCTS } from '../../sites/index.mjs';
+import { mainLink } from '../../lib/links.mjs';
+const SITE = SITES[import.meta.env.SITE_KEY];
+const OTHER = Object.values(PRODUCTS).find(p => p.key !== SITE.key);
+const nav = SITE.routes.filter(r => r.label && r.path !== SITE.cta.path);
+const MAIN = mainLink('home', true);
+---
+<footer><div class="wrap"><div class="fg pfg">
+<div><a class="logo" href="/"><svg class="mk" aria-hidden="true"><use href={`#${SITE.mark}`}/></svg><span>{SITE.name}</span></a><p style="margin-top:16px;max-width:300px;color:var(--mute)">{SITE.blurb} A <a class="ul-link" href={MAIN}>Brightyard</a> product.</p></div>
+<div><h4>{SITE.name}</h4><ul>{nav.map(r => <li><a href={r.path}>{r.label}</a></li>)}<li><a href={SITE.cta.path}>{SITE.cta.label}</a></li></ul></div>
+<div><h4>Brightyard</h4><ul><li><a href={MAIN}>About Brightyard</a></li><li><a href={OTHER.url + '/'}>{OTHER.name}, our other product</a></li><li><a href={mainLink('contact', true)}>Contact</a></li></ul></div>
+</div><div class="legal"><span>&copy; <span id="yr">2026</span> Brightyard. All rights reserved.</span><span><a href={mainLink('privacy', true)}>Privacy policy</a></span></div></div></footer>

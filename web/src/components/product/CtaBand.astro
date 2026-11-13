@@ -1,0 +1,6 @@
+---
+// The closing band at the end of each product page (except the demo / early access page itself).
+import { SITES } from '../../sites/index.mjs';
+const SITE = SITES[import.meta.env.SITE_KEY];
+---
+<div class="sec"><div class="wrap"><div class="band rv"><div><h2>{SITE.band.title}</h2><p>{SITE.band.text}</p></div><a class="btn lime mag" href={SITE.cta.path}>{SITE.cta.label} <span class="arrow">&rarr;</span></a></div></div></div>

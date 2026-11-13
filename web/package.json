@@ -1,0 +1,23 @@
+{
+  "name": "brightyard-web",
+  "private": true,
+  "type": "module",
+  "description": "brightyard.in, allocivo.brightyard.in and xessly.brightyard.in, built from one Astro project. See README.md.",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "build:main": "node tools/build.mjs main",
+    "build:allocivo": "node tools/build.mjs allocivo",
+    "build:xessly": "node tools/build.mjs xessly",
+    "dev": "node tools/dev.mjs main",
+    "dev:allocivo": "node tools/dev.mjs allocivo",
+    "dev:xessly": "node tools/dev.mjs xessly",
+    "build:functions": "node tools/build-functions.mjs",
+    "test:shell": "node tests/compare-shell.mjs"
+  },
+  "devDependencies": {
+    "astro": "7.4.4"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  }
+}

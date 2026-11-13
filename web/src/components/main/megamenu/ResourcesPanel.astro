@@ -1,0 +1,16 @@
+---
+// Mega menu: Resources panel (glass panel opened by the script).
+import { link } from '../../../lib/links.mjs';
+const site = import.meta.env.SITE_KEY;
+---
+<div class="mm"><button class="mmb" type="button" aria-expanded="false" aria-controls="mm-res" data-r="insights">Resources<i class="chev" aria-hidden="true"></i></button>
+<div class="mmp" id="mm-res"><div class="wrap mmg">
+<div><span class="mmh">Learn how we think</span>
+<div class="mml">
+<a href={link('how', site)}><b>How we work</b><span>Our delivery playbook, in public</span></a>
+<a href={link('insights', site)}><b>Insights</b><span>Field notes on AI, cloud, accessibility and delivery</span></a>
+<a href={link('home/bpgen', site)}><b>Brief to blueprint</b><span>Describe a problem, get a first-draft plan in seconds</span></a>
+<a href={link('work', site)}><b>Case studies</b><span>Client results, with the numbers attached</span></a>
+</div></div>
+<a class="mmf" href={link('how/pressb', site)}><span class="tag">Try it</span><b>See how this site is built</b><span>Press B anywhere to turn on Blueprint mode.</span><em>Learn more &rarr;</em></a>
+</div></div></div>
