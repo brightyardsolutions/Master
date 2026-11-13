@@ -1527,3 +1527,94 @@ body.ast-away .astb:not([aria-expanded="true"]){opacity:0;pointer-events:none;tr
 /* hero copy stays readable when the animated dots pass behind it */
 .hero3 .micro{color:#C9C6F2}
 .hero3 .lead,.hero3 .micro,.hero3 h1{text-shadow:0 1px 2px rgba(11,10,36,.9),0 0 18px rgba(11,10,36,.95)}
+
+/* ===================================================================== */
+/* Glass header: frosted surfaces with a thin neon edge (lime, indigo, mint). */
+/* Light glass over light sections, dark glass over dark ones.             */
+/* ===================================================================== */
+:root{
+  --gl-light:linear-gradient(135deg,rgba(255,255,255,.86),rgba(250,249,255,.74));
+  --gl-dark:linear-gradient(135deg,rgba(34,30,88,.74),rgba(11,10,36,.66));
+  --gl-blur:blur(36px) saturate(1.8);
+  --gl-edge:linear-gradient(120deg,rgba(198,244,50,.95),rgba(124,116,255,.75) 38%,rgba(143,242,204,.8) 68%,rgba(198,244,50,.95));
+  --gl-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 40px 80px -36px rgba(30,27,75,.5),0 0 44px -14px rgba(198,244,50,.35);
+  --gl-shadow-d:inset 0 1px 0 rgba(255,255,255,.14),0 40px 90px -36px rgba(0,0,0,.75),0 0 48px -12px rgba(124,116,255,.45);
+}
+/* the neon edge: a 1px gradient ring drawn with a mask, so the inside stays clear */
+.gl-edge::before,
+header#hdr.sc .nav::before,
+.mmp>.mmg::before{z-index:1;content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:var(--gl-edge);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.7}
+/* the sheen: a soft highlight across the top */
+.mmp>.mmg::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(700px 180px at 18% -60px,rgba(255,255,255,.75),transparent 70%)}
+
+/* ---------- header bar: transparent at the top, a floating glass pill once scrolled ---------- */
+header#hdr,header#hdr.mm-on{background:transparent;box-shadow:none}
+header#hdr.sc,header#hdr.on-dark:not(.mm-on).sc{background:transparent;box-shadow:none;backdrop-filter:none}
+header#hdr .nav{position:relative;z-index:0;border-radius:20px;transition:height .3s var(--ease),margin .3s var(--ease),padding .3s}
+header#hdr .nav::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s}
+header#hdr.sc .nav{margin-top:10px;height:60px;padding-left:20px;padding-right:12px}
+header#hdr.sc .nav::after{opacity:1;background:var(--gl-light);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);box-shadow:var(--gl-shadow)}
+header#hdr.sc.on-dark .nav::after{background:var(--gl-dark);box-shadow:var(--gl-shadow-d)}
+header#hdr.sc.on-dark .nav::before{opacity:.55}
+/* while a menu is open over a dark section, the bar keeps its dark styling */
+header#hdr.on-dark.mm-on{color:#fff}
+header#hdr.on-dark.mm-on .logo b{color:var(--lime)}
+@media(min-width:941px){
+  header#hdr.on-dark.mm-on .menu a.l,header#hdr.on-dark.mm-on .menu .mmb{color:rgba(255,255,255,.72)}
+  header#hdr.on-dark.mm-on .menu .mmb:hover,header#hdr.on-dark.mm-on .mm.open .mmb,header#hdr.on-dark.mm-on .menu a.l:hover{color:#fff}
+  header#hdr.on-dark.mm-on .menu .btn.pri{background:var(--lime);color:var(--ink)}
+}
+
+/* ---------- mega menus: a floating glass card ---------- */
+@media(min-width:941px){
+  .mmp{background:none;border:0;box-shadow:none;padding:0 16px}
+  .mmp>.mmg{position:relative;margin:10px auto 0;max-width:min(1120px,100%);border-radius:26px;padding:28px 28px 28px 32px;
+    background:var(--gl-light);-webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);box-shadow:var(--gl-shadow);isolation:isolate}
+  .mm.open .mmp{animation:glin .42s var(--ease2)}
+  .mml a{position:relative;transition:background .25s,box-shadow .25s,transform .25s var(--ease)}
+  .mml a:hover,.mml a:focus-visible{background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px rgba(124,116,255,.22),0 10px 26px -16px rgba(79,70,229,.6);transform:translateY(-1px)}
+  .mmf{background:linear-gradient(160deg,rgba(198,244,50,.22),rgba(124,116,255,.12));border:1px solid rgba(255,255,255,.75);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+  .mmf:hover{border-color:rgba(124,116,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 0 28px -8px rgba(198,244,50,.6)}
+  .mmcard{background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.75);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+  .mmcard:hover{border-color:rgba(124,116,255,.5)}
+  .mmsub a{background:rgba(255,255,255,.62);box-shadow:inset 0 0 0 1px rgba(124,116,255,.14)}
+
+  /* dark glass over dark sections */
+  header#hdr.on-dark .mmp>.mmg{background:var(--gl-dark);box-shadow:var(--gl-shadow-d);color:#fff}
+  header#hdr.on-dark .mmp>.mmg::after{background:radial-gradient(700px 180px at 18% -60px,rgba(255,255,255,.16),transparent 70%)}
+  header#hdr.on-dark .mmh{color:rgba(255,255,255,.62)}
+  header#hdr.on-dark .mml b,header#hdr.on-dark .mmf b,header#hdr.on-dark .mmc-top b{color:#fff}
+  header#hdr.on-dark .mml span,header#hdr.on-dark .mmf span,header#hdr.on-dark .mmc-top small{color:rgba(255,255,255,.74)}
+  header#hdr.on-dark .mml a:hover,header#hdr.on-dark .mml a:focus-visible{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(198,244,50,.28),0 10px 30px -16px rgba(198,244,50,.45)}
+  header#hdr.on-dark .mmf{background:linear-gradient(160deg,rgba(198,244,50,.14),rgba(124,116,255,.16));border-color:rgba(255,255,255,.14);box-shadow:none}
+  header#hdr.on-dark .mmf em{color:var(--lime)}
+  header#hdr.on-dark .mmf .tag{background:rgba(255,255,255,.12);color:#fff}
+  header#hdr.on-dark .mmcard{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);box-shadow:none}
+  header#hdr.on-dark .mmsub a{background:rgba(255,255,255,.08);color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+  header#hdr.on-dark .mmsub a:hover,header#hdr.on-dark .mmsub a:focus-visible{background:var(--lime);color:var(--ink)}
+}
+@keyframes glin{from{opacity:0;transform:translateY(-10px) scale(.985)}}
+
+/* ---------- phones: the menu is a glass sheet ---------- */
+@media(max-width:940px){
+  .menu{left:8px;right:8px;top:calc(100% + 6px);border-radius:22px;border:0;background:var(--gl-light);
+    -webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);box-shadow:var(--gl-shadow)}
+  header#hdr.sc .nav{margin:8px 8px 0;padding-left:16px;padding-right:8px}
+}
+
+/* ---------- no blur available, or the visitor asked for less transparency: solid surfaces ---------- */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  header#hdr.sc .nav::after,.mmp>.mmg,.menu{background:#fff}
+  header#hdr.sc.on-dark .nav::after,header#hdr.on-dark .mmp>.mmg{background:#14123A}
+}
+@media(prefers-reduced-transparency:reduce){
+  header#hdr.sc .nav::after,.mmp>.mmg,.menu{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
+  header#hdr.sc.on-dark .nav::after,header#hdr.on-dark .mmp>.mmg{background:#14123A}
+}
+@media(prefers-reduced-motion:reduce){.mm.open .mmp{animation:none}}
+/* soft fade above the floating pill, so page text doesn't peek out over it */
+header#hdr::before{content:"";position:absolute;left:0;right:0;top:0;height:26px;pointer-events:none;opacity:0;transition:opacity .3s;background:linear-gradient(var(--bg),rgba(252,251,255,0))}
+header#hdr.sc::before{opacity:1}
+header#hdr.sc.on-dark::before{background:linear-gradient(#0B0A24,rgba(11,10,36,0))}
