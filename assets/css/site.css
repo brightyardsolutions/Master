@@ -942,7 +942,7 @@ body.bp-on{cursor:crosshair}
 @media(max-width:600px){.bpr{grid-template-columns:1fr;gap:8px}.bpax{margin-left:0}}
 
 /* ==========================================================================
-   BrightYard v2 layer: cinematic theme, 3D stages, motion
+   Brightyard v2 layer: cinematic theme, 3D stages, motion
    ========================================================================== */
 :root{--night:#0B0A24;--night2:#14123A;--serif:"Instrument Serif",Georgia,serif;--ease2:cubic-bezier(.16,1,.3,1)}
 html.lenis,html.lenis body{height:auto}

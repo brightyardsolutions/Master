@@ -1,4 +1,4 @@
-/* BrightYard 3D scenes. Source file: bundled with three.js into assets/js/scenes.js (see README). */
+/* Brightyard 3D scenes. Source file: bundled with three.js into assets/js/scenes.js (see README). */
 import {
   WebGLRenderer, Scene, PerspectiveCamera, Color, Fog, Group, Mesh, Points, Line, Sprite,
   BufferGeometry, BufferAttribute, Float32BufferAttribute, SphereGeometry, BoxGeometry, PlaneGeometry,
@@ -111,7 +111,7 @@ class Stage {
 }
 
 /* ====================================================================== */
-/* HERO: the yard. A field of signals flowing into the BrightYard mark.   */
+/* HERO: the yard. A field of signals flowing into the Brightyard mark.   */
 /* ====================================================================== */
 export class Hero extends Stage {
   constructor(canvas) {

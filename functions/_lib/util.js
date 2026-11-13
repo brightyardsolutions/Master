@@ -1,4 +1,4 @@
-/* Shared helpers for the BrightYard API (Cloudflare Pages Functions).
+/* Shared helpers for the Brightyard API (Cloudflare Pages Functions).
    Bindings and settings (Cloudflare dashboard > Pages project > Settings):
      DB              D1 database binding (tables in schema.sql). Optional: without it nothing is stored and there is no rate limit.
      ZEPTOMAIL_TOKEN secret, the Zoho ZeptoMail "Send Mail" token. Without it (or RESEND_API_KEY) the API answers 503
@@ -6,7 +6,7 @@
      ZEPTOMAIL_HOST  optional: cpaas.zoho.in (default, Zoho CPaaS India). Use the host from the API sample code in your
                      Zoho account if it differs, e.g. api.zeptomail.in for older ZeptoMail accounts
      RESEND_API_KEY  secret, alternative sender if ZeptoMail is not used
-     MAIL_FROM       e.g. "BrightYard <blueprints@brightyard.in>" (the domain must be verified in ZeptoMail)
+     MAIL_FROM       e.g. "Brightyard <blueprints@brightyard.in>" (the domain must be verified in ZeptoMail)
      TEAM_EMAIL      where lead notices go, e.g. hello@brightyard.in
      SITE_URL        e.g. https://brightyard.in/ (used to build the 3D blueprint link)
      LEAD_RETENTION_DAYS  optional, default 365: stored requests older than this are deleted
@@ -89,10 +89,10 @@ export async function saveLead(env, lead) {
 
 export class MailError extends Error { constructor(code) { super(code); this.code = code; } }
 
-/* "BrightYard <blueprints@brightyard.in>" -> { name, address } */
+/* "Brightyard <blueprints@brightyard.in>" -> { name, address } */
 function parseFrom(v) {
   const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(v || '');
-  return m ? { name: m[1].replace(/^"|"$/g, ''), address: m[2] } : { name: 'BrightYard', address: (v || '').trim() };
+  return m ? { name: m[1].replace(/^"|"$/g, ''), address: m[2] } : { name: 'Brightyard', address: (v || '').trim() };
 }
 
 /* Sends through Zoho ZeptoMail (preferred) or Resend, whichever key is set. */
@@ -134,7 +134,7 @@ export function layout(inner, footer) {
   return '<!doctype html><html><body style="margin:0;background:#F5F3FF;padding:24px 12px">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center">' +
     '<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px">' +
-    '<tr><td style="padding:28px 28px 8px;font:600 16px Inter,Arial,sans-serif;color:#1E1B4B">BrightYard</td></tr>' +
+    '<tr><td style="padding:28px 28px 8px;font:600 16px Inter,Arial,sans-serif;color:#1E1B4B">Brightyard</td></tr>' +
     '<tr><td style="padding:8px 28px 28px">' + inner + '</td></tr></table>' +
     '<p style="font:12px/1.5 Inter,Arial,sans-serif;color:#5B5887;max-width:600px;margin:14px auto 0">' + (footer || '') + '</p>' +
     '</td></tr></table></body></html>';

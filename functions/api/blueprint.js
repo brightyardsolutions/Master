@@ -21,7 +21,7 @@ export async function onRequestPost({ request, env }) {
   try {
     await sendMail(env, {
       to: email,
-      subject: 'Your BrightYard blueprint: ' + M.title,
+      subject: 'Your Brightyard blueprint: ' + M.title,
       html: layout(
         '<p style="font:15px/1.55 Inter,Arial,sans-serif;color:#1E1B4B;margin:0 0 6px">Here is the blueprint you made on brightyard.in. Forward this email to anyone on your team; the link opens the interactive 3D model.</p>' +
         '<p style="margin:16px 0 22px"><a href="' + esc(plan.link) + '" style="display:inline-block;background:#4F46E5;color:#fff;text-decoration:none;font:600 15px Inter,Arial,sans-serif;padding:12px 20px;border-radius:12px">Open the 3D blueprint</a></p>' +

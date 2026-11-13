@@ -1,4 +1,4 @@
-/* ===== BrightYard blueprint engine: deterministic, rules-based, no network calls ===== */
+/* ===== Brightyard blueprint engine: deterministic, rules-based, no network calls ===== */
 var BYEngine=(function(){
 'use strict';
 var MODES=['human-led','assisted','supervised','autonomous'];
@@ -482,7 +482,7 @@ function run(text,opts,M){
     inferred.map(function(p){return 'Assumed, not stated: '+p.description.toLowerCase()}),
     sol.template.assumptions,
     cx.notes,
-    ['Effort uses BrightYard planning benchmarks per activity, not measurements of your system','Every agent-written change is reviewed by an engineer before release','Approval waits assume named client owners respond within the stated days']);
+    ['Effort uses Brightyard planning benchmarks per activity, not measurements of your system','Every agent-written change is reviewed by an engineer before release','Approval waits assume named client owners respond within the stated days']);
   if(sol.relevance<60)assumptions.push('The selected solution covers '+sol.relevance+'% of the identified problems; the rest needs scoping in discovery');
 
   /* business impact */

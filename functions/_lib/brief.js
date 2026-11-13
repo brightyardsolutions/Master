@@ -45,7 +45,7 @@ function rows(items){return '<table role="presentation" cellpadding="0" cellspac
 /* one-page brief: what we heard, the solution, how, by when */
 function onePage(M,link){
   return '<div style="font:14px/1.5 Inter,Arial,sans-serif;color:'+INK+'">'+
-    '<p style="margin:0 0 4px;font:600 11px/1 Inter,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:'+IND+'">BrightYard blueprint</p>'+
+    '<p style="margin:0 0 4px;font:600 11px/1 Inter,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:'+IND+'">Brightyard blueprint</p>'+
     '<h1 style="font:600 24px/1.2 Inter,Arial,sans-serif;margin:0 0 6px">'+esc(M.title)+'</h1>'+
     '<p style="margin:0;color:'+MUTE+'">Live in about <b style="color:'+INK+'">'+M.minW+'–'+M.maxW+' weeks</b> · '+esc(M.complexity)+' complexity'+(M.start?' · starting '+esc(M.start):'')+'</p>'+
     h2('1. What we heard')+'<p style="margin:0 0 8px;color:'+MUTE+';font-style:italic">“'+esc(M.brief)+'”</p>'+
@@ -70,7 +70,7 @@ function fullPlan(M){
   return '<div style="font:14px/1.5 Inter,Arial,sans-serif;color:'+INK+'">'+s+'</div>';
 }
 function text(M,link){
-  var L=[];L.push('BrightYard blueprint: '+M.title,'Live in about '+M.minW+'–'+M.maxW+' weeks'+(M.start?', starting '+M.start:''),'');
+  var L=[];L.push('Brightyard blueprint: '+M.title,'Live in about '+M.minW+'–'+M.maxW+' weeks'+(M.start?', starting '+M.start:''),'');
   L.push('1. WHAT WE HEARD','"'+M.brief+'"');M.problems.forEach(function(p){L.push('- '+p.text+(p.stated?'':' (our assumption, to confirm)'))});
   L.push('','2. THE SOLUTION',M.summary);M.parts.forEach(function(c){L.push('- '+c.name)});
   L.push('','3. HOW WE BUILD IT');M.stages.forEach(function(s){L.push('- '+s.name+': '+s.when)});

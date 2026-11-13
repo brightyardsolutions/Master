@@ -6,7 +6,7 @@ compatibility_date = "2026-10-01"
 
 [vars]
 SITE_URL = "http://localhost:8788/"
-MAIL_FROM = "BrightYard <blueprints@brightyard.in>"
+MAIL_FROM = "Brightyard <blueprints@brightyard.in>"
 TEAM_EMAIL = "hello@brightyard.in"
 MAIL_LOG = "1"   # log emails to the terminal instead of sending them (used only when no ZEPTOMAIL_TOKEN is set)
 

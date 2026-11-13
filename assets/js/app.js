@@ -1,5 +1,5 @@
-/* BrightYard site script. Sections: settings and forms, menus, live demos, signature layer, core. */
-/* ===== BrightYard site settings: edit these before launch ===== */
+/* Brightyard site script. Sections: settings and forms, menus, live demos, signature layer, core. */
+/* ===== Brightyard site settings: edit these before launch ===== */
 window.SITE = {
   mode: 'launch',       // 'draft' shows highlighted placeholders; 'launch' hides every incomplete section
   formEndpoint: '/api/contact',    // e.g. 'https://formspree.io/f/xxxx' or '/api/contact'. Empty = form not connected yet.
@@ -17,7 +17,7 @@ var body=document.body,bar=$('#draftbar'),mbtn=$('#dmode');
 function setMode(m){
   body.classList.toggle('launch',m==='launch');
   mbtn.textContent=m==='launch'?'Back to draft view':'Preview launch view';
-  $('#dlabel').innerHTML=m==='launch'?'<b>Launch preview.</b> Sections that still need real data are hidden.':'<b>Draft preview.</b> Highlighted text needs real BrightYard data before launch.';
+  $('#dlabel').innerHTML=m==='launch'?'<b>Launch preview.</b> Sections that still need real data are hidden.':'<b>Draft preview.</b> Highlighted text needs real Brightyard data before launch.';
 }
 if(SITE.mode==='launch'){body.classList.add('launch');if(bar)bar.remove()}
 else if(mbtn){mbtn.addEventListener('click',function(){setMode(body.classList.contains('launch')?'draft':'launch')})}
@@ -1003,7 +1003,7 @@ function render(first){
   curId=r.id;
   pages.forEach(function(p){p.classList.toggle('on',p===pg)});
   links.forEach(function(a){a.classList.toggle('on',a.dataset.r===r.id)});
-  document.title=pg.dataset.title||'BrightYard';
+  document.title=pg.dataset.title||'Brightyard';
   toTop();hdr.classList.remove('hide');
   return enter(pg).then(function(){
     onScroll();tone();
@@ -1047,7 +1047,7 @@ if(anim&&pre&&!preSeen&&!deep){
 
 /* ---------- hero audience copy ---------- */
 var seg={
-  all:['BrightYard designs, builds and runs software that turns data, signals and requests into the next right action. We do it for our clients, and in our own products.','Talk to an engineer'],
+  all:['Brightyard designs, builds and runs software that turns data, signals and requests into the next right action. We do it for our clients, and in our own products.','Talk to an engineer'],
   startup:['Get to a first release your users can rely on. A senior team that designs, builds and ships with you, then stays for what comes next.','Plan your first release'],
   enterprise:['Modernise the systems you can\'t switch off. Replacement in safe slices, clear governance and a team on call after go-live.','Book an architecture review'],
   public:['Digital services that work for every citizen, including people using a screen reader or a five-year-old phone. Secure, accessible and built to be handed over.','Talk to our team']
@@ -1168,7 +1168,7 @@ if(glk){
 /* the assistant button steps aside while the blueprint result or the footer is on screen */
 var astb=document.getElementById('astb');
 if(astb&&'IntersectionObserver' in window){
-  astb.setAttribute('aria-label','Ask BrightYard');
+  astb.setAttribute('aria-label','Ask Brightyard');
   var seen=new Set();
   var small=matchMedia('(max-width:767px)');
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)seen.add(e.target);else seen.delete(e.target)});var away=false;seen.forEach(function(t){if(t.tagName==='FOOTER'||small.matches)away=true});document.body.classList.toggle('ast-away',away)},{threshold:.25});

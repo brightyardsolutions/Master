@@ -1,4 +1,4 @@
-# BrightYard website
+# Brightyard website
 
 Static site for brightyard.in, served by Cloudflare Pages. There is no build step on deploy: push to `main` and Cloudflare Pages redeploys what is in the repo.
 
@@ -18,7 +18,7 @@ Static site for brightyard.in, served by Cloudflare Pages. There is no build ste
 | `src/scenes.js` | Source for the 3D scenes (home hero, Allocivo hotel, Xessly page) |
 | `vendor/` | GSAP, ScrollTrigger and Lenis, served locally so the site does not depend on a CDN |
 | `assets/fonts/` | Inter and Instrument Serif, served from this site so visitors' browsers never contact Google (SIL Open Font License, licences included) |
-| `logos/`, `favicon.svg` | BrightYard, Allocivo and Xessly marks |
+| `logos/`, `favicon.svg` | Brightyard, Allocivo and Xessly marks |
 
 ## Running locally
 
@@ -68,15 +68,15 @@ The site still works with no backend: the dialog falls back to the share link, p
 
 1. **Email sender: Zoho ZeptoMail** (Zoho's service for automated email; separate from your Zoho Mail inbox).
    - Sign in at zeptomail.zoho.in with your Zoho account.
-   - Mail Agents > Add Mail Agent, name it `BrightYard website`.
+   - Mail Agents > Add Mail Agent, name it `Brightyard website`.
    - In the agent: Domains > Add domain `brightyard.in`. ZeptoMail shows a DKIM record (TXT) and a bounce record (CNAME). Add both in Cloudflare > DNS > Records, with the CNAME set to **DNS only** (grey cloud), then click Verify in ZeptoMail. Leave your existing Zoho Mail MX and SPF records as they are.
    - In the agent: SMTP/API > API > copy the **Send Mail token**.
 2. **Database.** Cloudflare > Storage & Databases > D1 > Create, name it `brightyard`. In its Console, paste the contents of `schema.sql` and Execute. Check with `SELECT name FROM sqlite_master WHERE type='table';` (you should see leads, events and rate).
-3. **Pages project settings.** Workers & Pages > your BrightYard project > Settings. Do this for **Production** and for **Preview**:
+3. **Pages project settings.** Workers & Pages > your Brightyard project > Settings. Do this for **Production** and for **Preview**:
    - Bindings > Add > D1 database: variable name `DB`, database `brightyard`.
    - Variables and secrets:
      - `ZEPTOMAIL_TOKEN`: type **Secret**, the Send Mail token. Never put it in code or in a plain variable.
-     - `MAIL_FROM`: `BrightYard <blueprints@brightyard.in>` (any address on the verified domain; it does not need its own mailbox)
+     - `MAIL_FROM`: `Brightyard <blueprints@brightyard.in>` (any address on the verified domain; it does not need its own mailbox)
      - `TEAM_EMAIL`: the Zoho Mail inbox that receives leads
      - `SITE_URL`: `https://brightyard.in/`
      - `ZEPTOMAIL_HOST`: only if the API sample code in your Zoho account (agent > SMTP/API > API) shows a host other than `cpaas.zoho.in`; set it to that host

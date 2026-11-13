@@ -1,4 +1,4 @@
-/* BrightYard D1 schema. Apply with: */
+/* Brightyard D1 schema. Apply with: */
 /* npx wrangler d1 execute brightyard --remote --file=schema.sql */
 CREATE TABLE IF NOT EXISTS leads (
   id          TEXT PRIMARY KEY,
