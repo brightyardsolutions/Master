@@ -1497,3 +1497,23 @@ body.ast-away .astb:not([aria-expanded="true"]){opacity:0;pointer-events:none;tr
   .astb span::after{content:"Ask";font-size:14px}
 }
 .lt{display:inline}
+
+/* ---------- audit decisions ---------- */
+/* prices */
+.st{grid-template-columns:1.1fr 2.6fr .9fr}
+.stnote{margin-top:16px;color:var(--mute);font-size:15px}
+/* inner pages: shorter, quieter headers; the italic accent belongs to the home page only */
+.ph{padding:168px 0 72px}
+.ph h1{font-size:clamp(40px,5.4vw,68px);line-height:1.02;letter-spacing:-.04em}
+.page:not(#p-home) .split mark{font-family:inherit;font-style:normal;font-weight:inherit;letter-spacing:inherit;padding-right:0}
+/* privacy: a plain document header */
+.ph.ph-doc{background:var(--mist);color:var(--ink);padding:150px 0 40px}
+.ph.ph-doc h1{color:var(--ink);font-size:clamp(36px,4.4vw,52px)}
+.ph.ph-doc .lead{color:var(--mute)}
+.ph.ph-doc .eyebrow{color:var(--ind)}
+.ph.ph-doc .wrap{transform:none!important;opacity:1!important}
+/* promises are commitments, so a check rather than a cross */
+.wont li::before{content:"\2713";font-weight:700}
+/* product pages wear their own brand: Allocivo teal with lime, Xessly indigo with mint */
+#p-allocivo{--ind:#0C5A60;--ind2:#08454A}
+#p-xessly{--lime:#8FF2CC}
