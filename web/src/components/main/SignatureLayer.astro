@@ -1,14 +1,16 @@
 ---
-// Yard menu dock (G), Blueprint mode (B), the lens and the yard menu dialog.
+// Yard menu dock (G), Blueprint mode (B), the lens and the yard menu dialog. The dock buttons are named by their
+// visible text ("Yard menu G", "Blueprint B") so voice control users can say what they see; aria-keyshortcuts
+// announces the keys. The space before each <kbd> keeps the words apart for assistive technology (flex hides it).
 ---
 <div class="dock" id="dock">
-  <button id="gbtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Open yard menu">
+  <button id="gbtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-keyshortcuts="G">
     <span class="gico" aria-hidden="true"><i class="y"></i><i></i><i class="y"></i><i></i><i class="y"></i><i></i><i></i><i class="y"></i><i></i></span>
-    <span class="lb">Yard menu</span><kbd>G</kbd>
+    <span class="lb">Yard menu</span> <kbd>G</kbd>
   </button>
-  <button id="bbtn" type="button" aria-pressed="false" aria-label="Toggle blueprint mode">
+  <button id="bbtn" type="button" aria-pressed="false" aria-keyshortcuts="B">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-    <span class="lb">Blueprint</span><kbd>B</kbd>
+    <span class="lb">Blueprint</span> <kbd>B</kbd>
   </button>
 </div>
 <div class="bhint" id="bhint" role="status"></div>

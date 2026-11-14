@@ -15,6 +15,10 @@ if (!SITE.product) throw new Error('ProductLayout is only for the product sites'
 const route = SITE.routes.find(r => r.path === Astro.props.path);
 if (!route) throw new Error(`No ${SITE.name} route with path "${Astro.props.path}"`);
 const notFound = route.path === '/404';
+// pages that don't open with the product banner get a main heading for screen readers (visually hidden, as the
+// page's design opens straight into its sections): "Allocivo: How it works". It sits just before the page section,
+// not inside it, so the first section keeps its spacing (.page>.sec:first-child)
+const needsHeading = !notFound && !route.sections.includes('prodhero');
 const url = SITE.url + route.path;
 ---
 <Base title={route.title} description={SITE.description} url={url} siteName={SITE.name} noindex={route.noindex} product={SITE.key} bodyClass={`prod-site prod-${SITE.short}`}>
@@ -30,6 +34,7 @@ const url = SITE.url + route.path;
 <ProductHeader current={route.path} />
 <DemoTemplates />
 <main id="main">
+{needsHeading && <h1 class="sr">{SITE.name}: {route.label}</h1>}
 <section class="page on" id={`p-${SITE.key}`} data-title={route.title}>
 <slot />
 {!notFound && route.path !== SITE.cta.path && <CtaBand />}

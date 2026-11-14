@@ -30,8 +30,8 @@ That is brightyard.in at http://localhost:4321. `npm run dev:allocivo` (port 432
 Check the pages against the sites as they were before the move to Astro (needs a build first; the old sites are
 taken from git history, see `tests/baseline.mjs`). The first compares the HTML and pixels of every page with scripts
 off; the second runs the same actions on both sides with scripts on (menus, the blueprint generator and lead dialog,
-forms, shortcuts, product demos, moving between pages). After a deliberate design change they report it as a
-difference, which is expected:
+forms, shortcuts, product demos, moving between pages). Approved changes since the move are listed in
+`tests/accepted.mjs`; anything else that differs is reported:
 
 ```bash
 npm run test:compare
@@ -98,6 +98,7 @@ How the Cloudflare projects were switched to this folder, and how to roll back: 
 | `tests/axe.mjs` | Accessibility scan of every page, old and new, desktop and phone |
 | `tests/engine-test.mjs`, `tests/engine-cases.mjs` | The 66 example briefs (add a case whenever a real brief lands on the wrong plan) |
 | `tests/baseline.mjs` | Takes the old sites (before the move to Astro) from git history for the three comparison tests |
+| `tests/accepted.mjs` | Approved changes since the move; the comparison tests apply them so only unintended differences show |
 | `tests/compare.mjs` | Old-against-new check: HTML of the shell and of every page, `<html>`/`<body>` attributes, head tags, the stylesheet, pixel-exact full-page screenshots of every page on desktop and phone, old `#/` addresses |
 
 ## Addresses

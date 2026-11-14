@@ -14,6 +14,7 @@ import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITES } from '../src/sites/index.mjs';
 import { baseline } from './baseline.mjs';
+import { acceptOld, acceptNew } from './accepted.mjs';
 import { link, mainLink } from '../src/lib/links.mjs';
 import { NO_SCRIPT_CSS } from '../src/lib/page.mjs';
 
@@ -76,7 +77,7 @@ async function comparePair(ctx, name, oldUrl, newUrl, sels, here, { head = [], e
   ok(ha === hb, `${name}: <html>/<body> attributes\n    old: ${ha}\n    new: ${hb}`);
   const A = await grab(a, sels), B = await grab(b, sels);
   for (const s of sels) {
-    const x = A[s] == null ? null : norm(oldHref(here)(A[s])), y = B[s] == null ? null : norm(B[s]);
+    const x = A[s] == null ? null : norm(acceptOld(oldHref(here)(A[s]))), y = B[s] == null ? null : norm(acceptNew(B[s]));
     ok(y !== null, `${name}: ${s} missing on the new page`);
     if (x !== y && y !== null) {
       let i = 0; while (x && x[i] === y[i]) i++;
@@ -201,8 +202,8 @@ try {
     const a = await ctx.newPage(), b = await ctx.newPage();
     await a.goto(P.oldUrl); await b.goto(P.newUrl);
     if (P.oldId) await showOld(a, P.oldId);
-    const x = norm(strip(oldHref(P.here)(await a.evaluate(s => document.querySelector(s).innerHTML, P.oldId ? '#p-' + P.oldId : 'main'))));
-    const y = norm(strip(await b.evaluate(s => document.querySelector(s).innerHTML, P.oldId ? 'section.page.on' : 'main')));
+    const x = norm(strip(acceptOld(oldHref(P.here)(await a.evaluate(s => document.querySelector(s).innerHTML, P.oldId ? '#p-' + P.oldId : 'main')))));
+    const y = norm(strip(acceptNew(await b.evaluate(s => document.querySelector(s).innerHTML, P.oldId ? 'section.page.on' : 'main'))));
     if (x !== y) { let i = 0; while (x[i] === y[i]) i++; ok(false, `${P.name}: page content differs at ${i}\n    old: ${x.slice(Math.max(0, i - 80), i + 100)}\n    new: ${y.slice(Math.max(0, i - 80), i + 100)}`); } else checks++;
     await a.close(); await b.close();
   }

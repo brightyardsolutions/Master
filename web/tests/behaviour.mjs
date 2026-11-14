@@ -23,6 +23,7 @@ import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITES } from '../src/sites/index.mjs';
 import { baseline } from './baseline.mjs';
+import { acceptOld, acceptNew } from './accepted.mjs';
 import { link, mainLink } from '../src/lib/links.mjs';
 
 const require = createRequire(import.meta.url);
@@ -132,7 +133,7 @@ try {
           for (const s of sels) { const e = document.querySelector(s); out[s] = e ? e.outerHTML : null; }
           return out;
         }, SHELL);
-        for (const k of Object.keys(html)) html[k] = norm(side === 'old' ? oldHref(site)(html[k] || '') : html[k] || '');
+        for (const k of Object.keys(html)) html[k] = norm(side === 'old' ? acceptOld(oldHref(site)(html[k] || '')) : acceptNew(html[k] || ''));
         // the parent menu is marked on child pages (decided for step 3; the old site did so only after an in-site move)
         html['#hdr'] = html['#hdr'].replace(/ class="mmb on"/g, ' class="mmb"');
         return html;

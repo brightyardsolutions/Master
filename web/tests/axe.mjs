@@ -1,8 +1,9 @@
 // Accessibility: axe-core (WCAG 2.2 A and AA rules) on every page of the three sites, old and new, desktop and phone.
 // Passes when the new pages have no finding that today's pages don't have. Known, accepted finding: the deliberately
-// low-contrast "Sign in" button in the Xessly demo (the "before" state the agents fix). Today's sites also have one
-// finding everywhere (label-content-name-mismatch: a few buttons' visible text differs from their spoken name); it is
-// carried over unchanged, as the move changes nothing, and listed as a possible later fix.
+// low-contrast "Sign in" button in the Xessly demo (the "before" state the agents fix). The two findings the old sites
+// had (label-content-name-mismatch on the dock buttons and product logos, and inner product pages without a main
+// heading) were fixed on 14 November 2026: they now fail the test wherever they appear, and every page must have
+// exactly one <h1>.
 // Run from web/ after `npm run build`:  npm run test:axe
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
@@ -47,12 +48,19 @@ async function scan(u, vp) {
   await c.close();
   return r.violations.flatMap(v => v.nodes.map(n => ({ id: v.id, target: n.target.join(' ') })));
 }
+async function h1Count(u, vp) {
+  const c = await browser.newContext({ viewport: vp }); const p = await c.newPage();
+  await p.goto(u); await p.waitForTimeout(600);
+  const n = await p.evaluate(() => document.querySelectorAll('h1').length); await c.close(); return n;
+}
 try {
   for (const [label, vp] of Object.entries({ desktop: { width: 1440, height: 900 }, phone: { width: 390, height: 844 } })) {
     for (const P of PAGES) {
       const now = await scan(P.new, vp), before = P.old ? await scan(P.old, vp) : [];
       const had = new Set(before.map(f => f.id));
-      const fresh = now.filter(f => !had.has(f.id) && !ACCEPTED(f));
+      const fresh = now.filter(f => (!had.has(f.id) || f.id === 'label-content-name-mismatch') && !ACCEPTED(f));
+      const h1 = await h1Count(P.new, vp);
+      checks++; if (h1 !== 1) { failures++; console.log(`  FAIL ${P.name} ${label}: ${h1} main headings (<h1>), expected 1`); }
       checks++;
       if (fresh.length) { failures++; console.log(`  FAIL ${P.name} ${label}: new findings ${JSON.stringify(fresh.slice(0, 4))}`); }
       if (process.env.SHOW) console.log(`  ${P.name} ${label}: old ${before.length}, new ${now.length}${now.length ? ' ' + JSON.stringify([...new Set(now.map(f => f.id))]) : ''}`);

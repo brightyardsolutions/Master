@@ -7,7 +7,7 @@ const nav = SITE.routes.filter(r => r.label && r.path !== SITE.cta.path);
 const { current } = Astro.props;
 ---
 <header id="hdr"><div class="wrap nav">
-<a class="logo plogo" href="/" aria-label={`${SITE.name} home`}><svg class="mk" aria-hidden="true"><use href={`#${SITE.mark}`}/></svg><span>{SITE.name}<small>by Brightyard</small></span></a>
+<a class="logo plogo" href="/" aria-label={`${SITE.name} by Brightyard, home`}><svg class="mk" aria-hidden="true"><use href={`#${SITE.mark}`}/></svg><span>{SITE.name} <small>by Brightyard</small></span></a>
 <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">&#9776;</button>
 <nav class="menu" id="menu" aria-label="Main">{nav.map(r => <a class={r.path === current ? 'l on' : 'l'} href={r.path} aria-current={r.path === current ? 'page' : undefined}>{r.label}</a>)}<a class="btn pri" href={SITE.cta.path}>{SITE.cta.label}</a></nav>
 </div></header>

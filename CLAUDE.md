@@ -60,12 +60,12 @@ setup; `web/README.md` covers the code, commands and tests.
 ## Checks before pushing (in `web/`)
 
 - `npm run build` (all three sites) and `npm test` (the 66 briefs).
-- `npm run test:compare`, `npm run test:behaviour`, `npm run test:axe`: compare every page with the sites as they were before the move to Astro (taken from git history, `tests/baseline.mjs`), with scripts off and on, plus accessibility. They prove nothing changed by accident; after a **deliberate, approved** design or content change they report that change as a difference, which is expected (say so to the owner, and check that only the intended pages differ).
+- `npm run test:compare`, `npm run test:behaviour`, `npm run test:axe`: compare every page with the sites as they were before the move to Astro (taken from git history, `tests/baseline.mjs`), with scripts off and on, plus accessibility. They prove nothing changed by accident. After a **deliberate, approved** design, content or accessibility change, add it to `tests/accepted.mjs` (what changed, and how the old HTML maps to the new), so the tests keep flagging everything else. `test:axe` also requires exactly one `<h1>` on every page and no `label-content-name-mismatch` (both fixed on 14 November 2026).
 - Known, accepted findings: axe flags the deliberately low-contrast "Sign in" button in the Xessly demo (the "before" state the agents fix).
 
 ## History
 
-- **November 2026, move to Astro** (steps 1 to 5, approved by the owner): brightyard.in went from one hash-routed page to real pages, the three sites were rebuilt from shared components with per-page scripts, the design and behaviour were kept identical (proved by the comparison tests), and the sites went live from `web/` on 14 November 2026 (`web/GO-LIVE.md`). Decisions: the curtain closes on link click and opens on the new page; a real not-found page on brightyard.in (dark page banner, "Go to the home page" and "Talk to an engineer"); child pages always mark their parent menu. The old single-page site and its `build-src/` build were then removed; they are in git history (commit `049e41e`).
+- **November 2026, move to Astro** (steps 1 to 5, approved by the owner): brightyard.in went from one hash-routed page to real pages, the three sites were rebuilt from shared components with per-page scripts, the design and behaviour were kept identical (proved by the comparison tests), and the sites went live from `web/` on 14 November 2026 (`web/GO-LIVE.md`). Decisions: the curtain closes on link click and opens on the new page; a real not-found page on brightyard.in (dark page banner, "Go to the home page" and "Talk to an engineer"); child pages always mark their parent menu. Accessibility fixes after the move (no visible change): the dock buttons are named by their visible text with `aria-keyshortcuts`, the product logos are named "Allocivo by Brightyard, home", and the inner product pages have a visually hidden `<h1>` ("Allocivo: How it works"). The old single-page site and its `build-src/` build were then removed; they are in git history (commit `049e41e`).
 
 ## Open items
 
@@ -73,5 +73,4 @@ setup; `web/README.md` covers the code, commands and tests.
 - Optional AI reading of blueprint briefs (Cloudflare Workers AI or paid Gemini; never the free Gemini tier, for privacy). The AI picks from the existing lists only; the rules engine still builds the plan. Measure it against the 66 briefs first.
 - Re-run the Impeccable and Taste design audit on the live sites.
 - Product site pages to add later (for example pricing or security).
-- Accessibility, carried over from the old sites: the inner product pages (`/how-it-works/`, `/demo/`, `/agent-flow/`…) have no `<h1>`; axe flags `label-content-name-mismatch` on a few buttons (visible text differs from their accessible name).
 - Per-page meta descriptions and share titles: every brightyard.in page still uses the home page's description and share text, as before the move.
