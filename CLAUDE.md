@@ -1,14 +1,14 @@
 # Brightyard websites: handover notes
 
-Three live static sites on Cloudflare Pages, all built from this repository:
+Three live static sites on Cloudflare Pages, all built from the Astro project in `web/` (live since 14 November 2026):
 
-| Site | Cloudflare project | Serves |
+| Site | Cloudflare project | Build settings |
 |---|---|---|
-| brightyard.in | `master3-agf` | repository root |
-| allocivo.brightyard.in | `allocivo` | `sites/allocivo` (root directory `sites/allocivo`, output `/`) |
-| xessly.brightyard.in | `xessly` | `sites/xessly` (root directory `sites/xessly`, output `/`) |
+| brightyard.in | `master3` (preview address `master3-agf.pages.dev`) | root `web`, `npm run build`, output `dist/main`, `ASTRO_SITE=main` |
+| allocivo.brightyard.in | `allocivo` | root `web`, `npm run build`, output `dist/allocivo`, `ASTRO_SITE=allocivo` |
+| xessly.brightyard.in | `xessly` | root `web`, `npm run build`, output `dist/xessly`, `ASTRO_SITE=xessly` |
 
-All three use **`main` as the production branch**, so a push to `main` updates all three. There is no build step on Cloudflare: generated files are committed.
+All three use **`main` as the production branch**, so a push to `main` rebuilds all three. **Work in `web/`** (see `web/README.md`). The old generated files (`index.html`, `assets/`, `vendor/`, `sites/`, `functions/` at the root) and `build-src/` are no longer served; they stay until the owner agrees to remove them (step 5), and the sections below about `build-src/` describe that old setup.
 
 ## Working with the owner
 
@@ -58,9 +58,9 @@ All three use **`main` as the production branch**, so a push to `main` updates a
 - axe flags the deliberately low-contrast "Sign in" button in the Xessly demo (it is the "before" state the agents fix);
 - `func-test.js`'s Allocivo part no longer applies since the product pages moved to the subdomains.
 
-## Next: the Astro migration (approved; steps 1 to 3 done)
+## The Astro migration (steps 1 to 4 done, live)
 
-**Where it stands:** the new project is `web/` (read `web/README.md`). Steps 1 to 3 are done: all three sites build from shared components, every page matches today's in HTML and pixels (`npm run test:compare`, scripts off), and the scripts are ported as per-page modules whose behaviour matches today's (`npm run test:behaviour`, scripts on). brightyard.in's not-found page uses the design the owner approved (dark page banner, "Go to the home page" and "Talk to an engineer"). Next is step 4: the owner follows `web/GO-LIVE.md` (preview links first, then "merge to main"; the old files stay until the move is settled). Approved decisions: the curtain closes on link click and opens on the new page (no client-side router); a real not-found page on brightyard.in (built to the approved design); local preview needs Node.js. The live sites still come from the old files until step 4.
+**Where it stands:** the new project is `web/` (read `web/README.md`). Steps 1 to 3 are done: all three sites build from shared components, every page matches today's in HTML and pixels (`npm run test:compare`, scripts off), and the scripts are ported as per-page modules whose behaviour matches today's (`npm run test:behaviour`, scripts on). brightyard.in's not-found page uses the design the owner approved (dark page banner, "Go to the home page" and "Talk to an engineer"). Step 4 is done: the owner switched the three Cloudflare projects (`web/GO-LIVE.md`), the previews were checked, and `main` went live on 14 November 2026; the live sites were checked afterwards. Next, with the owner's OK: step 5, remove the old files and rewrite these notes for the new setup only. Approved decisions: the curtain closes on link click and opens on the new page (no client-side router); a real not-found page on brightyard.in (built to the approved design); local preview needs Node.js. 
 
 Goal: real pages with their own addresses instead of hash routes, shared components for the three sites, and per-page scripts. **Keep the design and behaviour identical: no redesign during the move.**
 
