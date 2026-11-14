@@ -26,14 +26,14 @@ Do this for **each of the three projects**. The only value that changes between 
 
 | Project in Cloudflare | Site name (`ASTRO_SITE`) | Build output directory |
 |---|---|---|
-| `master3-agf` (brightyard.in) | `main` | `dist/main` |
+| `master3` (brightyard.in; its preview address is `master3-agf.pages.dev`) | `main` | `dist/main` |
 | `allocivo` | `allocivo` | `dist/allocivo` |
 | `xessly` | `xessly` | `dist/xessly` |
 
 ### 1. Change the build settings
 
 1. Go to **dash.cloudflare.com**, then **Workers & Pages** in the left menu, and click the project.
-2. Open the **Settings** tab, then **Build**. Next to **Build configuration**, click **Edit**.
+2. Open the **Settings** tab. In the **Build** box, click the **pencil** on the **Build configuration** row.
 3. Set:
    - **Framework preset:** None
    - **Build command:** `npm run build`
@@ -43,10 +43,12 @@ Do this for **each of the three projects**. The only value that changes between 
 
 ### 2. Add the site name
 
-1. Still in **Settings**, open **Variables and Secrets** and click **Add**.
-2. Type: **Plaintext**. Variable name: `ASTRO_SITE`. Value: the site name from the table (for example `main`).
-3. Make sure it is added for **both Production and Preview**. If the page lets you pick one environment at a time,
-   add it once for Production, then again for Preview.
+1. Still in **Settings**, scroll to **Variables and secrets**. The dropdown at the top right of the page says
+   which environment you are editing: start with **Production**.
+2. Click **+ Add**. In the new row: Type **Text**, Name `ASTRO_SITE`, Value the site name from the table (for
+   example `main`). Click **Save** below the table.
+3. Switch the dropdown at the top right to **Preview** and add the same row again, then **Save**. While there,
+   check that Preview also has `MAIL_FROM`, `SITE_URL`, `TEAM_EMAIL` and `ZEPTOMAIL_TOKEN`.
 4. Leave everything else as it is (`DB`, `ZEPTOMAIL_TOKEN`, `MAIL_FROM`, `TEAM_EMAIL`, `SITE_URL`).
 
 ### 3. Build the preview
