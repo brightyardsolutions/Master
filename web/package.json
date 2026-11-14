@@ -14,10 +14,12 @@
     "build:functions": "node tools/build-functions.mjs",
     "test:compare": "node tests/compare.mjs",
     "test": "node tests/engine-test.mjs",
-    "test:behaviour": "node tests/behaviour.mjs"
+    "test:behaviour": "node tests/behaviour.mjs",
+    "test:axe": "node tests/axe.mjs"
   },
   "devDependencies": {
-    "astro": "7.4.4"
+    "astro": "7.4.4",
+    "axe-core": "4.14.0"
   },
   "engines": {
     "node": ">=22.23.4"
