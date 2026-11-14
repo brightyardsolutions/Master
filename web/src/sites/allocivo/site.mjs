@@ -1,4 +1,4 @@
-// allocivo.brightyard.in. Settings carried over unchanged from build-src/src/products.py.
+// allocivo.brightyard.in: name, pages, call to action and texts used by the product layout.
 // `sections` lists the product blocks each page shows (ported as components in step 2).
 export default {
   key: 'allocivo',
@@ -19,6 +19,6 @@ export default {
     { path: '/demo/', file: 'demo.astro', label: 'Book a demo', sections: ['al-demo'], title: 'Book a demo | Allocivo' },
     { path: '/404', file: '404.astro', title: 'Page not found | Allocivo', noindex: true },
   ],
-  // which page each section id lives on (as products.py worked it out), for links like #/allocivo/al-how
+  // which page each section id lives on (the old product build worked this out from the sections), for links like #/allocivo/al-how
   anchors: { 'al-value': '', 'al-calc': '', 'al-problem': 'how-it-works/', 'al-how': 'how-it-works/', 'al-uses': 'how-it-works/', 'al-systems': 'integrations/', 'al-demo': 'demo/' },
 };

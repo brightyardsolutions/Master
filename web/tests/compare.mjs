@@ -13,6 +13,7 @@ import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'no
 import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITES } from '../src/sites/index.mjs';
+import { baseline } from './baseline.mjs';
 import { link, mainLink } from '../src/lib/links.mjs';
 import { NO_SCRIPT_CSS } from '../src/lib/page.mjs';
 
@@ -28,7 +29,7 @@ const NO_TOP_BARS = '#hdr,#draftbar,#prog{visibility:hidden!important}';
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const WEB = fileURLToPath(new URL('..', import.meta.url));
-const REPO = join(WEB, '..');
+const REPO = baseline();   // the old sites, from git history (tests/baseline.mjs)
 const OUT = join(WEB, 'tests/out');
 mkdirSync(OUT, { recursive: true });
 

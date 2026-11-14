@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://allocivo.brightyard.in/sitemap.xml

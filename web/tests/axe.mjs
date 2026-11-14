@@ -10,11 +10,12 @@ import { readFileSync, existsSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITES } from '../src/sites/index.mjs';
+import { baseline } from './baseline.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 const AXE = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
-const WEB = fileURLToPath(new URL('..', import.meta.url)), REPO = join(WEB, '..');
+const WEB = fileURLToPath(new URL('..', import.meta.url)), REPO = baseline();   // the old sites, from git history
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.jpg': 'image/jpeg' };
 const serve = (dir, port) => new Promise(res => {
   const s = createServer((req, rsp) => {

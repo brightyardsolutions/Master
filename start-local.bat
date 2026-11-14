@@ -1,7 +1,9 @@
 @echo off
-rem Double-click to run the BrightYard site locally at http://localhost:8080
-rem Optional: pass a different port, for example: start-local.bat 8081
-title BrightYard local preview
-set PORT=%1
-if "%PORT%"=="" set PORT=8080
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0serve.ps1" -Port %PORT%
+rem Double-click to preview the Brightyard sites on this computer. Needs Node.js (https://nodejs.org, LTS).
+rem brightyard.in opens at http://localhost:4321. Product sites: start-local.bat allocivo (port 4322)
+rem or start-local.bat xessly (port 4323). It downloads the latest changes from GitHub while it runs.
+rem Forms and the API do not work in this preview.
+title Brightyard local preview
+set SITE=%1
+if "%SITE%"=="" set SITE=main
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0web\tools\local.ps1" -Site %SITE%

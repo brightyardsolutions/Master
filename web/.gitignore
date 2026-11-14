@@ -6,3 +6,4 @@ dist/
 wrangler.toml
 !package-lock.json
 tests/out/
+tests/.baseline/

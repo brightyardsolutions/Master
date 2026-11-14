@@ -1,5 +1,10 @@
 # Going live with the new sites (migration step 4)
 
+> **Done on 14 November 2026.** All three projects build from `web/` and are live. This page is kept as a record and
+> for the rollback steps below. Since the old files were removed from the repository (step 5), "undo fully" by
+> changing the settings back no longer applies; **Rollback to this deployment** in Cloudflare still works for any
+> earlier deployment.
+
 This switches brightyard.in, allocivo.brightyard.in and xessly.brightyard.in from the old files to the new Astro
 build in `web/`. You do it in two stages: first you look at **preview links**, then you **go live**.
 Nothing here asks for a password or key: bindings, variables and secrets already set in Cloudflare stay as they are.
@@ -102,7 +107,7 @@ settings.
 - **Undo straight away:** in the project's **Deployments** tab, find the previous Production deployment (the old
   site), click **⋯**, then **Rollback to this deployment**. The old site is back within a minute. The old files
   stay in the repository until the move is settled, so nothing is lost.
-- **Undo fully:** set the build settings back to how they were. For brightyard.in: root directory empty, no build
+- **Undo fully** (only possible before step 5 removed the old files): set the build settings back to how they were. For brightyard.in: root directory empty, no build
   command, output directory `/`. For the product sites: root directory `sites/allocivo` or `sites/xessly`, no build
   command, output `/`. Then retry the latest Production deployment.
 - **The build fails** with a message about the Node.js version: add one more variable, `NODE_VERSION` =
@@ -119,7 +124,8 @@ handover notes then describe only the new setup. Nothing is removed until you ag
 
 ## Previewing on your own computer
 
-Install Node.js once from **nodejs.org** (the LTS installer). Then double-click `web\start-local.bat` in your copy of
-the repository. brightyard.in opens at http://localhost:4321. For the product sites, open a Command Prompt in the
-`web` folder and run `start-local.bat allocivo` (port 4322) or `start-local.bat xessly` (port 4323). Forms and the
-API don't work in this preview, as before.
+Install Node.js once from **nodejs.org** (the LTS installer). Then double-click `start-local.bat` in your copy of
+the repository, as before. brightyard.in opens at http://localhost:4321, and the preview keeps pulling the latest
+changes from GitHub while it runs. For the product sites, open a Command Prompt in the repository folder and run
+`start-local.bat allocivo` (port 4322) or `start-local.bat xessly` (port 4323). Forms and the API don't work in this
+preview, as before.

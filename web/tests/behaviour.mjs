@@ -22,11 +22,12 @@ import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'no
 import { join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITES } from '../src/sites/index.mjs';
+import { baseline } from './baseline.mjs';
 import { link, mainLink } from '../src/lib/links.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
-const WEB = fileURLToPath(new URL('..', import.meta.url)), REPO = join(WEB, '..'), OUT = join(WEB, 'tests/out');
+const WEB = fileURLToPath(new URL('..', import.meta.url)), REPO = baseline(), OUT = join(WEB, 'tests/out');   // REPO: the old sites, from git history
 mkdirSync(OUT, { recursive: true });
 const ONLY = process.env.ONLY ? process.env.ONLY.split(',') : null;
 const want = part => !ONLY || ONLY.includes(part);

@@ -1,4 +1,4 @@
-// xessly.brightyard.in. Settings carried over unchanged from build-src/src/products.py.
+// xessly.brightyard.in: name, pages, call to action and texts used by the product layout.
 // `sections` lists the product blocks each page shows (ported as components in step 2).
 export default {
   key: 'xessly',

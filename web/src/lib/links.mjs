@@ -6,7 +6,7 @@ import { SITES, PRODUCTS } from '../sites/index.mjs';
 const MAIN = SITES.main;
 const MAIN_PATH = Object.fromEntries(MAIN.routes.filter(r => r.hash).map(r => [r.hash, r.path]));
 
-// brightyard.in -> product sites: the same map as PMAP in today's app.js (it differs slightly from the
+// brightyard.in -> product sites: the same map the old app.js used (PMAP) (it differs slightly from the
 // product sites' own anchors, e.g. xs-who goes to #xs-routes), kept exactly so links land where they land today.
 export const PRODUCT_LINKS = {
   allocivo: { 'al-problem': 'how-it-works/#al-problem', 'al-how': 'how-it-works/#al-how', 'al-uses': 'how-it-works/#al-uses', 'al-systems': 'integrations/', 'al-demo': 'demo/', 'al-value': '#al-value', 'al-calc': '#al-calc' },
@@ -29,7 +29,7 @@ export function link(target, here = 'main') {
     if (product) return product.url + '/' + ((anchor && PRODUCT_LINKS[id][anchor]) || '');
     return mainLink(t);
   }
-  // on a product site: the products.py rules
+  // on a product site: the rules of the old product build
   if (product) {
     const base = id === here ? '/' : product.url + '/';
     if (!anchor) return base;
