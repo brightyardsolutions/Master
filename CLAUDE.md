@@ -75,3 +75,5 @@ Goal: real pages with their own addresses instead of hash routes, shared compone
 - Optional AI reading of blueprint briefs (Cloudflare Workers AI or paid Gemini; never the free Gemini tier, for privacy). The AI picks from the existing lists only; the rules engine still builds the plan. Measure it against the 66 briefs first.
 - Re-run the Impeccable and Taste design audit on the live sites.
 - Product site pages to add later (for example pricing or security).
+- Accessibility, carried over unchanged from the old sites (fix after the move): the inner product pages (`/how-it-works/`, `/demo/`, `/agent-flow/`…) have no `<h1>`; axe flags `label-content-name-mismatch` on a few buttons (visible text differs from their accessible name).
+- Cloudflare previews checked on 14 November 2026: brightyard.in (`claude-sleepy-euler-lezn7a.master3-agf.pages.dev`), Allocivo (`af5bfbba.allocivo.pages.dev`), Xessly (`35a1d55e.xessly.pages.dev`). All three projects use the new build settings from `web/GO-LIVE.md`.
